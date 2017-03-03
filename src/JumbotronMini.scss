@@ -1,0 +1,46 @@
+/* Scaled everything down except left and right margin and padding */
+
+.jumbotron-mini .container {
+  max-width: 100%;
+}
+.jumbotron-mini {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin-bottom: 0px;
+  color: inherit;
+  background-color: #eee;
+}
+.jumbotron-mini h1,
+.jumbotron-mini .h1 {
+  color: inherit;
+  font-size: 27px;
+}
+.jumbotron-mini p {
+  margin-bottom: 11px;
+  font-size: 17px;
+  font-weight: 200;
+}
+.jumbotron-mini > hr {
+  border-top-color: #d5d5d5;
+}
+.container .jumbotron-mini,
+.container-fluid .jumbotron-mini {
+  padding-right: 15px;
+  padding-left: 15px;
+  border-radius: 6px;
+}
+@media screen and (min-width: 768px) {
+  .jumbotron-mini {
+    padding-top: 25;
+    padding-bottom: 25;
+  }
+  .container .jumbotron-mini,
+  .container-fluid .jumbotron-mini {
+    padding-right: 60px;
+    padding-left: 60px;
+  }
+  .jumbotron-mini h1,
+  .jumbotron-mini .h1 {
+    font-size: 36px;
+  }
+}
