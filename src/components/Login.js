@@ -9,13 +9,15 @@ import {
   Grid,
   Jumbotron,
   Button,
-  ButtonToolbar
+  ButtonToolbar,
+  DropdownButton,
+  MenuItem
 } from 'react-bootstrap'
 
-const Login = ({login, logout, token, loading, message, displayMessage}) => {
+const Login = ({login, testUserLogin, logout, name, loading, message, displayMessage}) => {
   let key = 1
 
-  const loginButton = token === null
+  const loginButton = name === null
   ? <Button
     key={key++}
     bsStyle='primary'
@@ -31,7 +33,7 @@ const Login = ({login, logout, token, loading, message, displayMessage}) => {
       Log out
   </Button>
 
-  const meButton = token !== null
+  const meButton = name !== null
   ? <LinkContainer to={{ pathname: '/me' }} key={key++}><Button
     bsStyle='primary'
     disabled={loading}>
@@ -39,7 +41,18 @@ const Login = ({login, logout, token, loading, message, displayMessage}) => {
     </Button></LinkContainer>
   : ''
 
-  const buttons = [loginButton, meButton]
+  const testUserSelection = process.env.NODE_ENV !== 'production'
+    ? <DropdownButton key={key++} title='Test Users' id='test-users'>
+      <MenuItem eventKey='1' onClick={() => testUserLogin('Potetsalat', 'potet@salat.com', '123')}
+        >Potetsalat</MenuItem>
+      <MenuItem eventKey='2' onClick={() => testUserLogin('Blomkål', 'blomkål@suppe.no', '456')}
+        >Blomkål</MenuItem>
+      <MenuItem eventKey='3' onClick={() => testUserLogin('Kjøtthue', 'kjøtt@hue.no', '789')}
+        >Kjøtthue</MenuItem>
+    </DropdownButton>
+    : null
+
+  const buttons = [loginButton, meButton, testUserSelection]
 
   return (
     <div>
@@ -55,7 +68,7 @@ const Login = ({login, logout, token, loading, message, displayMessage}) => {
               themselves. By logging in with facebook you do not have to worry about
               exposing your password.
             </p>
-            <p><ButtonToolbar>{buttons}</ButtonToolbar></p>
+            <ButtonToolbar>{buttons}</ButtonToolbar>
             <p style={{height: '1em'}}><label>{displayMessage ? message : ''}</label></p>
             <p style={{marginTop: '5em'}}><small>Note: To change user you may have to go to facebook and log out from there.</small></p>
 
@@ -69,7 +82,7 @@ const Login = ({login, logout, token, loading, message, displayMessage}) => {
 Login.propTypes = {
   login: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired,
-  token: PropTypes.string,
+  name: PropTypes.string,
   message: PropTypes.string,
   loading: PropTypes.bool
 }
