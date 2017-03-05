@@ -25,7 +25,7 @@ import {
   )
 } */
 
-const Me = ({ logout, token, name, email, message}) => {
+const Me = ({ logout, token, name, email, message }) => {
   const logoutButton = token !== null
     ? <Button bsStyle='warning' onClick={() => { logout('me') }}>
         Log out
