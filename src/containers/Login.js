@@ -1,6 +1,6 @@
 
 import { connect } from 'react-redux'
-import { login, logout } from '../actions/Login'
+import { login, logout, testUserLogin } from '../actions/MyFetch'
 import Login from '../components/Login'
 
 const LoginContainer = ((Target, namespace) => {
@@ -8,6 +8,10 @@ const LoginContainer = ((Target, namespace) => {
     return {
       login: (onlySearchLocalStorage) => {
         let action = login(onlySearchLocalStorage)
+        dispatch(action)
+      },
+      testUserLogin: (name, email, mock_facebook_id) => {
+        let action = testUserLogin(name, email, mock_facebook_id)
         dispatch(action)
       },
       logout: () => {
@@ -20,7 +24,7 @@ const LoginContainer = ((Target, namespace) => {
   const mapStateToProps = (state) => {
     const localState = namespace ? state[namespace] : state
     return {
-      token: localState.token,
+      jwToken: localState.jwToken,
       name: localState.name,
       email: localState.email,
       message: localState.message,
