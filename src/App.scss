@@ -40,7 +40,7 @@ html {
 
 }
 
-.dropdown-menu{
+.navbar .dropdown-menu{
   padding: 0 !important;
   & a {
     padding-top: 0.5em  !important;
@@ -49,17 +49,41 @@ html {
   }
 }
 
-.open * {
+.navbar .open > * {
   background-color : #222 !important;
 }
 
-.open > a{
-  background-color : #2d2d2d !important;
+.navbar .open {
+  background-color : #222 !important;
 }
 
+.navbar .open:hover {
+  background-color: #2d2d2d !important;
+}
 
-.open {
-  background-color : #222 !important;
+.navbar .active > a {
+  background-color: #2d2d2d !important;
+}
+
+.navbar a:hover {
+  background-color: #2d2d2d !important;
+}
+
+.navbar .active > a:hover {
+  background-color: #2d2d2d !important;
+}
+
+.navbar .nav {
+  margin-bottom: 0 !important;
+  margin-top: 0 !important;
+
+  & * {
+    color: #e9e9e9 !important;
+  }
+}
+
+.navbar .navbar-collapse{
+  border-color: #e9e9e9 !important;
 }
 
 address {
@@ -94,23 +118,6 @@ address {
   z-index: -1;
   overflow-y: hidden;
 
-}
-
-.active > a {
-  background-color: #2d2d2d !important;
-}
-
-.nav {
-  margin-bottom: 0 !important;
-  margin-top: 0 !important;
-
-  & * {
-    color: #e9e9e9 !important;
-  }
-}
-
-.navbar-collapse{
-  border-color: #e9e9e9 !important;
 }
 
 #Title-container{
