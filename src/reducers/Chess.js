@@ -1,6 +1,6 @@
 const initialState = {
   readMore: false,
-  token: null
+  jwToken: null
 }
 
 export default function update (state = initialState, action) {
@@ -11,11 +11,19 @@ export default function update (state = initialState, action) {
       })
     case 'RECEIVE_TOKEN_FROM_SERVER':
       return Object.assign({}, state, {
-        token: action.token
+        jwToken: action.jwToken
       })
     case 'RECEIVE_TOKEN_FROM_LOCAL_STORAGE':
       return Object.assign({}, state, {
-        token: action.token
+        jwToken: action.jwToken
+      })
+    case '@@me/DELETE_TOKEN':
+      return Object.assign({}, state, {
+        jwToken: null
+      })
+    case '@@login/DELETE_TOKEN':
+      return Object.assign({}, state, {
+        jwToken: null
       })
     default:
       return state
