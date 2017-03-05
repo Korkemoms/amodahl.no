@@ -6,6 +6,7 @@ var InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 var WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
 var getClientEnvironment = require('./env');
 var paths = require('./paths');
+var path = require('path');
 
 
 // Webpack uses `publicPath` to determine where the app is being served from.
@@ -62,6 +63,9 @@ module.exports = {
         publicPath: publicPath
     },
     resolve: {
+        alias: {
+          react: path.resolve('./node_modules/react'),
+        },
         symlinks: false,
         // This allows you to set a fallback for where Webpack should look for modules.
         // We read `NODE_PATH` environment variable in `paths.js` and pass paths here.
