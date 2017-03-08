@@ -3,7 +3,20 @@ import fetch from 'isomorphic-fetch'
 // determine where to send requests
 const www = window.location.href.indexOf('www.') !== -1 ? 'www.' : ''
 const url = process.env.NODE_ENV === 'production'
-  ? `http://${www}amodahl.no/api/public` : `http://${www}local.amodahl.no:3000`
+  ? `https://${www}amodahl.no/api/public` : `http://${www}local.amodahl.no:3000`
+
+const scopes = [
+  'user.all',
+  'user.list',
+  'chess-game.all',
+  'chess-game.list',
+  'chess-game.create',
+  'chess-move.all',
+  'chess-move.list',
+  'chess-move.create',
+  'update.all',
+  'update.list'
+]
 
 export const requestTokenFromLocalStorage = () => {
   return {
@@ -127,7 +140,7 @@ function fbLoginCallback (dispatch, response, callback) {
     return
   }
 
-  fetchJwtToken(dispatch, fbAccessToken, ['user.list', 'user.all'],
+  fetchJwtToken(dispatch, fbAccessToken, scopes,
     response => {
       let action = receiveTokenFromServer(response.token,
         response.user.name, response.user.email)
@@ -141,7 +154,7 @@ function fbLoginCallback (dispatch, response, callback) {
       localStorage.setItem('isTestUser', false)
 
       if (callback) {
-        callback()
+        callback(response.token)
       }
     })
 }
@@ -166,7 +179,8 @@ export const testUserLogin = (local, server, name, email, mockFacebookId, callba
     }
     // try to get from server
     dispatch(requestTokenFromServer())
-    fetchTestUserJwtToken(dispatch, name, email, mockFacebookId, ['user.list', 'user.all'],
+    console.log(name, email, mockFacebookId)
+    fetchTestUserJwtToken(dispatch, name, email, mockFacebookId, scopes,
       response => {
         let action = receiveTokenFromServer(response.token,
           response.user.name, response.user.email)
@@ -180,7 +194,7 @@ export const testUserLogin = (local, server, name, email, mockFacebookId, callba
         localStorage.setItem('isTestUser', true)
 
         if (callback) {
-          callback()
+          callback(response.token)
         }
       })
   }
@@ -207,7 +221,7 @@ export const login = (local, server, callback) => {
       return
     }
 
-          // try to get from server
+    // try to get from server
     dispatch(requestTokenFromServer())
           // log in with facebook
     console.info('Begin facebook login')
@@ -220,10 +234,17 @@ export const login = (local, server, callback) => {
   }
 }
 
-export const myFetch = (jwToken, dispatch, attempts = 0) => {
-  return (what, props) => {
-    var headers = new Headers()
+/*
+  Uses callback instead of .then because
+  I could not figure out how to
+  pass both body and headers otherwise.
+*/
+export const myFetch = (dispatch) => (jwToken, attempts = 0) => {
+  return (what, props, callback) => {
+    var headers = props.headers ? props.headers : new Headers()
     headers.append('Authorization', 'Bearer ' + jwToken)
+    headers.append('pragma', 'no-cache')
+    headers.append('cache-control', 'no-store')
 
     const properties = {
       headers: headers,
@@ -231,39 +252,41 @@ export const myFetch = (jwToken, dispatch, attempts = 0) => {
     }
 
     return fetch(url + what, properties)
-    .then(response => { // ensure its json
+    .then(response => {
+      // ensure its json
       let contentType = response.headers.get('content-type')
       let gotJson = contentType && contentType.indexOf('application/json') !== -1
-
       if (!gotJson) {
         throw new Error('Oops, we haven\'t got JSON: ' + JSON.stringify(response))
       }
-      return response.json()
-    })
-    .then(response => { // check if token has expired
-      if (response.status === 'error' && response.message === 'Expired token') {
-        // try to get new token and then repeat fetch
-        if (attempts < 2) {
-          let callback = () => myFetch(jwToken, dispatch, attempts++)(what, props)
-          if (localStorage.isTestUser === true && localStorage.jwToken
-            && localStorage.name && localStorage.email) {
-            dispatch(testUserLogin(false, true, localStorage.name, localStorage.email, localStorage.name, callback))
-          } else {
-            dispatch(login(false, true, callback))
-          }
+      return response.json().then(json => {
+        // check if token has expired
+        if (json.status === 'error' && json.message === 'Expired token') {
+          // try to get new token and then repeat fetch
+          if (attempts < 2) {
+            let callback = (newToken) =>
+              myFetch(newToken, dispatch, attempts + 1)(what, props, callback)
 
-          throw new Error('Token expired')
+            if (localStorage.isTestUser === true && localStorage.jwToken &&
+              localStorage.name && localStorage.email) {
+              dispatch(testUserLogin(false, true, localStorage.name,
+                localStorage.email, localStorage.name, callback))
+            } else {
+              dispatch(login(false, true, callback))
+            }
+            throw new Error('Token expired')
+          }
+          throw new Error('Token expired, no more relog attempts')
         }
 
-        throw new Error('Token expired, no more relog attempts')
-      }
-      return response
-    })
-    .then(response => { // ensure query was accepted
-      if (response.status && response.status !== 'ok') {
-        throw new Error('Received: ' + JSON.stringify(response))
-      }
-      return response
+        // ensure query was accepted
+        if (json.status && json.status !== 'ok') {
+          throw new Error('Received: ' + JSON.stringify(json))
+        }
+        if (callback) {
+          callback(json, response.headers)
+        }
+      })
     })
   }
 }
