@@ -15,11 +15,12 @@ import {
   Button
 } from 'react-bootstrap'
 
-const Chess = ({ readMore, toggleReadMore, myFetch, dispatch }) => {
+const Chess = ({ readMore, toggleReadMore, myFetch, myEmail, myName, jwToken }) => {
   const readMoreButton = readMore ? ''
       : <Button bsStyle='primary' onClick={() => {
         toggleReadMore(true)
       }}>Read more</Button>
+
   return (
     <div>
       <MyHeader headline='Chess&#9816;' />
@@ -28,7 +29,8 @@ const Chess = ({ readMore, toggleReadMore, myFetch, dispatch }) => {
 
         <Jumbotron className='jumbotron-mini' style={{background: 'white'}}>
 
-          <ChessGame myFetch={myFetch ? myFetch(dispatch) : null} />
+          <ChessGame myEmail={myEmail} myName={myName}
+            myFetch={jwToken !== null ? myFetch(jwToken) : null} />
           <Grid>
 
             <PageHeader>Blabla</PageHeader>
@@ -86,6 +88,8 @@ Chess.propTypes = {
   readMore: PropTypes.bool.isRequired,
   toggleReadMore: PropTypes.func.isRequired,
   myFetch: PropTypes.func,
-  dispatch: PropTypes.func
+  dispatch: PropTypes.func,
+  myEmail: PropTypes.string,
+  myName: PropTypes.string
 }
 export default Chess
