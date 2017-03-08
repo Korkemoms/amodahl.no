@@ -10,7 +10,7 @@ const ChessContainer = ((Target, namespace) => {
         let action = toggleReadMore(readMore)
         dispatch(action)
       },
-      dispatch: dispatch
+      myFetch: myFetch(dispatch)
     }
   }
 
@@ -18,14 +18,10 @@ const ChessContainer = ((Target, namespace) => {
     const localState = namespace ? state[namespace] : state
 
     let props = {
-      readMore: localState.readMore
-    }
-
-    if (localState.jwToken && localState.jwToken !== null) {
-      props = {
-        myFetch: (dispatch) => myFetch(localState.jwToken, dispatch),
-        ...props
-      }
+      readMore: localState.readMore,
+      myEmail: localState.myEmail,
+      myName: localState.myName,
+      jwToken: localState.jwToken
     }
 
     return props
