@@ -21,7 +21,7 @@ const Login = ({login, testUserLogin, logout, name, loading, message, displayMes
   ? <Button
     key={key++}
     bsStyle='primary'
-    onClick={() => { login(false) }}
+    onClick={() => { login(false, true) }}
     disabled={loading}>
       Log in with facebook
     </Button>
@@ -31,7 +31,7 @@ const Login = ({login, testUserLogin, logout, name, loading, message, displayMes
     onClick={() => { logout() }}
     disabled={loading}>
       Log out
-  </Button>
+    </Button>
 
   const meButton = name !== null
   ? <LinkContainer to={{ pathname: '/me' }} key={key++}><Button
@@ -41,7 +41,7 @@ const Login = ({login, testUserLogin, logout, name, loading, message, displayMes
     </Button></LinkContainer>
   : ''
 
-  const testUserSelection = process.env.NODE_ENV !== 'production'
+  const testUserSelection = process.env.NODE_ENV !== 'production' && name === null
     ? <DropdownButton key={key++} title='Test Users' id='test-users'>
       <MenuItem eventKey='1' onClick={() => testUserLogin('Potetsalat', 'potet@salat.com', '123')}
         >Potetsalat</MenuItem>
@@ -49,8 +49,10 @@ const Login = ({login, testUserLogin, logout, name, loading, message, displayMes
         >Blomkål</MenuItem>
       <MenuItem eventKey='3' onClick={() => testUserLogin('Kjøtthue', 'kjøtt@hue.no', '789')}
         >Kjøtthue</MenuItem>
+      <MenuItem eventKey='4' onClick={() => testUserLogin('Kjøtthue2', 'kjøtt2@hue.no', '7829')}>
+        Kjøtthue2</MenuItem>
     </DropdownButton>
-    : null
+      : null
 
   const buttons = [loginButton, meButton, testUserSelection]
 

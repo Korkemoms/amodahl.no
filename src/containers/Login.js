@@ -6,12 +6,12 @@ import Login from '../components/Login'
 const LoginContainer = ((Target, namespace) => {
   const mapDispatchToProps = (dispatch) => {
     return {
-      login: (onlySearchLocalStorage) => {
-        let action = login(onlySearchLocalStorage)
+      login: (local, server, callback) => {
+        let action = login(local, server, callback)
         dispatch(action)
       },
       testUserLogin: (name, email, mock_facebook_id) => {
-        let action = testUserLogin(name, email, mock_facebook_id)
+        let action = testUserLogin(true, true, name, email, mock_facebook_id)
         dispatch(action)
       },
       logout: () => {
