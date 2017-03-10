@@ -1,6 +1,10 @@
-export const setFadeInEnabled = (fadeInEnabled) => {
+export const enableFadeIn = () => {
   return {
-    type: 'TOGGLE_FADE_IN_ENABLED',
-    fadeInEnabled: fadeInEnabled
+    type: 'ENABLE_FADE_IN'
+  }
+}
+export const disableFadeIn = () => {
+  return {
+    type: 'DISABLE_FADE_IN'
   }
 }
