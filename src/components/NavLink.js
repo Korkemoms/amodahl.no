@@ -3,11 +3,11 @@ import React, { PropTypes } from 'react'
 import { NavItem } from 'react-bootstrap'
 import {LinkContainer} from 'react-router-bootstrap'
 
-const NavLink = ({ children, to, setFadeInEnabled }) => {
+const NavLink = ({ children, to, disableFadeIn }) => {
   return (
     <LinkContainer to={to}>
       <NavItem role='navigation' onClick={() => {
-        setFadeInEnabled(false)
+        disableFadeIn()
       }}>
         {children}
       </NavItem>
@@ -17,6 +17,6 @@ const NavLink = ({ children, to, setFadeInEnabled }) => {
 NavLink.propTypes = {
   children: PropTypes.any,
   to: PropTypes.object.isRequired,
-  setFadeInEnabled: PropTypes.func.isRequired
+  disableFadeIn: PropTypes.func.isRequired
 }
 export default NavLink

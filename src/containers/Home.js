@@ -1,13 +1,13 @@
 
 import { connect } from 'react-redux'
-import { setFadeInEnabled } from '../actions/Home'
+import { disableFadeIn } from '../actions/Home'
 import Home from '../components/Home'
 
 const HomeContainer = ((Target, namespace) => {
   const mapDispatchToProps = (dispatch) => {
     return {
-      setFadeInEnabled: (fadeInEnabled) => {
-        let action = setFadeInEnabled(fadeInEnabled)
+      disableFadeIn: () => {
+        let action = disableFadeIn()
         dispatch(action)
       }
     }

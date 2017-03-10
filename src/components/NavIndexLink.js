@@ -3,11 +3,11 @@ import React, { PropTypes } from 'react'
 import { NavItem } from 'react-bootstrap'
 import {IndexLinkContainer} from 'react-router-bootstrap'
 
-const NavIndexLink = ({ children, to, setFadeInEnabled }) => {
+const NavIndexLink = ({ children, to, disableFadeIn }) => {
   return (
     <IndexLinkContainer to={to}>
       <NavItem role='navigation' onClick={() => {
-        setFadeInEnabled(false)
+        disableFadeIn()
       }}>
         {children}
       </NavItem>
@@ -17,6 +17,6 @@ const NavIndexLink = ({ children, to, setFadeInEnabled }) => {
 NavIndexLink.propTypes = {
   children: PropTypes.any,
   to: PropTypes.object.isRequired,
-  setFadeInEnabled: PropTypes.func.isRequired
+  disableFadeIn: PropTypes.func.isRequired
 }
 export default NavIndexLink
