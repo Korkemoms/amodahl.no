@@ -13,7 +13,7 @@ import {
   Button
 } from 'react-bootstrap'
 
-const Home = ({ fadeInEnabled, setFadeInEnabled }) => {
+const Home = ({ fadeInEnabled, disableFadeIn }) => {
   return (
     <div>
       <MyHeader headline='Welcome' />
@@ -43,7 +43,7 @@ const Home = ({ fadeInEnabled, setFadeInEnabled }) => {
                     and some other great javascript and php libraries.
                   </p>
                   <p><Link to='/chess-project' onClick={() => {
-                    setFadeInEnabled(false)
+                    disableFadeIn()
                   }}><Button bsStyle='primary'>Read more</Button></Link></p>
                 </Jumbotron>
               </Col>
@@ -66,7 +66,7 @@ const Home = ({ fadeInEnabled, setFadeInEnabled }) => {
                   like making user friendly interfaces.
                   </p>
                   <p><Link to='/about' onClick={() => {
-                    setFadeInEnabled(false)
+                    disableFadeIn()
                   }}><Button bsStyle='primary'>More about me</Button></Link></p>
                 </Jumbotron>
               </Col>
@@ -80,6 +80,6 @@ const Home = ({ fadeInEnabled, setFadeInEnabled }) => {
 
 Home.propTypes = {
   fadeInEnabled: PropTypes.bool.isRequired,
-  setFadeInEnabled: PropTypes.func.isRequired
+  disableFadeIn: PropTypes.func.isRequired
 }
 export default Home
