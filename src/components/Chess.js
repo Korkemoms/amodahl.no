@@ -31,6 +31,12 @@ const Chess = ({ readMore, toggleReadMore, myFetch, myEmail, myName, jwToken }) 
 
           <ChessGame myEmail={myEmail} myName={myName}
             myFetch={jwToken !== null ? myFetch(jwToken) : null} />
+
+        </Jumbotron>
+      </div>
+      <div style={{background: 'white', marginTop:'10em'}}>
+
+        <Jumbotron className='jumbotron-mini' style={{background: 'white'}}>
           <Grid>
 
             <PageHeader>Blabla</PageHeader>
@@ -77,6 +83,7 @@ const Chess = ({ readMore, toggleReadMore, myFetch, myEmail, myName, jwToken }) 
               </ListGroup>
             </div>
           </Grid>
+
         </Jumbotron>
       </div>
     </div>
