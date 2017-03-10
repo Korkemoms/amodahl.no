@@ -159,28 +159,27 @@ function fbLoginCallback (dispatch, response, callback) {
     })
 }
 
-export const testUserLogin = (local, server, name, email, mockFacebookId, callback) => {
-  return (dispatch) => {
+export const testUserLogin = (local, server, name, email, mockFacebookId, callback) => dispatch => {
     // try to get from local
-    if (local) {
-      dispatch(requestTokenFromLocalStorage())
-      if (localStorage.jwToken && localStorage.name && localStorage.email) {
-        let action = receiveTokenFromLocalStorage(localStorage.jwToken,
+  if (local) {
+    dispatch(requestTokenFromLocalStorage())
+    if (localStorage.jwToken && localStorage.name && localStorage.email) {
+      let action = receiveTokenFromLocalStorage(localStorage.jwToken,
           localStorage.name, localStorage.email)
-        dispatch(action)
-        return
-      }
-      let action = requestTokenFailed('No login info found in local storage', false)
       dispatch(action)
-    }
-
-    if (!server) {
       return
     }
+    let action = requestTokenFailed('No login info found in local storage', false)
+    dispatch(action)
+  }
+
+  if (!server) {
+    return
+  }
     // try to get from server
-    dispatch(requestTokenFromServer())
-    console.log(name, email, mockFacebookId)
-    fetchTestUserJwtToken(dispatch, name, email, mockFacebookId, scopes,
+  dispatch(requestTokenFromServer())
+  console.log(name, email, mockFacebookId)
+  fetchTestUserJwtToken(dispatch, name, email, mockFacebookId, scopes,
       response => {
         let action = receiveTokenFromServer(response.token,
           response.user.name, response.user.email)
@@ -197,41 +196,38 @@ export const testUserLogin = (local, server, name, email, mockFacebookId, callba
           callback(response.token)
         }
       })
-  }
 }
 
-export const login = (local, server, callback) => {
-  return (dispatch) => {
+export const login = (local, server, callback) => dispatch => {
     // try to get from local
-    if (local) {
-      dispatch(requestTokenFromLocalStorage())
-      if (localStorage.jwToken && localStorage.name && localStorage.email) {
-        let action = receiveTokenFromLocalStorage(localStorage.jwToken,
+  if (local) {
+    dispatch(requestTokenFromLocalStorage())
+    if (localStorage.jwToken && localStorage.name && localStorage.email) {
+      let action = receiveTokenFromLocalStorage(localStorage.jwToken,
         localStorage.name, localStorage.email)
-        dispatch(action)
-        if (callback) {
-          callback()
-        }
-        return
+      dispatch(action)
+      if (callback) {
+        callback()
       }
-      dispatch(requestTokenFailed('No login info found in local storage', false))
-    }
-
-    if (!server) {
       return
     }
+    dispatch(requestTokenFailed('No login info found in local storage', false))
+  }
+
+  if (!server) {
+    return
+  }
 
     // try to get from server
-    dispatch(requestTokenFromServer())
+  dispatch(requestTokenFromServer())
           // log in with facebook
-    console.info('Begin facebook login')
-    window.FB.login(response => {
-      fbLoginCallback(dispatch, response, callback)
-      console.info('Successfully logged in to facebook', response)
-    }, {
-      scope: 'public_profile,email'
-    })
-  }
+  console.info('Begin facebook login')
+  window.FB.login(response => {
+    fbLoginCallback(dispatch, response, callback)
+    console.info('Successfully logged in to facebook', response)
+  }, {
+    scope: 'public_profile,email'
+  })
 }
 
 /*
@@ -239,19 +235,18 @@ export const login = (local, server, callback) => {
   I could not figure out how to
   pass both body and headers otherwise.
 */
-export const myFetch = (dispatch) => (jwToken, attempts = 0) => {
-  return (what, props, callback) => {
-    var headers = props.headers ? props.headers : new Headers()
-    headers.append('Authorization', 'Bearer ' + jwToken)
-    headers.append('pragma', 'no-cache')
-    headers.append('cache-control', 'no-store')
+export const myFetch = dispatch => (jwToken, attempts = 0) => (what, props, callback) => {
+  var headers = props.headers ? props.headers : new Headers()
+  headers.append('Authorization', 'Bearer ' + jwToken)
+  headers.append('pragma', 'no-cache')
+  headers.append('cache-control', 'no-store')
 
-    const properties = {
-      headers: headers,
-      ...props
-    }
+  const properties = {
+    headers: headers,
+    ...props
+  }
 
-    return fetch(url + what, properties)
+  return fetch(url + what, properties)
     .then(response => {
       // ensure its json
       let contentType = response.headers.get('content-type')
@@ -288,22 +283,19 @@ export const myFetch = (dispatch) => (jwToken, attempts = 0) => {
         }
       })
     })
-  }
 }
 
-export const logout = (dispatcher) => {
-  return (dispatch) => {
-    dispatch(deleteToken(dispatcher))
-    localStorage.clear()
+export const logout = (dispatcher) => dispatch => {
+  dispatch(deleteToken(dispatcher))
+  localStorage.clear()
 
     // log out of facebook
-    console.info('Begin facebook logout')
-    try {
-      window.FB.logout((response) => {
-        console.info('Successfully logged out of facebook', response)
-      })
-    } catch (err) {
-      console.info('There was a problem logging out of facebook', err)
-    }
+  console.info('Begin facebook logout')
+  try {
+    window.FB.logout((response) => {
+      console.info('Successfully logged out of facebook', response)
+    })
+  } catch (err) {
+    console.info('There was a problem logging out of facebook', err)
   }
 }
