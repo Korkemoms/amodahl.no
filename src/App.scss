@@ -118,7 +118,21 @@ address {
   z-index: -1;
   overflow-y: hidden;
 
+  &.Enchanted-forest {
+    background: url('./images/Enchanted-forest.jpg');
+    background-size: cover;
+  }
+  &.Natural-forest {
+    background: url('./images/Natural-forest.jpg');
+    background-size: cover;
+  }
+
+
 }
+
+
+
+
 
 #Title-container{
   overflow-y: hidden;
