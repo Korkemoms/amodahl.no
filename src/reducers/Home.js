@@ -4,9 +4,13 @@ const initialState = {
 
 export default function update (state = initialState, action) {
   switch (action.type) {
-    case 'TOGGLE_FADE_IN_ENABLED':
+    case 'DISABLE_FADE_IN':
       return Object.assign({}, state, {
-        fadeInEnabled: action.fadeInEnabled
+        fadeInEnabled: false
+      })
+    case 'ENABLE_FADE_IN':
+      return Object.assign({}, state, {
+        fadeInEnabled: true
       })
     default:
       return state
