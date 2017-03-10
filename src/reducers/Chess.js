@@ -27,11 +27,15 @@ export default function update (state = initialState, action) {
     }
     case '@@me/DELETE_TOKEN':
       return Object.assign({}, state, {
-        jwToken: null
+        jwToken: null,
+        myEmail: null,
+        myName: null
       })
     case '@@login/DELETE_TOKEN':
       return Object.assign({}, state, {
-        jwToken: null
+        jwToken: null,
+        myEmail: null,
+        myName: null
       })
     default:
       return state
