@@ -56,7 +56,7 @@ const Login = ({login, testUserLogin, logout, name,
   }
 
   const goBackButton = name !== null && lastPage !== null
-    ? <Button key={key++} bsStyle='success' onClick={() => navigate(lastPage)} >{lastPage}</Button>
+    ? <Button key={key++} bsStyle='success' onClick={() => navigate(lastPage)} >{lastPage.replace('/', '')}</Button>
     : null
 
   const showTestUserButton = name === null  // && process.env.NODE_ENV !== 'production'

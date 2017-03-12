@@ -39,19 +39,18 @@ const Home = ({ fadeInEnabled, disableFadeIn }) => {
                 <Jumbotron bsClass='jumbotron-mini' style={{backgroundColor: 'transparent'}}>
                   <h1>Chess&#9822;</h1>
                   <p>
-                    My latest project is a chess app. I am developing it with react-bootstrap
-                    and some other great javascript and php libraries.
+                    I am working on a chess app for the browser. It is made with React, Redux, Bootstrap and PHP.
                   </p>
                   <p><Link to='/chess-project' onClick={() => {
                     disableFadeIn()
-                  }}><Button bsStyle='primary'>Read more</Button></Link></p>
+                  }}><Button bsStyle='success'>Play</Button></Link></p>
                 </Jumbotron>
               </Col>
               <Col xs={12} md={4}>
                 <Jumbotron bsClass='jumbotron-mini' style={{backgroundColor: 'transparent'}}>
                   <h1>Projects</h1>
                   <p>
-                    I have worked on many personal programming projects.
+                    I have worked on many programming projects.
                     I plan on showing a few of the ones that made it into
                     production here.
                   </p>
@@ -61,13 +60,13 @@ const Home = ({ fadeInEnabled, disableFadeIn }) => {
                 <Jumbotron bsClass='jumbotron-mini' style={{backgroundColor: 'transparent'}}>
                   <h1>About me</h1>
                   <p>
-                    I'm an aspiring software developer living in Bergen, Norway.
+                    I'm a software developer living in Bergen, Norway.
                   I enjoy turning complex problems into simple solutions and I
-                  like making user friendly interfaces.
+                  love to build stuff.
                   </p>
                   <p><Link to='/about' onClick={() => {
                     disableFadeIn()
-                  }}><Button bsStyle='primary'>More about me</Button></Link></p>
+                  }}><Button bsStyle='success'>Read more</Button></Link></p>
                 </Jumbotron>
               </Col>
             </Row>
