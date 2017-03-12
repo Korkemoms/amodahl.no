@@ -14,9 +14,11 @@ const NavIndexLink = ({ children, to, disableFadeIn }) => {
     </IndexLinkContainer>
   )
 }
+
 NavIndexLink.propTypes = {
   children: PropTypes.any,
   to: PropTypes.object.isRequired,
   disableFadeIn: PropTypes.func.isRequired
 }
+
 export default NavIndexLink

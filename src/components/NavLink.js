@@ -14,9 +14,11 @@ const NavLink = ({ children, to, disableFadeIn }) => {
     </LinkContainer>
   )
 }
+
 NavLink.propTypes = {
   children: PropTypes.any,
   to: PropTypes.object.isRequired,
   disableFadeIn: PropTypes.func.isRequired
 }
+
 export default NavLink
