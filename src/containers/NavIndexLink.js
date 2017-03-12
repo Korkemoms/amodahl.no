@@ -4,13 +4,8 @@ import NavIndexLink from '../components/NavIndexLink'
 import { disableFadeIn } from '../actions/Home'
 
 const NavIndexLinkContainer = ((Target, namespace) => {
-  const mapDispatchToProps = (dispatch) => {
-    return {
-      disableFadeIn: () => {
-        let action = disableFadeIn()
-        dispatch(action)
-      }
-    }
+  const mapDispatchToProps = {
+    disableFadeIn
   }
 
   const mapStateToProps = (state) => {
