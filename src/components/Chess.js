@@ -34,54 +34,23 @@ const Chess = ({ readMore, toggleReadMore, myFetch, myEmail, myName, jwToken }) 
 
         </Jumbotron>
       </div>
-      <div style={{background: 'white', marginTop:'10em'}}>
+      <div style={{background: 'white', marginTop: '10em'}}>
 
         <Jumbotron className='jumbotron-mini' style={{background: 'white'}}>
           <Grid>
 
-            <PageHeader>Blabla</PageHeader>
+            <PageHeader>About this app</PageHeader>
             <p>
-                  I am making this game to learn more about exciting
-                  web technologies. <b>I disabled network play, I will enable
-                  it again when the api is not totally unsafe 😀</b>
+                  This app is made with React, Redux and Bootstrap. The API is
+                  implemented with PHP and MySQL.
             </p>
-            <ButtonToolbar>
-              {readMoreButton}
-            </ButtonToolbar>
-            <div style={{display: readMore ? 'block' : 'none'}}>
-              <PageHeader>Front-end <small>some of the technologies I use to make the client</small></PageHeader>
-              <p>
-                I used create-react-app as boilerplate, it comes with loads of
-                useful features that helped me get started.
-              </p>
-              <p>
-                I am now remaking the app with Redux because it looks really convenient with React.
-              </p>
-              <ListGroup>
-                <ListGroupItem header='React'>It makes it easy to build reusable javascript UI components</ListGroupItem>
-                <ListGroupItem header='Redux'>Manage the state.</ListGroupItem>
-                <ListGroupItem header='Bundler (Webpack)'>Turn a complicated project into static js and css for deployment</ListGroupItem>
-                <ListGroupItem header='NPM'>Makes it extremely easy to find and add new libraries to a project</ListGroupItem>
-                <ListGroupItem header='react-router'>Keeps the URL in sync with the UI</ListGroupItem>
-                <ListGroupItem header='ES6 (babel)'>I like modules and arrow functions</ListGroupItem>
-                <ListGroupItem header='Bootstrap (react-bootstrap)'>Because i want things to look good</ListGroupItem>
-                <ListGroupItem header='CSS preprocessor (Sass)'>More flexible css</ListGroupItem>
-              </ListGroup>
+            <p>
+              <label>{'Client:'}</label> <a href='https://github.com/Korkemoms/chess-client'>
+                {'https://github.com/Korkemoms/chess-client'}</a>
+              <br /><label>{'API:'}</label> <a href='https://github.com/Korkemoms/amodahl.no-api'>
+                {'https://github.com/Korkemoms/amodahl.no-api'}</a>
+            </p>
 
-              <PageHeader>Back-end <small>some of the technologies I use to make the API</small></PageHeader>
-              <p>
-                The API was terribly unsafe, I am now rebuilding it with JSON Web Tokens.
-                I found a nice boilerplate (<a href='https://github.com/tuupola/slim-api-skeleton'>slim-api-skeleton</a>) which comes
-                 with many useful libraries.
-              </p>
-              <ListGroup>
-                <ListGroupItem header='Composer'>Makes it extremely easy to find and add new libraries to a project</ListGroupItem>
-                <ListGroupItem header='Slim'>Framework for adding routers, middleware and more</ListGroupItem>
-                <ListGroupItem header='Spot'>Datamapper, makes it easier to work with the database.</ListGroupItem>
-                <ListGroupItem header='Fractal'>Consistent data output from the API.</ListGroupItem>
-
-              </ListGroup>
-            </div>
           </Grid>
 
         </Jumbotron>
@@ -91,12 +60,4 @@ const Chess = ({ readMore, toggleReadMore, myFetch, myEmail, myName, jwToken }) 
   )
 }
 
-Chess.propTypes = {
-  readMore: PropTypes.bool.isRequired,
-  toggleReadMore: PropTypes.func.isRequired,
-  myFetch: PropTypes.func,
-  dispatch: PropTypes.func,
-  myEmail: PropTypes.string,
-  myName: PropTypes.string
-}
 export default Chess
