@@ -84,9 +84,7 @@ const Login = ({login, testUserLogin, logout, name,
         <Jumbotron className='jumbotron-mini' style={{background: 'white'}}>
           <Grid>
             <p>
-              I am practicing making games and services that will require users to identify
-              themselves. By logging in with facebook you do not have to worry about
-              exposing your password.
+              Logging in with facebook is fast, safe and easy.
             </p>
             <ButtonToolbar>{buttons}</ButtonToolbar>
             <p style={{height: '1em'}}><label>{displayMessage ? message : ''}</label></p>
