@@ -4,13 +4,8 @@ import { disableFadeIn } from '../actions/Home'
 import Home from '../components/Home'
 
 const HomeContainer = ((Target, namespace) => {
-  const mapDispatchToProps = (dispatch) => {
-    return {
-      disableFadeIn: () => {
-        let action = disableFadeIn()
-        dispatch(action)
-      }
-    }
+  const mapDispatchToProps = {
+    disableFadeIn
   }
 
   const mapStateToProps = (state) => {

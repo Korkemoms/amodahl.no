@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 import MyNavbar from '../containers/MyNavbar'
 
 const App = ({ children }) => {

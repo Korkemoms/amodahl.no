@@ -2,8 +2,7 @@ import { connect } from 'react-redux'
 import AmodahlNo from '../components/AmodahlNo'
 
 const AmodahlNoContainer = ((Target, namespace) => {
-  const mapDispatchToProps = (dispatch) => {
-    return {}
+  const mapDispatchToProps = {
   }
 
   const mapStateToProps = (state) => {

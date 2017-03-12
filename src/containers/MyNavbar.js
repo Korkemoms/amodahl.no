@@ -3,10 +3,7 @@ import { connect } from 'react-redux'
 import MyNavbar from '../components/MyNavbar'
 
 const MyNavbarContainer = ((Target, namespace) => {
-  const mapDispatchToProps = (dispatch) => {
-    return {
-    }
-  }
+  const mapDispatchToProps = {}
 
   const mapStateToProps = (state) => {
     const localState = namespace ? state[namespace] : state

@@ -2,9 +2,7 @@ import { connect } from 'react-redux'
 import About from '../components/About'
 
 const AboutContainer = ((Target, namespace) => {
-  const mapDispatchToProps = (dispatch) => {
-    return {}
-  }
+  const mapDispatchToProps = {}
 
   const mapStateToProps = (state) => {
     // const localState = namespace ? state[namespace] : state
