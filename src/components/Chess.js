@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 
 import '../JumbotronMini.scss'
 import '../App.scss'
@@ -8,19 +8,10 @@ import ChessGame from 'chess-client'
 import {
   Grid,
   PageHeader,
-  ButtonToolbar,
-  Jumbotron,
-  ListGroup,
-  ListGroupItem,
-  Button
+  Jumbotron
 } from 'react-bootstrap'
 
-const Chess = ({ readMore, toggleReadMore, myFetch, myEmail, myName, jwToken }) => {
-  const readMoreButton = readMore ? ''
-      : <Button bsStyle='primary' onClick={() => {
-        toggleReadMore(true)
-      }}>Read more</Button>
-
+const Chess = ({ readMore, toggleReadMore, myFetch, myEmail, myName, jwToken, navigate }) => {
   return (
     <div>
       <MyHeader headline='Chess&#9816;' />
@@ -29,8 +20,12 @@ const Chess = ({ readMore, toggleReadMore, myFetch, myEmail, myName, jwToken }) 
 
         <Jumbotron className='jumbotron-mini' style={{background: 'white'}}>
 
-          <ChessGame myEmail={myEmail} myName={myName}
-            myFetch={jwToken !== null ? myFetch(jwToken) : null} />
+          <ChessGame
+            myEmail={myEmail}
+            myName={myName}
+            myFetch={jwToken !== null ? myFetch(jwToken) : null}
+            navigate={navigate}
+            />
 
         </Jumbotron>
       </div>
