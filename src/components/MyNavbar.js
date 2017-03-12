@@ -10,7 +10,7 @@ import {
 const MyNavbar = ({ name, page }) => {
   const userSpecific = name === null
   ? <NavLink eventKey={4} to={{ pathname: '/login' }}>Log in</NavLink>
-  : <NavLink eventKey={4} to={{ pathname: '/me' }}>{name}</NavLink>
+  : <NavLink eventKey={4} to={{ pathname: '/me' }}>Logged in: {name}</NavLink>
 
   return (
     <Navbar
