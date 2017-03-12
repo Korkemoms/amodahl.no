@@ -41,7 +41,9 @@ const Login = ({login, testUserLogin, logout, name, loading, message, displayMes
     </Button></LinkContainer>
   : ''
 
-  const testUserSelection = process.env.NODE_ENV !== 'production' && name === null
+  const showTestUserButton = name === null  // && process.env.NODE_ENV !== 'production'
+
+  const testUserSelection = showTestUserButton
     ? <DropdownButton key={key++} title='Test Users' id='test-users'>
       <MenuItem eventKey='2' onClick={() => testUserLogin("Gul'dan(Test)", 'guldan@hotmail.com', '123')}
         >Gul'dan(Test)</MenuItem>
