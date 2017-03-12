@@ -43,14 +43,12 @@ const Login = ({login, testUserLogin, logout, name, loading, message, displayMes
 
   const testUserSelection = process.env.NODE_ENV !== 'production' && name === null
     ? <DropdownButton key={key++} title='Test Users' id='test-users'>
-      <MenuItem eventKey='1' onClick={() => testUserLogin('Potetsalat', 'potet@salat.com', '123')}
-        >Potetsalat</MenuItem>
-      <MenuItem eventKey='2' onClick={() => testUserLogin('Blomkål', 'blomkål@suppe.no', '456')}
-        >Blomkål</MenuItem>
-      <MenuItem eventKey='3' onClick={() => testUserLogin('Kjøtthue', 'kjøtt@hue.no', '789')}
-        >Kjøtthue</MenuItem>
-      <MenuItem eventKey='4' onClick={() => testUserLogin('Kjøtthue2', 'kjøtt2@hue.no', '7829')}>
-        Kjøtthue2</MenuItem>
+      <MenuItem eventKey='2' onClick={() => testUserLogin("Gul'dan(Test)", 'guldan@hotmail.com', '123')}
+        >Gul'dan(Test)</MenuItem>
+      <MenuItem eventKey='3' onClick={() => testUserLogin('Krosus(Test)', 'krosus@google.com', '456')}
+        >Krosus(Test)</MenuItem>
+      <MenuItem eventKey='4' onClick={() => testUserLogin('Elisande(Test)', 'elisande@amazon.com', '789')}>
+        Elisande(Test)</MenuItem>
     </DropdownButton>
       : null
 
@@ -79,14 +77,6 @@ const Login = ({login, testUserLogin, logout, name, loading, message, displayMes
       </div>
     </div>
   )
-}
-
-Login.propTypes = {
-  login: PropTypes.func.isRequired,
-  logout: PropTypes.func.isRequired,
-  name: PropTypes.string,
-  message: PropTypes.string,
-  loading: PropTypes.bool
 }
 
 export default Login
