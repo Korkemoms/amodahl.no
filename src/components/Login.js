@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 
 import '../JumbotronMini.scss'
 import '../App.scss'
@@ -14,7 +14,8 @@ import {
   MenuItem
 } from 'react-bootstrap'
 
-const Login = ({login, testUserLogin, logout, name, loading, message, displayMessage}) => {
+const Login = ({login, testUserLogin, logout, name,
+  loading, message, displayMessage, history, navigate}) => {
   let key = 1
 
   const loginButton = name === null
@@ -39,7 +40,24 @@ const Login = ({login, testUserLogin, logout, name, loading, message, displayMes
     disabled={loading}>
       Details
     </Button></LinkContainer>
-  : ''
+  : null
+
+  let lastPage = null
+  let ignorePages = [
+    '/login',
+    '/me'
+  ]
+
+  for (let i = history.length - 1; i >= 0; i--) {
+    if (ignorePages.indexOf(history[i]) === -1) {
+      lastPage = history[i]
+      break
+    }
+  }
+
+  const goBackButton = name !== null && lastPage !== null
+    ? <Button key={key++} bsStyle='success' onClick={() => navigate(lastPage)} >{lastPage}</Button>
+    : null
 
   const showTestUserButton = name === null  // && process.env.NODE_ENV !== 'production'
 
@@ -54,7 +72,7 @@ const Login = ({login, testUserLogin, logout, name, loading, message, displayMes
     </DropdownButton>
       : null
 
-  const buttons = [loginButton, meButton, testUserSelection]
+  const buttons = [loginButton, meButton, testUserSelection, goBackButton]
 
   return (
     <div>

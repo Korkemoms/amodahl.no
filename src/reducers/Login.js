@@ -2,11 +2,21 @@ const initialState = {
   name: null,
   message: null,
   displayMessage: true,
-  email: null
+  email: null,
+  history: []
 }
 
 export default function update (state = initialState, action) {
   switch (action.type) {
+    case '@@router/LOCATION_CHANGE': {
+      let history = state.history.slice(0, 10)
+      history.push(action.payload.pathname)
+
+      return Object.assign({}, state, {
+        history: history
+      })
+    }
+
     case 'REQUEST_TOKEN_FROM_LOCAL_STORAGE':
       return Object.assign({}, state, {
         message: 'Logging in...',
