@@ -82,5 +82,4 @@ class About extends Component {
   }
 }
 
-About.propTypes = {}
 export default About

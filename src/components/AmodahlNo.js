@@ -34,5 +34,4 @@ const AmodahlNo = () => {
   )
 }
 
-AmodahlNo.propTypes = {}
 export default AmodahlNo

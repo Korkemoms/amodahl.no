@@ -78,8 +78,4 @@ const Home = ({ fadeInEnabled, disableFadeIn }) => {
   )
 }
 
-Home.propTypes = {
-  fadeInEnabled: PropTypes.bool.isRequired,
-  disableFadeIn: PropTypes.func.isRequired
-}
 export default Home

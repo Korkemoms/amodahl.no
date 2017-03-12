@@ -79,11 +79,4 @@ const Me = ({ logout, token, name, email, message }) => {
   )
 }
 
-Me.propTypes = {
-  logout: PropTypes.func.isRequired,
-  token: PropTypes.string,
-  name: PropTypes.string,
-  email: PropTypes.string
-}
-
 export default Me
