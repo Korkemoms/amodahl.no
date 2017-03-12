@@ -3,7 +3,7 @@ import { render } from 'react-dom'
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
-import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
+import { routerMiddleware, syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
 import thunkMiddleware from 'redux-thunk'
 import createLogger from 'redux-logger'
@@ -38,14 +38,15 @@ const reducer = combineReducers({
   routing: routerReducer
 })
 
-const loggerMiddleware = createLogger()
+const middleware = applyMiddleware(
+  thunkMiddleware, // allows dispatching of functions
+  routerMiddleware(browserHistory), // keeps url in sync with app
+  createLogger() // useful logging
+)
 
 const store = createStore(
   reducer,
-  applyMiddleware(
-      thunkMiddleware, // lets us dispatch() functions
-      loggerMiddleware // neat middleware that logs actions
-    )
+  middleware
 )
 
 // init facebook sdk
