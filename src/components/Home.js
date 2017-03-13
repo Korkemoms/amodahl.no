@@ -10,10 +10,12 @@ import {
   Row,
   Col,
   Jumbotron,
-  Button
+  Button,
+  DropdownButton,
+  MenuItem
 } from 'react-bootstrap'
 
-const Home = ({ fadeInEnabled, disableFadeIn }) => {
+const Home = ({ fadeInEnabled, disableFadeIn, navigate }) => {
   return (
     <div>
       <MyHeader headline='Welcome' />
@@ -50,9 +52,17 @@ const Home = ({ fadeInEnabled, disableFadeIn }) => {
                 <Jumbotron bsClass='jumbotron-mini' style={{backgroundColor: 'transparent'}}>
                   <h1>Projects</h1>
                   <p>
-                    I have worked on many programming projects.
-                    I plan on showing a few of the ones that made it into
-                    production here.
+                    Here are some of the things I have made that are not totally useless. 😄
+                  </p>
+                  <p>
+                    <DropdownButton bsStyle='success' title='Projects'>
+                      <MenuItem onClick={() => navigate('/chess-project')}>
+                      Chess
+                      </MenuItem>
+                      <MenuItem onClick={() => navigate('/amodahl-no')}>
+                      amodahl.no
+                      </MenuItem>
+                    </DropdownButton>
                   </p>
                 </Jumbotron>
               </Col>
@@ -60,7 +70,7 @@ const Home = ({ fadeInEnabled, disableFadeIn }) => {
                 <Jumbotron bsClass='jumbotron-mini' style={{backgroundColor: 'transparent'}}>
                   <h1>About me</h1>
                   <p>
-                    I'm a software developer living in Bergen, Norway.
+                    I'm a programmer living in Bergen, Norway.
                   I enjoy turning complex problems into simple solutions and I
                   love to build stuff.
                   </p>

@@ -2,10 +2,18 @@
 import { connect } from 'react-redux'
 import { disableFadeIn } from '../actions/Home'
 import Home from '../components/Home'
+import { push } from 'react-router-redux'
 
 const HomeContainer = ((Target, namespace) => {
-  const mapDispatchToProps = {
-    disableFadeIn
+  const mapDispatchToProps = dispatch => {
+    return {
+      disableFadeIn: () => {
+        dispatch(disableFadeIn())
+      },
+      navigate: (path) => {
+        dispatch(push(path))
+      }
+    }
   }
 
   const mapStateToProps = (state) => {
