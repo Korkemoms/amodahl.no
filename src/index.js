@@ -38,9 +38,20 @@ const reducer = combineReducers({
   routing: routerReducer
 })
 
+
+const myMiddleware = store => next => action => {
+  if (action.type === '@@router/LOCATION_CHANGE') {
+
+    // when new page scroll up!
+    window.scrollTo(0, 0)
+  }
+  return next(action)
+}
+
 const middleware = applyMiddleware(
   thunkMiddleware, // allows dispatching of functions
   routerMiddleware(browserHistory), // keeps url in sync with app
+  myMiddleware,
   createLogger() // useful logging
 )
 
