@@ -3,11 +3,22 @@ import MyNavbar from '../containers/MyNavbar'
 
 const App = ({ children }) => {
   const footerInstance = (
-    <div className='Footer'><address>
-      <i className='fa fa-envelope-o' aria-hidden='true' />
-      {' a_modahl@hotmail.com'}<br />
-      {'© 2017 Andreas Modahl'}
-    </address></div>
+
+    <address className='Footer'>
+
+      <div>
+        <a style={{fontSize: '18px', color: 'white'}} href='https://www.facebook.com/andreas.modahl'>
+          <i className='fa fa-facebook-official fa-2x' aria-hidden='true' />
+        </a>
+      </div>
+      <div>
+        <a style={{color: 'white'}} href='mailto:a_modahl@hotmail.com'>
+          {'a_modahl@hotmail.com'}
+        </a><br />
+        {'© 2017 Andreas Modahl'}
+      </div>
+
+    </address>
   )
 
   return (
