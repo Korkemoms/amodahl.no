@@ -218,9 +218,9 @@ export const login = (local, server, callback) => dispatch => {
     return
   }
 
-    // try to get from server
+  // try to get from server
   dispatch(requestTokenFromServer())
-          // log in with facebook
+  // log in with facebook
   console.info('Begin facebook login')
   window.FB.login(response => {
     fbLoginCallback(dispatch, response, callback)
