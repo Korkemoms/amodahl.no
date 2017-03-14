@@ -4,6 +4,7 @@ import '../MyContent.scss'
 import '../App.scss'
 import MyHeader from '../components/MyHeader'
 import {LinkContainer} from 'react-router-bootstrap'
+import DocumentTitle from 'react-document-title'
 
 import {
   Grid,
@@ -58,21 +59,24 @@ const Me = ({ logout, token, name, email, message }) => {
     : ''
 
   return (
-    <div>
 
-      <MyHeader headline='Current user' />
+    <DocumentTitle title='Current user'>
+      <div>
 
-      <div className='mycontent' style={{background: 'white'}}>
-        <Grid>
-          {form}
-          {logoutButton}
-          {loginButton}
-          <p><label>{message}</label></p>
+        <MyHeader headline='Current user' />
 
-        </Grid>
+        <div className='mycontent' style={{background: 'white'}}>
+          <Grid>
+            {form}
+            {logoutButton}
+            {loginButton}
+            <p><label>{message}</label></p>
+
+          </Grid>
+        </div>
+
       </div>
-
-    </div>
+    </DocumentTitle>
   )
 }
 

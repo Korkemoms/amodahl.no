@@ -1,5 +1,6 @@
 import React from 'react'
 import MyNavbar from '../containers/MyNavbar'
+import DocumentTitle from 'react-document-title'
 
 const App = ({ children }) => {
   const footerInstance = (
@@ -22,13 +23,15 @@ const App = ({ children }) => {
   )
 
   return (
-    <div className='App-root'>
-      <MyNavbar />
+    <DocumentTitle title='amodahl.no'>
+      <div className='App-root'>
+        <MyNavbar />
 
-      {children}
-      {footerInstance}
+        {children}
+        {footerInstance}
 
-    </div>
+      </div>
+    </DocumentTitle>
   )
 }
 

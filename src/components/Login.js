@@ -4,6 +4,7 @@ import '../MyContent.scss'
 import '../App.scss'
 import MyHeader from '../components/MyHeader'
 import {LinkContainer} from 'react-router-bootstrap'
+import DocumentTitle from 'react-document-title'
 
 import {
   Grid,
@@ -76,23 +77,25 @@ const Login = ({login, testUserLogin, logout, name,
   const buttons = [loginButton, meButton, testUserSelection, goBackButton]
 
   return (
-    <div>
+    <DocumentTitle title='Log in'>
+      <div>
 
-      <MyHeader headline='Log in' />
+        <MyHeader headline='Log in' />
 
-      <div className='mycontent'>
-        <Grid>
-          <p>
+        <div className='mycontent'>
+          <Grid>
+            <p>
               Logging in with facebook is fast, safe and easy.
             </p>
-          <ButtonToolbar>{buttons}</ButtonToolbar>
-          <p style={{height: '1em'}}><label>{displayMessage ? message : ''}</label></p>
-          <p style={{marginTop: '5em'}}><small>Note: To change user you may have to go to facebook and log out from there.</small></p>
+            <ButtonToolbar>{buttons}</ButtonToolbar>
+            <p style={{height: '1em'}}><label>{displayMessage ? message : ''}</label></p>
+            <p style={{marginTop: '5em'}}><small>Note: To change user you may have to go to facebook and log out from there.</small></p>
 
-        </Grid>
+          </Grid>
+        </div>
+
       </div>
-
-    </div>
+    </DocumentTitle>
   )
 }
 
