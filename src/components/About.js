@@ -24,7 +24,7 @@ class About extends Component {
           <div className='mycontent'>
 
             <Grid>
-              <h1>About me</h1>
+              <h1>Who am I?</h1>
               <p>
                 {
                     'I\'m a computer enthusiast living in Bergen, Norway. I have' +
