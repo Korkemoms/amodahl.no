@@ -62,6 +62,9 @@ const Home = ({ fadeInEnabled, disableFadeIn, navigate }) => {
                       <MenuItem onClick={() => navigate('/amodahl-no')}>
                       amodahl.no
                       </MenuItem>
+                      <MenuItem onClick={() => navigate('/matrix-multiplication')}>
+                      Matrix multiplication game
+                      </MenuItem>
                     </DropdownButton>
                   </p>
                 </Jumbotron>
