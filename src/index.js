@@ -20,6 +20,7 @@ import About from './containers/About'
 import Login from './containers/Login'
 import Me from './containers/Me'
 import AmodahlNo from './containers/AmodahlNo'
+import MatrixMultiplication from './containers/MatrixMultiplication'
 
 import aboutReducer from './reducers/About'
 import chessReducer from './reducers/Chess'
@@ -71,7 +72,8 @@ window.fbAsyncInit = function () {
 };
 
 (function (d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0]
+  let js
+  let fjs = d.getElementsByTagName(s)[0]
   if (d.getElementById(id)) { return }
   js = d.createElement(s); js.id = id
   js.src = '//connect.facebook.net/en_US/sdk.js'
@@ -90,6 +92,7 @@ render(
           <Route path='/about' component={About} />
           <Route path='/chess-project' component={Chess} />
           <Route path='/amodahl-no' component={AmodahlNo} />
+          <Route path='/matrix-multiplication' component={MatrixMultiplication} />
           <Route path='/login' component={Login} />
           <Route path='/me' component={Me} />
         </Route>
