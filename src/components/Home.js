@@ -43,9 +43,9 @@ const Home = ({ fadeInEnabled, disableFadeIn, navigate }) => {
                   <p>
                     I am working on a chess app for the browser. It is made with React, Redux, Bootstrap and PHP.
                   </p>
-                  <p><Link to='/chess-project' onClick={() => {
+                  <Link to='/chess-project' onClick={() => {
                     disableFadeIn()
-                  }}><Button bsStyle='success'>Play</Button></Link></p>
+                  }}><Button bsStyle='success'>Play</Button></Link>
                 </Jumbotron>
               </Col>
               <Col xs={12} md={4}>
@@ -54,19 +54,17 @@ const Home = ({ fadeInEnabled, disableFadeIn, navigate }) => {
                   <p>
                     Here are some of the things I have made that are not totally useless. 😄
                   </p>
-                  <p>
-                    <DropdownButton bsStyle='success' title='Projects'>
-                      <MenuItem onClick={() => navigate('/chess-project')}>
-                      Chess
-                      </MenuItem>
-                      <MenuItem onClick={() => navigate('/amodahl-no')}>
-                      amodahl.no
-                      </MenuItem>
-                      <MenuItem onClick={() => navigate('/matrix-multiplication')}>
-                      Matrix multiplication game
-                      </MenuItem>
-                    </DropdownButton>
-                  </p>
+                  <DropdownButton id='projects-dropdown-menu-button' bsStyle='success' title='Projects'>
+                    <MenuItem onClick={() => navigate('/chess-project')}>
+                    Chess
+                    </MenuItem>
+                    <MenuItem onClick={() => navigate('/amodahl-no')}>
+                    amodahl.no
+                    </MenuItem>
+                    <MenuItem onClick={() => navigate('/matrix-multiplication')}>
+                    Matrix multiplication game
+                    </MenuItem>
+                  </DropdownButton>
                 </Jumbotron>
               </Col>
               <Col xs={12} md={4}>
@@ -77,9 +75,9 @@ const Home = ({ fadeInEnabled, disableFadeIn, navigate }) => {
                   I enjoy turning complex problems into simple solutions and I
                   love to build stuff.
                   </p>
-                  <p><Link to='/about' onClick={() => {
+                  <Link to='/about' onClick={() => {
                     disableFadeIn()
-                  }}><Button bsStyle='success'>Read more</Button></Link></p>
+                  }}><Button bsStyle='success'>Read more</Button></Link>
                 </Jumbotron>
               </Col>
             </Row>
