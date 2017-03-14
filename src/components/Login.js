@@ -45,7 +45,9 @@ const Login = ({login, testUserLogin, logout, name,
   let lastPage = null
   let ignorePages = [
     '/login',
-    '/me'
+    '/me',
+    '/',
+    ''
   ]
 
   for (let i = history.length - 1; i >= 0; i--) {
