@@ -14,7 +14,7 @@ import {
 } from 'react-bootstrap'
 
 class About extends Component {
-  
+
   render () {
     return (
       <div>

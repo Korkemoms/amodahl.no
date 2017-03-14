@@ -38,10 +38,8 @@ const reducer = combineReducers({
   routing: routerReducer
 })
 
-
 const myMiddleware = store => next => action => {
   if (action.type === '@@router/LOCATION_CHANGE') {
-
     // when new page scroll up!
     window.scrollTo(0, 0)
   }
