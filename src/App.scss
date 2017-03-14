@@ -6,6 +6,12 @@ body {
   margin: 0;
   min-height: 100%;
   word-wrap: break-word;
+
+  background: url('./images/Magic-forest.jpg') no-repeat fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
 html {
@@ -115,26 +121,6 @@ address {
 
 .App-root {
   width: 100%;
-}
-
-.Background-container {
-  background: url('./images/Magic-forest.jpg');
-  background-size: cover;
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  top: 0;
-  z-index: -1;
-  overflow-y: hidden;
-
-  &.Enchanted-forest {
-    background: url('./images/Enchanted-forest.jpg');
-    background-size: cover;
-  }
-  &.Natural-forest {
-    background: url('./images/Natural-forest.jpg');
-    background-size: cover;
-  }
 }
 
 #Title-container{
