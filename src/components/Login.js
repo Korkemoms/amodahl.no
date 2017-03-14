@@ -1,13 +1,12 @@
 import React from 'react'
 
-import '../JumbotronMini.scss'
+import '../MyContent.scss'
 import '../App.scss'
 import MyHeader from '../components/MyHeader'
 import {LinkContainer} from 'react-router-bootstrap'
 
 import {
   Grid,
-  Jumbotron,
   Button,
   ButtonToolbar,
   DropdownButton,
@@ -81,20 +80,18 @@ const Login = ({login, testUserLogin, logout, name,
 
       <MyHeader headline='Log in' />
 
-      <div style={{background: 'white'}}>
-
-        <Jumbotron className='jumbotron-mini' style={{background: 'white'}}>
-          <Grid>
-            <p>
+      <div className='mycontent'>
+        <Grid>
+          <p>
               Logging in with facebook is fast, safe and easy.
             </p>
-            <ButtonToolbar>{buttons}</ButtonToolbar>
-            <p style={{height: '1em'}}><label>{displayMessage ? message : ''}</label></p>
-            <p style={{marginTop: '5em'}}><small>Note: To change user you may have to go to facebook and log out from there.</small></p>
+          <ButtonToolbar>{buttons}</ButtonToolbar>
+          <p style={{height: '1em'}}><label>{displayMessage ? message : ''}</label></p>
+          <p style={{marginTop: '5em'}}><small>Note: To change user you may have to go to facebook and log out from there.</small></p>
 
-          </Grid>
-        </Jumbotron>
+        </Grid>
       </div>
+
     </div>
   )
 }

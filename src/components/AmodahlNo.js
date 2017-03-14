@@ -1,12 +1,11 @@
 import React from 'react'
 
-import '../JumbotronMini.scss'
+import '../MyContent.scss'
 import '../App.scss'
 import MyHeader from '../components/MyHeader'
 
 import {
-  Grid,
-  Jumbotron
+  Grid
 } from 'react-bootstrap'
 
 const AmodahlNo = () => {
@@ -14,21 +13,19 @@ const AmodahlNo = () => {
     <div>
       <MyHeader headline='amodahl.no' />
 
-      <div style={{background: 'white'}}>
-
-        <Jumbotron className='jumbotron-mini' style={{background: 'white'}}>
-          <Grid>
-            <h1>About this website</h1>
-            <p>
+      <div className='mycontent' style={{background: 'white'}}>
+        <Grid>
+          <h1>About this website</h1>
+          <p>
               This website is made with react, react-router, redux and bootstrap.
               This combination is more than what is needed for a simple website like this but it
               is great for making more complex applications. You can look
-              at the source code here: <a href='https://github.com/Korkemoms/amodahl.no/'>
-                {'https://github.com/Korkemoms/amodahl.no/'}</a>
-            </p>
-          </Grid>
-        </Jumbotron>
+              at the source code here: <a href='https://github.com/Korkemoms/amodahl.no'>
+                {'https://github.com/Korkemoms/amodahl.no'}</a>
+          </p>
+        </Grid>
       </div>
+
     </div>
 
   )

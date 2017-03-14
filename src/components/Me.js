@@ -1,13 +1,12 @@
 import React from 'react'
 
-import '../JumbotronMini.scss'
+import '../MyContent.scss'
 import '../App.scss'
 import MyHeader from '../components/MyHeader'
 import {LinkContainer} from 'react-router-bootstrap'
 
 import {
   Grid,
-  Jumbotron,
   Button,
   FormGroup,
   ControlLabel,
@@ -63,18 +62,16 @@ const Me = ({ logout, token, name, email, message }) => {
 
       <MyHeader headline='Current user' />
 
-      <div style={{background: 'white'}}>
+      <div className='mycontent' style={{background: 'white'}}>
+        <Grid>
+          {form}
+          {logoutButton}
+          {loginButton}
+          <p><label>{message}</label></p>
 
-        <Jumbotron className='jumbotron-mini' style={{background: 'white'}}>
-          <Grid>
-            {form}
-            {logoutButton}
-            {loginButton}
-            <p><label>{message}</label></p>
-
-          </Grid>
-        </Jumbotron>
+        </Grid>
       </div>
+
     </div>
   )
 }

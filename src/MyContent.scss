@@ -1,0 +1,52 @@
+
+.mycontent .container {
+  max-width: 100%;
+}
+.mycontent {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin-bottom: 0px;
+  color: inherit;
+  background-color: white;
+}
+.mycontent h1,
+.mycontent .h1 {
+  color: inherit;
+  font-size: 27px;
+}
+.mycontent p {
+  margin-bottom: 11px;
+  font-size: 17px;
+  font-weight: 200;
+}
+.mycontent > hr {
+  border-top-color: #d5d5d5;
+}
+.container .mycontent,
+.container-fluid .mycontent {
+  padding-right: 15px;
+  padding-left: 15px;
+  border-radius: 6px;
+}
+
+.myimage {
+  margin: auto;
+  margin-bottom: 2em;
+}
+
+@media screen and (min-width: 768px) {
+  .myimage {
+    margin-top: 3em;
+    margin-bottom: 0;
+  }
+
+  .mycontent {
+    padding-top: 25;
+    padding-bottom: 25;
+  }
+
+  .mycontent h1,
+  .mycontent .h1 {
+    font-size: 36px;
+  }
+}
