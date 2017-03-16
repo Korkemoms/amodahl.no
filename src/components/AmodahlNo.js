@@ -14,7 +14,6 @@ const AmodahlNo = () => {
     <DocumentTitle title='About this website'>
       <div>
         <MyHeader headline='amodahl.no' />
-
         <div className='mycontent' style={{background: 'white'}}>
           <Grid>
             <h1>About this website</h1>
