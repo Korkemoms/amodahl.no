@@ -21,11 +21,13 @@ import Login from './containers/Login'
 import Me from './containers/Me'
 import AmodahlNo from './containers/AmodahlNo'
 import MatrixMultiplication from './containers/MatrixMultiplication'
+import LeveringMontering from './containers/LeveringMontering'
 
 import aboutReducer from './reducers/About'
 import chessReducer from './reducers/Chess'
 import homeReducer from './reducers/Home'
 import loginReducer from './reducers/Login'
+import leveringMonteringReducer from './reducers/LeveringMontering'
 import myNavbarReducer from './reducers/MyNavbar'
 import meReducer from './reducers/Me'
 
@@ -34,6 +36,7 @@ const reducer = combineReducers({
   chess: chessReducer,
   home: homeReducer,
   login: loginReducer,
+  leveringMontering: leveringMonteringReducer,
   myNavbar: myNavbarReducer,
   me: meReducer,
   routing: routerReducer
@@ -41,7 +44,7 @@ const reducer = combineReducers({
 
 const myMiddleware = store => next => action => {
   if (action.type === '@@router/LOCATION_CHANGE') {
-    // when new page scroll up!
+    // scroll up when vising new page!
     window.scrollTo(0, 0)
   }
   return next(action)
@@ -93,6 +96,7 @@ render(
           <Route path='/chess-project' component={Chess} />
           <Route path='/amodahl-no' component={AmodahlNo} />
           <Route path='/matrix-multiplication' component={MatrixMultiplication} />
+          <Route path='/leveringmontering' component={LeveringMontering} />
           <Route path='/login' component={Login} />
           <Route path='/me' component={Me} />
         </Route>
