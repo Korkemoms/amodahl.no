@@ -176,7 +176,7 @@ function fbLoginCallback (dispatch, fbResponse, tokenCallback) {
   let fbAccessToken = fbResponse.authResponse.accessToken
 
   if (!fbResponse.authResponse) { // ensure facebook login was successful
-    dispatch(requestTokenFailed('Failed to log in to facebook: ' + JSON.stringify(response), true))
+    dispatch(requestTokenFailed('Failed to log in to facebook: ' + JSON.stringify(fbResponse), true))
     return
   }
 
@@ -294,7 +294,7 @@ export const login = (local, server, callback) => dispatch => {
   console.info('Begin facebook login')
   window.FB.login(fbResponse => {
     fbLoginCallback(dispatch, fbResponse, callback)
-    console.info('Successfully logged in to facebook', response)
+    console.info('Successfully logged in to facebook', fbResponse)
   }, {
     scope: 'public_profile,email'
   })
