@@ -5,6 +5,7 @@ const www = window.location.href.indexOf('www.') !== -1 ? 'www.' : ''
 const url = process.env.NODE_ENV === 'production'
   ? `https://${www}amodahl.no/api/public` : `http://${www}local.amodahl.no:3000`
 
+/* The scopes to request for the token */
 const scopes = [
   'user.all',
   'user.list',
@@ -64,6 +65,21 @@ export const receiveTokenFromLocalStorage = (jwToken, name, email) => {
   }
 }
 
+/**
+ * @callback onSuccess
+ * @param {object} response The response body from the API
+ */
+
+/**
+ * Ask the API for a token for one of the test users.
+ * Valid test users are defined by the API.
+ * @param dispatch The redux dispatch function
+ * @param {string} name The test user name
+ * @param {string} email The test user email
+ * @param {string} mockFacebookId The test user (fake) facebook id
+ * @param {string[]} scopes The scopes to request for the token
+ * @param {onSuccess} onSuccess Callback when token is received
+ */
 function fetchTestUserJwtToken (dispatch, name, email, mockFacebookId, scopes, onSuccess) {
   var form = new FormData()
   form.append('requested_scopes', JSON.stringify(scopes))
@@ -99,7 +115,17 @@ function fetchTestUserJwtToken (dispatch, name, email, mockFacebookId, scopes, o
   })
 }
 
-function fetchJwtToken (dispatch, fbAccessToken, scopes, onSuccess) {
+/**
+ * Ask the API for a token using a facebook token.
+ * The API will checks that the facebook token is valid
+ * and then responds with a JSON web token.
+ *
+ * @param dispatch The redux dispatch function
+ * @param {string} fbAccessToken A valid facebook token
+ * @param {string[]} scopes The scopes to request for the token
+ * @param {onSuccess} onSuccess Callback when token is received
+ */
+function fetchJwToken (dispatch, fbAccessToken, scopes, onSuccess) {
   var form = new FormData()
   form.append('fb_access_token', fbAccessToken)
   form.append('requested_scopes', JSON.stringify(scopes))
@@ -132,35 +158,69 @@ function fetchJwtToken (dispatch, fbAccessToken, scopes, onSuccess) {
   })
 }
 
-function fbLoginCallback (dispatch, response, callback) {
-  let fbAccessToken = response.authResponse.accessToken
+/**
+ * @callback tokenCallback
+ * @param {string} token A JSON web token
+ */
 
-  if (!response.authResponse) { // ensure facebook login was successful
+/**
+ * Is ment to be called after logging in to facebook.
+ * Will request a JSON web token from amodahl.no API, using the
+ * facebook token as authorization
+ *
+ * @param dispatch The redux dispatch function
+ * @param {Object} fbResponse The login response from the facebook API
+ * @param {tokenCallback} tokenCallback Called when JSON web token is received from amodahl.no API
+ */
+function fbLoginCallback (dispatch, fbResponse, tokenCallback) {
+  let fbAccessToken = fbResponse.authResponse.accessToken
+
+  if (!fbResponse.authResponse) { // ensure facebook login was successful
     dispatch(requestTokenFailed('Failed to log in to facebook: ' + JSON.stringify(response), true))
     return
   }
 
-  fetchJwtToken(dispatch, fbAccessToken, scopes,
+  // fetch token from amodahl.no using facebook token
+  fetchJwToken(dispatch, fbAccessToken, scopes,
     response => {
-      let action = receiveTokenFromServer(response.token,
-        response.user.name, response.user.email)
-      dispatch(action)
+      // store user info in redux store
+      dispatch(receiveTokenFromServer(fbResponse.token,
+        fbResponse.user.name, fbResponse.user.email))
 
-      // store user info in browser
-      localStorage.setItem('jwToken', response.token)
-      localStorage.setItem('name', response.user.name)
-      localStorage.setItem('email', response.user.email)
+      // store user info in browser (for next time app is started)
+      localStorage.setItem('jwToken', fbResponse.token)
+      localStorage.setItem('name', fbResponse.user.name)
+      localStorage.setItem('email', fbResponse.user.email)
       localStorage.setItem('mockFacebookId', null)
       localStorage.setItem('isTestUser', false)
 
-      if (callback) {
-        callback(response.token)
+      if (tokenCallback) {
+        tokenCallback(fbResponse.token)
       }
     })
 }
 
-export const testUserLogin = (local, server, name, email, mockFacebookId, callback) => dispatch => {
-    // try to get from local
+/**
+ * @callback tokenCallback
+ * @param {string} token A JSON web token
+ */
+
+// TODO refactor, this method is confusing
+/**
+ *
+ * Try to log in as a test user, logging in means just getting a token, name and email.
+ * Later, if the token is invalid (it often is when its from local storage)
+ * this method can be called again with the server parameter true to get a new token
+ * from the server.
+ * @param {boolean} local Whether to try to get login info from local storage
+ * @param {boolean} server Whether to try to get login info from server
+ * @param {string} name Test user name, only used getting login info from server
+ * @param {string} email Test user email, only used getting login info from server
+ * @param {string} mockFacebookId Test user mockFacebookId, only used getting login info from server
+ * @param {tokenCallback} tokenCallback Called when JSON web token is received from amodahl.no API
+ */
+export const testUserLogin = (local, server, name, email, mockFacebookId, tokenCallback) => dispatch => {
+    // try to get info from local
   if (local) {
     dispatch(requestTokenFromLocalStorage())
     if (localStorage.jwToken && localStorage.name && localStorage.email) {
@@ -176,7 +236,7 @@ export const testUserLogin = (local, server, name, email, mockFacebookId, callba
   if (!server) {
     return
   }
-    // try to get from server
+    // try to get info from server
   dispatch(requestTokenFromServer())
   console.log(name, email, mockFacebookId)
   fetchTestUserJwtToken(dispatch, name, email, mockFacebookId, scopes,
@@ -192,12 +252,22 @@ export const testUserLogin = (local, server, name, email, mockFacebookId, callba
         localStorage.setItem('mockFacebookId', mockFacebookId)
         localStorage.setItem('isTestUser', true)
 
-        if (callback) {
-          callback(response.token)
+        if (tokenCallback) {
+          tokenCallback(response.token)
         }
       })
 }
 
+/**
+ *
+ * Try to log in as a test user, logging in means just getting a token, name and email.
+ * Later, if the token is invalid (it often is when its from local storage)
+ * this method can be called again with the server parameter true to get a new token
+ * from the server.
+ * @param {boolean} local Whether to try to get login info from local storage
+ * @param {boolean} server Whether to try to get login info from server
+ * @param {tokenCallback} tokenCallback Called when JSON web token is received from amodahl.no API
+ */
 export const login = (local, server, callback) => dispatch => {
     // try to get from local
   if (local) {
@@ -222,20 +292,36 @@ export const login = (local, server, callback) => dispatch => {
   dispatch(requestTokenFromServer())
   // log in with facebook
   console.info('Begin facebook login')
-  window.FB.login(response => {
-    fbLoginCallback(dispatch, response, callback)
+  window.FB.login(fbResponse => {
+    fbLoginCallback(dispatch, fbResponse, callback)
     console.info('Successfully logged in to facebook', response)
   }, {
     scope: 'public_profile,email'
   })
 }
 
-/*
-  Uses callback instead of .then because
-  I could not figure out how to
-  pass both body and headers otherwise.
-*/
-export const myFetch = dispatch => (jwToken, attempts = 0) => (what, props, callback) => {
+/**
+ * @callback myFetchCallback
+ * @param {Object} body The response body
+ * @param {Object} header The response header
+ */
+
+/**
+ * Method for fetching resources from amodahl.no API.
+ * If request fails because of expired token a login action is dispatched and
+ * the fetch request is repeated after successfull login.
+ * @param dispatch The redux dispatch function
+ * @param {string} jwToken a token for amodahl.no API
+ * @param {number} attempts Number fetch attempts for 'what'
+ * @param {string} what The url describing what to fetch
+ * @param {Object} what Additional fetch properties
+ * @param {myFetchCallback} what Called after successfully fetching resource
+ *
+ * Uses callback instead of .then because
+ * I could not figure out how to
+ * pass both body and headers otherwise.
+ */
+export const myFetch = dispatch => (jwToken, attempts = 0) => (what, props, myFetchCallback) => {
   var headers = props.headers ? props.headers : new Headers()
   headers.append('Authorization', 'Bearer ' + jwToken)
   headers.append('pragma', 'no-cache')
@@ -278,13 +364,18 @@ export const myFetch = dispatch => (jwToken, attempts = 0) => (what, props, call
         if (json.status && json.status !== 'ok') {
           throw new Error('Received: ' + JSON.stringify(json))
         }
-        if (callback) {
-          callback(json, response.headers)
+        if (myFetchCallback) {
+          myFetchCallback(json, response.headers)
         }
       })
     })
 }
 
+/**
+ * Clears local storage and dispatches an action to tell
+ * other components that user has logged out.
+ * @param {string} dispatcher Identifies from which page user clicked log out
+ */
 export const logout = (dispatcher) => dispatch => {
   dispatch(deleteToken(dispatcher))
   localStorage.clear()
