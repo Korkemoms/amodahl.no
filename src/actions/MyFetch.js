@@ -184,13 +184,13 @@ function fbLoginCallback (dispatch, fbResponse, tokenCallback) {
   fetchJwToken(dispatch, fbAccessToken, scopes,
     response => {
       // store user info in redux store
-      dispatch(receiveTokenFromServer(fbResponse.token,
-        fbResponse.user.name, fbResponse.user.email))
-
+      dispatch(receiveTokenFromServer(response.token,
+        response.user.name, response.user.email))
+        
       // store user info in browser (for next time app is started)
-      localStorage.setItem('jwToken', fbResponse.token)
-      localStorage.setItem('name', fbResponse.user.name)
-      localStorage.setItem('email', fbResponse.user.email)
+      localStorage.setItem('jwToken', response.token)
+      localStorage.setItem('name', response.user.name)
+      localStorage.setItem('email', response.user.email)
       localStorage.setItem('mockFacebookId', null)
       localStorage.setItem('isTestUser', false)
 
