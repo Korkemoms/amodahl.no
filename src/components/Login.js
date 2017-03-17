@@ -42,14 +42,9 @@ const Login = ({login, testUserLogin, logout, name,
     </Button></LinkContainer>
   : null
 
+  // determine the 'last page' for the go-back button
   let lastPage = null
-  let ignorePages = [
-    '/login',
-    '/me',
-    '/',
-    ''
-  ]
-
+  let ignorePages = ['/login', '/me', '/', '']
   for (let i = history.length - 1; i >= 0; i--) {
     if (ignorePages.indexOf(history[i]) === -1) {
       lastPage = history[i]
@@ -89,11 +84,19 @@ const Login = ({login, testUserLogin, logout, name,
             </p>
             <ButtonToolbar>{buttons}</ButtonToolbar>
             <p style={{height: '1em'}}><label>{displayMessage ? message : ''}</label></p>
-            <p style={{marginTop: '5em'}}><small>Note: To change user you may have to go to facebook and log out from there.</small></p>
-
+            <p style={{marginTop: '5em'}}>
+              <small>
+                Read about the login implementation {' '}
+                <a style={{cursor: 'pointer'}}
+                  onClick={() => { navigate('amodahl-no') }}>here
+                </a>.
+                <br />
+                Note: To change user you may
+                have to go to facebook and log out from there.
+              </small>
+            </p>
           </Grid>
         </div>
-
       </div>
     </DocumentTitle>
   )
