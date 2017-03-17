@@ -306,6 +306,13 @@ export const login = (local, server, callback) => dispatch => {
  * @param {Object} header The response header
  */
 
+ /**
+  * @function myFetch
+  * @param {string} what The url describing what to fetch
+  * @param {Object} props Additional fetch properties
+  * @param {myFetchCallback} what Called after successfully fetching resource
+  */
+
 /**
  * Method for fetching resources from amodahl.no API.
  * If request fails because of expired token a login action is dispatched and
@@ -314,7 +321,7 @@ export const login = (local, server, callback) => dispatch => {
  * @param {string} jwToken a token for amodahl.no API
  * @param {number} attempts Number fetch attempts for 'what'
  * @param {string} what The url describing what to fetch
- * @param {Object} what Additional fetch properties
+ * @param {Object} props Additional fetch properties
  * @param {myFetchCallback} what Called after successfully fetching resource
  *
  * Uses callback instead of .then because
