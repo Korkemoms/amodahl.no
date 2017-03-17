@@ -10,7 +10,8 @@ import {
   Grid,
   Row,
   Col,
-  Image
+  Image,
+  PageHeader
 } from 'react-bootstrap'
 
 const MatrixMultiplication = () => {
@@ -22,7 +23,7 @@ const MatrixMultiplication = () => {
           <Grid>
             <Row>
               <Col className='mycontent' xs={12} sm={8}>
-                <h1>About this game</h1>
+                <PageHeader>About this game</PageHeader>
                 <p>This is a small game for Android where players practice multiplying matrices.</p>
                 <p>
                   My own experience:<br />
