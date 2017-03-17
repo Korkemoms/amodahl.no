@@ -4,7 +4,6 @@ import '../MyContent.scss'
 import '../App.scss'
 import MyHeader from '../components/MyHeader'
 import DocumentTitle from 'react-document-title'
-import { carouselSelect } from '../actions/LeveringMontering'
 
 import ImageNewOrder from '../images/Levering-montering-ny-ordre.png'
 import ImageOverview from '../images/Levering-montering-oversikt.png'
