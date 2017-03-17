@@ -66,9 +66,9 @@ const Home = ({ fadeInEnabled, disableFadeIn, navigate }) => {
                       <MenuItem onClick={() => navigate('/matrix-multiplication')}>
                       Matrix multiplication game
                     </MenuItem>
-                      {/*<MenuItem onClick={() => navigate('/leveringmontering')}>
+                      {/* <MenuItem onClick={() => navigate('/leveringmontering')}>
                       Leveringmontering.no (Order management system)
-                    </MenuItem>*/}
+                    </MenuItem> */}
 
                     </DropdownButton>
                   </Jumbotron>
