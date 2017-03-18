@@ -1,23 +1,20 @@
 
 import { connect } from 'react-redux'
-import { login, logout, testUserLogin } from '../actions/MyFetch'
+import { login, logout } from '../actions/Login'
 import Login from '../components/Login'
 import { push } from 'react-router-redux'
 
 const LoginContainer = ((Target, namespace) => {
   const mapDispatchToProps = (dispatch) => {
     return {
-      login: (local, server, callback) => {
-        dispatch(login(local, server, callback))
-      },
-      testUserLogin: (name, email, mockFacebookId) => {
-        dispatch(testUserLogin(true, true, name, email, mockFacebookId))
+      login: (...args) => {
+        dispatch(login(...args))
       },
       logout: () => {
         dispatch(logout('login'))
       },
-      navigate: (path) => {
-        dispatch(push(path))
+      navigate: (...args) => {
+        dispatch(push(...args))
       }
     }
   }

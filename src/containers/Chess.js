@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { toggleReadMore } from '../actions/Chess'
-import { myFetch } from '../actions/MyFetch'
+import { myFetch } from '../actions/Login'
 import Chess from '../components/Chess'
 import { push } from 'react-router-redux'
 

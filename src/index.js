@@ -11,7 +11,7 @@ import createLogger from 'redux-logger'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'font-awesome/css/font-awesome.css'
 
-import {login} from './actions/MyFetch'
+import {login} from './actions/Login'
 
 import App from './containers/App'
 import Home from './containers/Home'
@@ -71,7 +71,8 @@ window.fbAsyncInit = function () {
     version: 'v2.8'
   })
   window.FB.AppEvents.logPageView()
-  store.dispatch(login(true))
+
+  store.dispatch(login())
 };
 
 (function (d, s, id) {

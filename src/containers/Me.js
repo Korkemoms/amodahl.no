@@ -1,6 +1,6 @@
 
 import { connect } from 'react-redux'
-import { logout } from '../actions/MyFetch'
+import { logout } from '../actions/Login'
 import Me from '../components/Me'
 
 const MeContainer = ((Target, namespace) => {

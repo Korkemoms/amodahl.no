@@ -19,17 +19,29 @@ export default function update (state = initialState, action) {
 
     case 'REQUEST_TOKEN_FROM_LOCAL_STORAGE':
       return Object.assign({}, state, {
-        message: 'Logging in...',
+        message: 'Looking for user info in local storage...',
         displayMessage: true,
         loading: true
       })
-    case 'REQUEST_TOKEN_FROM_SERVER':
+    case 'REQUEST_TOKEN_FROM_FACEBOOK':
       return Object.assign({}, state, {
-        message: 'Logging in...',
+        message: 'Logging in to facebook...',
         displayMessage: true,
         loading: true
       })
-    case 'RECEIVE_TOKEN_FROM_SERVER':
+    case 'REQUEST_TOKEN_FROM_AMODAHL':
+      return Object.assign({}, state, {
+        message: 'Logging in to amodahl.no...',
+        displayMessage: true,
+        loading: true
+      })
+    case 'REQUEST_TOKEN_FROM_SIGNERE':
+      return Object.assign({}, state, {
+        message: 'Logging in to signere.no...',
+        displayMessage: true,
+        loading: true
+      })
+    case 'RECEIVE_TOKEN_FROM_AMODAHL':
       return Object.assign({}, state, {
         name: action.name,
         email: action.email,

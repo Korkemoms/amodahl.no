@@ -22,7 +22,10 @@ const Login = ({login, testUserLogin, logout, name,
   ? <Button
     key={key++}
     bsStyle='primary'
-    onClick={() => { login(false, true) }}
+    onClick={() => {
+      login({
+        type: 'facebook'
+      })}}
     disabled={loading}>
       Log in with facebook
     </Button>
@@ -53,19 +56,39 @@ const Login = ({login, testUserLogin, logout, name,
   }
 
   const goBackButton = name !== null && lastPage !== null
-    ? <Button key={key++} bsStyle='success' onClick={() => navigate(lastPage)} >{lastPage.replace('/', '')}</Button>
+    ? <Button key={key++} bsStyle='success' onClick={() => navigate(lastPage)} >
+      {lastPage.replace('/', '')}
+    </Button>
     : null
 
   const showTestUserButton = name === null  // && process.env.NODE_ENV !== 'production'
 
   const testUserSelection = showTestUserButton
     ? <DropdownButton key={key++} title='Test users' id='test-users'>
-      <MenuItem eventKey='2' onClick={() => testUserLogin("Gul'dan(Test)", 'guldan@hotmail.com', '123')}
-        >Gul'dan(Test)</MenuItem>
-      <MenuItem eventKey='3' onClick={() => testUserLogin('Krosus(Test)', 'krosus@google.com', '456')}
-        >Krosus(Test)</MenuItem>
-      <MenuItem eventKey='4' onClick={() => testUserLogin('Elisande(Test)', 'elisande@amazon.com', '789')}>
-        Elisande(Test)</MenuItem>
+      <MenuItem eventKey='2'
+        onClick={() => login({
+          type: 'test',
+          name: "Gul'dan(Test)",
+          email: 'guldan@hotmail.com',
+          mockFacebookId: '123'})}
+        >Gul'dan(Test)
+      </MenuItem>
+      <MenuItem eventKey='3'
+        onClick={() => login({
+          type: 'test',
+          name: 'Krosus(Test)',
+          email: 'krosus@google.com',
+          mockFacebookId: '456'})}
+        >Krosus(Test)
+      </MenuItem>
+      <MenuItem eventKey='4'
+        onClick={() => login({
+          type: 'test',
+          name: 'Elisande(Test)',
+          email: 'elisande@amazon.com',
+          mockFacebookId: '789'})}
+          >Elisande(Test)
+      </MenuItem>
     </DropdownButton>
       : null
 
