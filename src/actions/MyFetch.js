@@ -80,7 +80,7 @@ export const receiveTokenFromLocalStorage = (jwToken, name, email) => {
  * @param {string[]} scopes The scopes to request for the token
  * @param {onSuccess} onSuccess Callback when token is received
  */
-function fetchTestUserJwtToken (dispatch, name, email, mockFacebookId, scopes, onSuccess) {
+function fetchTestUserJwToken (dispatch, name, email, mockFacebookId, scopes, onSuccess) {
   var form = new FormData()
   form.append('requested_scopes', JSON.stringify(scopes))
   form.append('name', name)
@@ -239,7 +239,7 @@ export const testUserLogin = (local, server, name, email, mockFacebookId, tokenC
     // try to get info from server
   dispatch(requestTokenFromServer())
   console.log(name, email, mockFacebookId)
-  fetchTestUserJwtToken(dispatch, name, email, mockFacebookId, scopes,
+  fetchTestUserJwToken(dispatch, name, email, mockFacebookId, scopes,
       response => {
         let action = receiveTokenFromServer(response.token,
           response.user.name, response.user.email)
@@ -306,12 +306,12 @@ export const login = (local, server, callback) => dispatch => {
  * @param {Object} header The response header
  */
 
- /**
-  * @function myFetch
-  * @param {string} what The url describing what to fetch
-  * @param {Object} props Additional fetch properties
-  * @param {myFetchCallback} what Called after successfully fetching resource
-  */
+/**
+ * @function myFetch
+ * @param {string} what The url describing what to fetch
+ * @param {Object} props Additional fetch properties
+ * @param {myFetchCallback} what Called after successfully fetching resource
+ */
 
 /**
  * Method for fetching resources from amodahl.no API.
