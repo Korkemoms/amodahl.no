@@ -30,19 +30,17 @@ const Chess = ({ readMore, toggleReadMore, myFetch, myEmail, myName, jwToken, na
         <div className='mycontent' style={{ marginTop: '10em' }}>
 
           <Grid>
-
             <PageHeader>About this app</PageHeader>
             <p>
                   This app is made with React, Redux and Bootstrap. The API is
                   implemented with PHP and MySQL.
             </p>
-            <p>
+            <p><small>
               <label>{'Client:'}</label> <a href='https://github.com/Korkemoms/chess-client'>
                 {'https://github.com/Korkemoms/chess-client'}</a>
               <br /><label>{'API:'}</label> <a href='https://github.com/Korkemoms/amodahl.no-api'>
                 {'https://github.com/Korkemoms/amodahl.no-api'}</a>
-            </p>
-
+            </small></p>
           </Grid>
 
         </div>

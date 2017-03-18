@@ -15,7 +15,7 @@ const AmodahlNo = () => {
     <DocumentTitle title='About this website'>
       <div>
         <MyHeader headline='amodahl.no' />
-        <div className='mycontent' style={{background: 'white'}}>
+        <div className='mycontent'>
           <Grid>
             <PageHeader>About this website</PageHeader>
             <p>
@@ -37,7 +37,7 @@ const AmodahlNo = () => {
               To stop others from seeing the token (or other info) all communication
               with the API is encrypted with <strong>SSL</strong> (https).
             </p>
-            <p>
+            <p><small>
               <label>{'Client:'}</label>{' '}
               <a href='https://github.com/Korkemoms/amodahl.no'>
                 {'https://github.com/Korkemoms/amodahl.no'}</a>
@@ -45,8 +45,7 @@ const AmodahlNo = () => {
               <label>{'API:'}</label>{' '}
               <a href='https://github.com/Korkemoms/amodahl.no-api'>
                 {'https://github.com/Korkemoms/amodahl.no-api'}</a>
-            </p>
-
+            </small></p>
           </Grid>
         </div>
 

@@ -24,9 +24,10 @@ class About extends Component {
           <div className='mycontent'>
 
             <Grid>
-              <PageHeader>Who am I?</PageHeader>
-              <p>
-                {
+              <Row><Col xs={11}>
+                <PageHeader>Who am I?</PageHeader>
+                <p>
+                  {
                     'I\'m a computer enthusiast living in Bergen, Norway. I have' +
                     ' a bachelor in computer science and I am interested in' +
                     ' everything about programming and technology. I have some experience' +
@@ -35,8 +36,10 @@ class About extends Component {
                     ' into the vast ocean of JavaScript frameworks.' +
                     ' '
                   }
-              </p>
-              <PageHeader>Contact info</PageHeader>
+                </p>
+                <PageHeader>Contact info</PageHeader>
+              </Col></Row>
+
               <Row>
                 <Col xs={1}>
                   <i className='fa fa-address-book-o fa-2x' aria-hidden='true' />
@@ -64,7 +67,6 @@ class About extends Component {
                 </Col>
               </Row>
             </Grid>
-
           </div>
           <div style={{textAlign: 'center', background: 'white', padding: '5em 0', marginTop: '30em'}}>
             <Image responsive style={{display: 'block', margin: 'auto'}} src={me} />

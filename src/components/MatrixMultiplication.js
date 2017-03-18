@@ -19,10 +19,10 @@ const MatrixMultiplication = () => {
     <DocumentTitle title='Matrix multiplication game'>
       <div>
         <MyHeader headline='Matrix multiplication game' />
-        <div style={{background: 'white'}}>
+        <div className='mycontent'>
           <Grid>
             <Row>
-              <Col className='mycontent' xs={12} sm={8}>
+              <Col xs={12} sm={8}>
                 <PageHeader>About this game</PageHeader>
                 <p>This is a small game for Android where players practice multiplying matrices.</p>
                 <p>
@@ -39,7 +39,7 @@ const MatrixMultiplication = () => {
             </Row>
             <Row>
               <Col xs={12}>
-                <p>
+                <p><small>
                   <label>Play store:</label>{' '}
                   <a href='https://play.google.com/store/apps/details?id=org.ajm.laforkids'>
                     {'https://play.google.com/store/apps/details?id=org.ajm.laforkids'}</a>
@@ -47,7 +47,7 @@ const MatrixMultiplication = () => {
                   <label>Source code:</label>{' '}
                   <a href='https://github.com/Korkemoms/Matrix-Multiplication'>
                     {'https://github.com/Korkemoms/Matrix-Multiplication'}</a>
-                </p>
+                </small></p>
               </Col>
             </Row>
           </Grid>

@@ -58,10 +58,10 @@ const LeveringMontering = ({carouselIndex, carouselDirection, carouselSelect}) =
     <DocumentTitle title='leveringmontering.no'>
       <div>
         <MyHeader headline='leveringmontering.no' />
-        <div style={{background: 'white'}}>
+        <div className='mycontent'>
           <Grid>
             <Row>
-              <Col className='mycontent' xs={12} sm={8}>
+              <Col xs={12} sm={8}>
                 <h1>About leveringmontering.no</h1>
                 <p>This is a order management system I made for a company that delivers furniture.
                   The system is used on a daily basis and I am
