@@ -41,6 +41,12 @@ export default function update (state = initialState, action) {
         displayMessage: true,
         loading: true
       })
+    case 'REQUEST_TOKEN_FROM_GOOGLE':
+      return Object.assign({}, state, {
+        message: 'Logging in to google...',
+        displayMessage: true,
+        loading: true
+      })
     case 'RECEIVE_TOKEN_FROM_AMODAHL':
       return Object.assign({}, state, {
         name: action.name,
