@@ -12,7 +12,7 @@ export default function update (state = initialState, action) {
       return Object.assign({}, state, {
         readMore: action.readMore
       })
-    case 'RECEIVE_TOKEN_FROM_SERVER':
+    case 'RECEIVE_TOKEN_FROM_AMODAHL':
       return Object.assign({}, state, {
         jwToken: action.jwToken,
         myEmail: action.email,
