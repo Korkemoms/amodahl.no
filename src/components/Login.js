@@ -14,28 +14,47 @@ import {
   MenuItem
 } from 'react-bootstrap'
 
-const Login = ({login, testUserLogin, logout, name,
+const Login = ({login, logout, name,
   loading, message, displayMessage, history, navigate}) => {
   let key = 1
 
-  const loginButton = name === null
+  const googleButton = name === null
+  ? <Button
+    key={key++}
+    bsStyle='success'
+    onClick={() => {
+      login({
+        type: 'google'
+      })
+    }}
+    disabled={loading}>
+      Log in with google
+    </Button>
+  : null
+
+  const facebookButton = name === null
   ? <Button
     key={key++}
     bsStyle='primary'
     onClick={() => {
       login({
         type: 'facebook'
-      })}}
+      })
+    }}
     disabled={loading}>
       Log in with facebook
     </Button>
-  : <Button
-    key={key++}
-    bsStyle='warning'
-    onClick={() => { logout() }}
-    disabled={loading}>
-      Log out
-    </Button>
+  : null
+
+  const logoutButton = name !== null
+    ? <Button
+      key={key++}
+      bsStyle='warning'
+      onClick={() => { logout() }}
+      disabled={loading}>
+        Log out
+      </Button>
+      : null
 
   const meButton = name !== null
   ? <LinkContainer to={{ pathname: '/me' }} key={key++}><Button
@@ -92,7 +111,36 @@ const Login = ({login, testUserLogin, logout, name,
     </DropdownButton>
       : null
 
-  const buttons = [loginButton, meButton, testUserSelection, goBackButton]
+  const buttons = [
+    facebookButton,
+    googleButton,
+    logoutButton,
+    meButton,
+    testUserSelection,
+    goBackButton
+  ]
+
+  const signereButton = name === null
+  ? <Button
+    key={key++}
+    bsStyle='warning'
+    onClick={() => {
+      login({
+        type: 'signere'
+      })
+    }}
+    disabled={loading}>
+        Log in with Signere
+      </Button>
+  : null
+
+  const experimentalButtons = [signereButton]
+  const experimentalButtonsToolbar = name === null
+  ? <div>
+    <p style={{marginTop: '3em'}}>Experimental: </p>
+    <ButtonToolbar>{experimentalButtons}</ButtonToolbar>
+  </div>
+    : null
 
   return (
     <DocumentTitle title='Log in'>
@@ -103,10 +151,12 @@ const Login = ({login, testUserLogin, logout, name,
         <div className='mycontent'>
           <Grid>
             <p>
-              Logging in with facebook is fast, safe and easy.
+              Logging in with facebook or google is fast, safe and easy.
             </p>
             <ButtonToolbar>{buttons}</ButtonToolbar>
+
             <p style={{height: '1em'}}><label>{displayMessage ? message : ''}</label></p>
+            {experimentalButtonsToolbar}
             <p style={{marginTop: '5em'}}>
               <small>
                 Read about the login implementation {' '}
@@ -115,7 +165,7 @@ const Login = ({login, testUserLogin, logout, name,
                 </a>.
                 <br />
                 Note: To change user you may
-                have to go to facebook and log out from there.
+                have to go to facebook/google and log out from there.
               </small>
             </p>
           </Grid>

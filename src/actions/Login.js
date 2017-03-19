@@ -1,5 +1,7 @@
 import fetch from 'isomorphic-fetch'
 
+// import initializer, {CreateIdentificationRequest} from 'IdentiSignIdentification'
+
 // determine where to send requests
 const www = window.location.href.indexOf('www.') !== -1 ? 'www.' : ''
 const url = process.env.NODE_ENV === 'production'
@@ -22,6 +24,13 @@ const scopes = [
 export const requestTokenFromLocalStorage = params => {
   return {
     type: 'REQUEST_TOKEN_FROM_LOCAL_STORAGE',
+    params: params
+  }
+}
+
+export const requestTokenFromGoogle = params => {
+  return {
+    type: 'REQUEST_TOKEN_FROM_GOOGLE',
     params: params
   }
 }
@@ -50,6 +59,13 @@ export const requestTokenFromAmodahl = params => {
 export const receiveTokenFromFacebook = params => {
   return {
     type: 'RECEIVE_TOKEN_FROM_FACEBOOK',
+    params: params
+  }
+}
+
+export const receiveTokenFromGoogle = params => {
+  return {
+    type: 'RECEIVE_TOKEN_FROM_GOOGLE',
     params: params
   }
 }
@@ -106,11 +122,18 @@ export const deleteToken = (dispatcher) => {
  * @param {onSuccess} onSuccess Callback when token is received
  */
 function fetchJwToken (dispatch, params, callback) {
+  dispatch(requestTokenFromAmodahl(params))
+  if (!callback) {
+    callback = () => {}
+  }
   // prepare body
   var form = new FormData()
   form.append('requested_scopes', JSON.stringify(scopes))
   if (params.fbAccessToken) {
     form.append('fb_access_token', params.fbAccessToken)
+  }
+  if (params.googleIdToken) {
+    form.append('google_id_token', params.googleIdToken)
   }
   if (params.name) {
     form.append('name', params.name)
@@ -120,6 +143,9 @@ function fetchJwToken (dispatch, params, callback) {
   }
   if (params.mockFacebookId) {
     form.append('mock_facebook_id', params.mockFacebookId)
+  }
+  if (params.type) {
+    form.append('type', params.type)
   }
 
   return fetch(url + '/token', {
@@ -141,11 +167,21 @@ function fetchJwToken (dispatch, params, callback) {
     if (!ok) {
       throw new Error('Received: ' + JSON.stringify(response))
     }
+    return response
+  }).then(response => {
+    dispatch(receiveTokenFromAmodahl(response.token,
+      response.user.name, response.user.email))
 
-    // finally got token
-    if (callback) {
-      callback(response)
-    }
+    // store user info in browser (for next time app is started)
+    localStorage.setItem('loginType', params.type)
+    localStorage.setItem('jwToken', response.token)
+    localStorage.setItem('name', response.user.name)
+    localStorage.setItem('email', response.user.email)
+
+    callback(response.token)
+  })
+  .catch(error => {
+    dispatch(requestTokenFailed(error, true))
   })
 }
 
@@ -160,95 +196,109 @@ export const login = (params, callback) => dispatch => {
     callback = () => {}
   }
 
-  if (params.type === 'facebook') {
-    // try to get from local
-    dispatch(requestTokenFromLocalStorage())
-    if (localStorage.loginType === 'facebook') {
-      dispatch(receiveTokenFromLocalStorage(localStorage.jwToken,
-        localStorage.name, localStorage.email))
+  // try offline login
+  dispatch(requestTokenFromLocalStorage(params))
+  if (localStorage.loginType && localStorage.loginType === params.type) {
+    dispatch(receiveTokenFromLocalStorage(localStorage.jwToken,
+          localStorage.name, localStorage.email))
 
-      callback(localStorage.jwToken)
+    callback(localStorage.jwToken)
 
-      return
+    return
+  }
+  dispatch(requestTokenFailed(`No ${params.type} login info found in local storage`, false))
+
+  if (params.type === 'google') {
+    dispatch(requestTokenFromGoogle(params))
+
+    const signInGoogle = () => {
+      window.gapi.auth2.getAuthInstance().signIn().then(result => {
+        dispatch(receiveTokenFromGoogle(result.Zi.id_token))
+        fetchJwToken(dispatch, {
+          ...params,
+          googleIdToken: result.Zi.id_token
+        }, callback)
+      })
     }
-    dispatch(requestTokenFailed('No facebook login info found in local storage', false))
 
-    // try to get from server using facebook token
+    window.signinCallback = () => {
+      window.gapi.load('auth2', () => {
+        window.gapi.auth2.init({
+          client_id: '778219340101-tf221dbeeho9frka8js86iv460hfuse0.apps.googleusercontent.com'
+        })
+        window.gapi.auth2.getAuthInstance().isSignedIn.listen(signInGoogle)
+
+        // dispatch(requestTokenFailed('Failed to log in to google: '
+        //    + JSON.stringify(error), true))
+      })
+    }
+
+    if (window.gapi) {
+      signInGoogle()
+    } else { // init google sdk first
+      var jsElm = document.createElement('script')
+      jsElm.type = 'application/javascript'
+      jsElm.src = 'https://apis.google.com/js/platform.js?onload=signinCallback'
+      jsElm.id = 'google-lib'
+      document.body.appendChild(jsElm)
+    }
+  }
+
+  if (params.type === 'signere') {
+    dispatch(requestTokenFromSignere(params))
+    dispatch(requestTokenFailed('Signere not supported yet', true))
+  }
+
+  if (params.type === 'facebook') {
     dispatch(requestTokenFromFacebook())
-    // log in with facebook
-    console.info('Begin facebook login')
-    window.FB.login(fbResponse => {
-      if (!fbResponse.authResponse) { // ensure facebook login was successful
-        dispatch(requestTokenFailed('Failed to log in to facebook: ' + JSON.stringify(fbResponse), true))
-        return
-      }
 
-      dispatch(receiveTokenFromFacebook(fbResponse.authResponse))
+    // to be called after init facebook sdk
+    const fbLogin = () => {
+      window.FB.login(fbResponse => {
+        if (!fbResponse.authResponse) { // ensure facebook login was successful
+          dispatch(requestTokenFailed('Failed to log in to facebook: ' + JSON.stringify(fbResponse), true))
+          return
+        }
 
-      let fbAccessToken = fbResponse.authResponse.accessToken
-      // fetch token from amodahl.no using facebook token
-      dispatch(requestTokenFromAmodahl({
-        ...params,
-        fbToken: fbAccessToken
-      }))
-      fetchJwToken(dispatch, {
-        fbAccessToken: fbAccessToken
-      },
-        response => {
-          // store user info in redux store
-          dispatch(receiveTokenFromAmodahl(response.token,
-            response.user.name, response.user.email))
+        dispatch(receiveTokenFromFacebook(fbResponse.authResponse))
 
-          // store user info in browser (for next time app is started)
-          localStorage.setItem('loginType', 'facebook')
-          localStorage.setItem('jwToken', response.token)
-          localStorage.setItem('name', response.user.name)
-          localStorage.setItem('email', response.user.email)
+        let fbAccessToken = fbResponse.authResponse.accessToken
+        // fetch token from amodahl.no using facebook token
 
-          callback(localStorage.jwToken)
+        fetchJwToken(dispatch, {
+          ...params,
+          fbAccessToken: fbAccessToken
+        }, callback)
+      }, {scope: 'public_profile,email'})
+    }
+
+    if (document.getElementById('facebook-jssdk')) {
+      fbLogin()
+    } else { // init facebook sdk first
+      window.fbAsyncInit = function () {
+        window.FB.init({
+          appId: '772463112910269',
+          xfbml: true,
+          version: 'v2.8'
         })
-        .catch(error => {
-          dispatch(requestTokenFailed(error, true))
-        })
-      console.info('Successfully logged in to facebook', fbResponse)
-    }, {
-      scope: 'public_profile,email'
-    })
+        window.FB.AppEvents.logPageView()
+
+        fbLogin()
+      };
+
+      (function (d, s, id) {
+        let js
+        let fjs = d.getElementsByTagName(s)[0]
+        if (d.getElementById(id)) { return }
+        js = d.createElement(s); js.id = id
+        js.src = '//connect.facebook.net/en_US/sdk.js'
+        fjs.parentNode.insertBefore(js, fjs)
+      }(document, 'script', 'facebook-jssdk'))
+    }
   }
 
   if (params.type === 'test') {
-    // try to get info from local
-
-    dispatch(requestTokenFromLocalStorage())
-    if (localStorage.loginType === 'test') {
-      dispatch(receiveTokenFromLocalStorage(localStorage.jwToken,
-            localStorage.name, localStorage.email))
-
-      callback(localStorage.jwToken)
-
-      return
-    }
-    dispatch(requestTokenFailed('No test login info found in local storage', false))
-
-    // try to get info from server
-    dispatch(requestTokenFromAmodahl(params))
-    fetchJwToken(dispatch, params,
-        response => {
-          let action = receiveTokenFromAmodahl(response.token,
-            response.user.name, response.user.email)
-          dispatch(action)
-
-          // store user info in browser (for next time app is started)
-          localStorage.setItem('loginType', 'test')
-          localStorage.setItem('jwToken', response.token)
-          localStorage.setItem('name', response.user.name)
-          localStorage.setItem('email', response.user.email)
-
-          callback(localStorage.jwToken)
-        })
-        .catch(error => {
-          dispatch(requestTokenFailed(error, true))
-        })
+    fetchJwToken(dispatch, params, callback)
   }
 }
 
