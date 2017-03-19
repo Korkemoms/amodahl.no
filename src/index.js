@@ -62,29 +62,9 @@ const store = createStore(
   middleware
 )
 
-// init facebook sdk
-// and fetch jwToken after
-window.fbAsyncInit = function () {
-  window.FB.init({
-    appId: '772463112910269',
-    xfbml: true,
-    version: 'v2.8'
-  })
-  window.FB.AppEvents.logPageView()
-
-  store.dispatch(login())
-};
-
-(function (d, s, id) {
-  let js
-  let fjs = d.getElementsByTagName(s)[0]
-  if (d.getElementById(id)) { return }
-  js = d.createElement(s); js.id = id
-  js.src = '//connect.facebook.net/en_US/sdk.js'
-  fjs.parentNode.insertBefore(js, fjs)
-}(document, 'script', 'facebook-jssdk'))
-
 const history = syncHistoryWithStore(browserHistory, store)
+
+store.dispatch(login())
 
 render(
   <Provider store={store}>
