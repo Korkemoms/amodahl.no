@@ -21,13 +21,6 @@ const scopes = [
   'update.list'
 ]
 
-export const requestTokenFromLocalStorage = params => {
-  return {
-    type: 'REQUEST_TOKEN_FROM_LOCAL_STORAGE',
-    params: params
-  }
-}
-
 export const requestTokenFromGoogle = params => {
   return {
     type: 'REQUEST_TOKEN_FROM_GOOGLE',
@@ -52,6 +45,13 @@ export const requestTokenFromSignere = params => {
 export const requestTokenFromAmodahl = params => {
   return {
     type: 'REQUEST_TOKEN_FROM_AMODAHL',
+    params: params
+  }
+}
+
+export const requestTokenFromLocalStorage = params => {
+  return {
+    type: 'REQUEST_TOKEN_FROM_LOCAL_STORAGE',
     params: params
   }
 }
@@ -388,12 +388,15 @@ export const logout = (dispatcher) => dispatch => {
   localStorage.clear()
 
   // log out of facebook
-  console.info('Begin facebook logout')
   try {
-    window.FB.logout((response) => {
-      console.info('Successfully logged out of facebook', response)
-    })
+    if (window.FB) {
+      window.FB.logout((response) => {
+        console.info('Successfully logged out of facebook', response)
+      })
+    }
   } catch (err) {
     console.info('There was a problem logging out of facebook', err)
   }
+
+  // TODO log out google
 }
