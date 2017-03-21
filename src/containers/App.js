@@ -5,7 +5,7 @@ const AppContainer = ((Target, namespace) => {
   const mapDispatchToProps = {}
 
   const mapStateToProps = (state) => {
-    // const localState = namespace ? state[namespace] : state
+    //const localState = namespace ? state[namespace] : state
     return {}
   }
 
