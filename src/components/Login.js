@@ -17,8 +17,9 @@ import {
 const Login = ({login, logout, name,
   loading, message, displayMessage, history, navigate}) => {
   let key = 1
+  let isLoggedIn = name !== null
 
-  const googleButton = name === null
+  const googleButton = !isLoggedIn
   ? <Button
     key={key++}
     bsStyle='success'
@@ -32,7 +33,7 @@ const Login = ({login, logout, name,
     </Button>
   : null
 
-  const facebookButton = name === null
+  const facebookButton = !isLoggedIn
   ? <Button
     key={key++}
     bsStyle='primary'
@@ -46,7 +47,7 @@ const Login = ({login, logout, name,
     </Button>
   : null
 
-  const logoutButton = name !== null
+  const logoutButton = isLoggedIn
     ? <Button
       key={key++}
       bsStyle='warning'
@@ -56,7 +57,7 @@ const Login = ({login, logout, name,
       </Button>
       : null
 
-  const meButton = name !== null
+  const meButton = isLoggedIn
   ? <LinkContainer to={{ pathname: '/me' }} key={key++}><Button
     bsStyle='primary'
     disabled={loading}>
@@ -74,15 +75,15 @@ const Login = ({login, logout, name,
     }
   }
 
-  const goBackButton = name !== null && lastPage !== null
+  const goBackButton = isLoggedIn && lastPage !== null
     ? <Button key={key++} bsStyle='success' onClick={() => navigate(lastPage)} >
       {lastPage.replace('/', '')}
     </Button>
     : null
 
-  const showTestUserButton = name === null  // && process.env.NODE_ENV !== 'production'
+  const showTestUserButton = !isLoggedIn // && process.env.NODE_ENV !== 'production'
 
-  const testUserSelection = showTestUserButton
+  const testUserButton = showTestUserButton
     ? <DropdownButton key={key++} title='Test users' id='test-users'>
       <MenuItem eventKey='2'
         onClick={() => login({
@@ -116,7 +117,7 @@ const Login = ({login, logout, name,
     googleButton,
     logoutButton,
     meButton,
-    testUserSelection,
+    testUserButton,
     goBackButton
   ]
 
