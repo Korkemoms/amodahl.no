@@ -110,6 +110,13 @@
       "react-app"
     ]
   },
+  "standard": {
+    "globals": [ 
+      "localStorage", 
+      "Headers", 
+      "FormData" 
+    ]
+  },
   "eslintConfig": {
     "extends": "react-app"
   }
