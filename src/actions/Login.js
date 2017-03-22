@@ -257,7 +257,7 @@ export const login = (params, callback) => dispatch => {
         }, callback)
       }, error => {
         dispatch(requestTokenFailed('Could not log in with google', true))
-       })
+      })
     }
 
     const clId = '778219340101-tf221dbeeho9frka8js86iv460hfuse0.apps.googleusercontent.com'
