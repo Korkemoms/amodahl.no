@@ -1,18 +1,11 @@
 
 import { connect } from 'react-redux'
-import { login, logout } from '../actions/Login'
-import Login from '../components/Login'
+import SignereLogin from '../components/SignereLogin'
 import { push } from 'react-router-redux'
 
-const LoginContainer = ((Target, namespace) => {
+const SignereLoginContainer = ((Target, namespace) => {
   const mapDispatchToProps = (dispatch) => {
     return {
-      login: (...args) => {
-        dispatch(login(...args))
-      },
-      logout: () => {
-        dispatch(logout('login'))
-      },
       navigate: (...args) => {
         dispatch(push(...args))
       }
@@ -23,17 +16,11 @@ const LoginContainer = ((Target, namespace) => {
     const localState = namespace ? state[namespace] : state
 
     return {
-      jwToken: localState.jwToken,
-      name: localState.name,
-      email: localState.email,
-      message: localState.message,
-      displayMessage: localState.displayMessage,
-      loading: localState.loading,
-      history: localState.history
+      url: localState.url
     }
   }
 
   return connect(mapStateToProps, mapDispatchToProps)(Target)
-})(Login, 'login')
+})(SignereLogin, 'signereLogin')
 
-export default LoginContainer
+export default SignereLoginContainer
