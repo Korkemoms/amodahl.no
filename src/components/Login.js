@@ -121,13 +121,14 @@ const Login = ({login, logout, name,
     goBackButton
   ]
 
-  const signereButton = name === null
+  const signereButton = !isLoggedIn
   ? <Button
     key={key++}
     bsStyle='warning'
     onClick={() => {
       login({
-        type: 'signere'
+        type: 'signere',
+        navigate: navigate
       })
     }}
     disabled={loading}>
