@@ -7,7 +7,8 @@ var InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 var url = require('url');
 var paths = require('./paths');
 var getClientEnvironment = require('./env');
-
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+ 
 
 function ensureSlash(path, needsSlash) {
     var hasSlash = path.endsWith('/');
@@ -118,8 +119,7 @@ module.exports = {
                     /\.css$/,
                     /\.json$/,
                     /\.svg$/,
-                    /\.scss$/,
-                    /\.png$/
+                    /\.scss$/
 
                 ],
                 loader: 'url',
@@ -170,11 +170,6 @@ module.exports = {
                 query: {
                     name: 'static/media/[name].[hash:8].[ext]'
                 }
-            },
-            {
-                test: /\.png$/,
-                loader: "url-loader",
-                query: {mimetype: "images/png"}
             }
         ]
     },
@@ -193,6 +188,7 @@ module.exports = {
         ];
     },
     plugins: [
+        new BundleAnalyzerPlugin(),
         // Makes the public URL available as %PUBLIC_URL% in index.html, e.g.:
         // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
         // In production, it will be an empty string unless you specify "homepage"
