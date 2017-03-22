@@ -24,56 +24,63 @@ const scopes = [
 export const requestTokenFromGoogle = params => {
   return {
     type: 'REQUEST_TOKEN_FROM_GOOGLE',
-    params: params
+    debugInfo: params
   }
 }
 
 export const requestTokenFromFacebook = params => {
   return {
     type: 'REQUEST_TOKEN_FROM_FACEBOOK',
-    params: params
+    debugInfo: params
   }
 }
 
-export const requestTokenFromSignere = params => {
+export const requestUrlFromSignere = params => {
   return {
-    type: 'REQUEST_TOKEN_FROM_SIGNERE',
-    params: params
+    type: 'REQUEST_URL_FROM_SIGNERE',
+    debugInfo: params
+  }
+}
+
+export const receiveUrlFromSignere = params => {
+  return {
+    type: 'RECEIVE_URL_FROM_SIGNERE',
+    ...params
   }
 }
 
 export const requestTokenFromAmodahl = params => {
   return {
     type: 'REQUEST_TOKEN_FROM_AMODAHL',
-    params: params
+    debugInfo: params
   }
 }
 
 export const requestTokenFromLocalStorage = params => {
   return {
     type: 'REQUEST_TOKEN_FROM_LOCAL_STORAGE',
-    params: params
+    debugInfo: params
   }
 }
 
 export const receiveTokenFromFacebook = params => {
   return {
     type: 'RECEIVE_TOKEN_FROM_FACEBOOK',
-    params: params
+    debugInfo: params
   }
 }
 
 export const receiveTokenFromGoogle = params => {
   return {
     type: 'RECEIVE_TOKEN_FROM_GOOGLE',
-    params: params
+    debugInfo: params
   }
 }
 
 export const receiveTokenFromSignere = params => {
   return {
     type: 'RECEIVE_TOKEN_FROM_SIGNERE',
-    params: params
+    debugInfo: params
   }
 }
 
@@ -209,9 +216,9 @@ export const login = (params, callback) => dispatch => {
   dispatch(requestTokenFailed(`No ${params.type} login info found in local storage`, false))
 
   if (params.type === 'signere') {
-    // dispatch(requestTokenFromSignere(params))
+    dispatch(requestUrlFromSignere(params))
 
-    // get url for iframe (API is not ready for this yet)
+    // get url for iframe
     var form = new FormData()
     form.append('requested_scopes', JSON.stringify(scopes))
     form.append('type', 'signere')
@@ -219,9 +226,20 @@ export const login = (params, callback) => dispatch => {
       method: 'POST',
       body: form
 
-    }).then(result => {
+    })
+    .then(response => { // ensure its json
+      let contentType = response.headers.get('content-type')
+      let gotJson = contentType && contentType.indexOf('application/json') !== -1
+
+      if (!gotJson) {
+        throw new Error('Oops, we haven\'t got JSON: ' + JSON.stringify(response))
+      }
+      return response.json()
+    })
+    .then(result => {
       // TODO
-      console.log(result)
+      dispatch(receiveUrlFromSignere(result))
+      params.navigate('/signere-login')
     })
   }
 
