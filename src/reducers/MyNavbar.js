@@ -5,7 +5,7 @@ const initialState = {
 
 export default function update (state = initialState, action) {
   switch (action.type) {
-    case 'RECEIVE_TOKEN_FROM_SERVER':
+    case 'RECEIVE_TOKEN_FROM_AMODAHL':
       return Object.assign({}, state, {
         name: action.name
       })
