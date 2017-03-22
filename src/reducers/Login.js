@@ -25,7 +25,7 @@ export default function update (state = initialState, action) {
       })
     case 'REQUEST_TOKEN_FROM_FACEBOOK':
       return Object.assign({}, state, {
-        message: 'Logging in to facebook...',
+        message: 'Logging in with facebook...',
         displayMessage: true,
         loading: true
       })
@@ -37,13 +37,13 @@ export default function update (state = initialState, action) {
       })
     case 'REQUEST_TOKEN_FROM_SIGNERE':
       return Object.assign({}, state, {
-        message: 'Logging in to signere.no...',
+        message: 'Logging in with signere.no...',
         displayMessage: true,
         loading: true
       })
     case 'REQUEST_TOKEN_FROM_GOOGLE':
       return Object.assign({}, state, {
-        message: 'Logging in to google...',
+        message: 'Logging in with google...',
         displayMessage: true,
         loading: true
       })
