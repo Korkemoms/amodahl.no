@@ -247,22 +247,28 @@ export const login = (params, callback) => dispatch => {
     dispatch(requestTokenFromGoogle(params))
 
     const signInGoogle = () => {
-      window.gapi.auth2.getAuthInstance().signIn().then(result => {
+      console.info('Signing in with google')
+      window.gapi.auth2.getAuthInstance().signIn()
+      .then(result => {
         dispatch(receiveTokenFromGoogle(result.Zi.id_token))
         fetchJwToken(dispatch, {
           ...params,
           googleIdToken: result.Zi.id_token
         }, callback)
-      })
+      }, error => {
+        dispatch(requestTokenFailed('Could not log in with google', true))
+       })
     }
 
+    const clId = '778219340101-tf221dbeeho9frka8js86iv460hfuse0.apps.googleusercontent.com'
     window.signinCallback = () => {
+      console.info('Done initializing google sdk')
       window.gapi.load('auth2', () => {
         window.gapi.auth2.init({
-          client_id: '778219340101-tf221dbeeho9frka8js86iv460hfuse0.apps.googleusercontent.com'
+          client_id: clId
         })
-        window.gapi.auth2.getAuthInstance().isSignedIn.listen(signInGoogle)
-
+        // window.gapi.auth2.getAuthInstance().isSignedIn.listen(signInGoogle)
+        signInGoogle()
         // dispatch(requestTokenFailed('Failed to log in to google: '
         //    + JSON.stringify(error), true))
       })
@@ -271,6 +277,7 @@ export const login = (params, callback) => dispatch => {
     if (window.gapi) {
       signInGoogle()
     } else { // init google sdk first
+      console.info('Initializing google sdk')
       var jsElm = document.createElement('script')
       jsElm.type = 'application/javascript'
       jsElm.src = 'https://apis.google.com/js/platform.js?onload=signinCallback'
@@ -286,7 +293,8 @@ export const login = (params, callback) => dispatch => {
     const fbLogin = () => {
       window.FB.login(fbResponse => {
         if (!fbResponse.authResponse) { // ensure facebook login was successful
-          dispatch(requestTokenFailed('Failed to log in to facebook: ' + JSON.stringify(fbResponse), true))
+          dispatch(requestTokenFailed('Failed to log in to facebook: ' +
+            JSON.stringify(fbResponse), true))
           return
         }
 
