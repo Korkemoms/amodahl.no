@@ -208,6 +208,23 @@ export const login = (params, callback) => dispatch => {
   }
   dispatch(requestTokenFailed(`No ${params.type} login info found in local storage`, false))
 
+  if (params.type === 'signere') {
+    // dispatch(requestTokenFromSignere(params))
+
+    // get url for iframe (API is not ready for this yet)
+    var form = new FormData()
+    form.append('requested_scopes', JSON.stringify(scopes))
+    form.append('type', 'signere')
+    fetch(url + '/token', {
+      method: 'POST',
+      body: form
+
+    }).then(result => {
+      // TODO
+      console.log(result)
+    })
+  }
+
   if (params.type === 'google') {
     dispatch(requestTokenFromGoogle(params))
 
@@ -242,11 +259,6 @@ export const login = (params, callback) => dispatch => {
       jsElm.id = 'google-lib'
       document.body.appendChild(jsElm)
     }
-  }
-
-  if (params.type === 'signere') {
-    dispatch(requestTokenFromSignere(params))
-    dispatch(requestTokenFailed('Signere not supported yet', true))
   }
 
   if (params.type === 'facebook') {
