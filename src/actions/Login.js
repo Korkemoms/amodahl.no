@@ -410,5 +410,5 @@ export const logout = (dispatcher) => dispatch => {
     console.info('There was a problem logging out of facebook', err)
   }
 
-  // TODO log out google
+  // TODO log out with google sdk?
 }
