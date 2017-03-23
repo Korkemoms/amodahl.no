@@ -1,6 +1,6 @@
 {
   "name": "amodahl.no",
-  "version": "0.4.5-2",
+  "version": "0.4.5-3",
   "private": true,
   "devDependencies": {
     "autoprefixer": "6.5.1",
