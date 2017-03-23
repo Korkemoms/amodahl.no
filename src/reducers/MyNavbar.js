@@ -5,23 +5,15 @@ const initialState = {
 
 export default function update (state = initialState, action) {
   switch (action.type) {
-    case 'RECEIVE_TOKEN_FROM_AMODAHL':
+    case 'RECEIVE_AMODAHL_TOKEN':
       return Object.assign({}, state, {
         name: action.name
       })
-    case 'RECEIVE_TOKEN_FROM_LOCAL_STORAGE':
-      return Object.assign({}, state, {
-        name: action.name
-      })
-    case 'REQUEST_TOKEN_FAILED':
+    case '@@me/DELETE_AMODAHL_TOKEN':
       return Object.assign({}, state, {
         name: null
       })
-    case '@@me/DELETE_TOKEN':
-      return Object.assign({}, state, {
-        name: null
-      })
-    case '@@login/DELETE_TOKEN':
+    case '@@login/DELETE_AMODAHL_TOKEN':
       return Object.assign({}, state, {
         name: null
       })
