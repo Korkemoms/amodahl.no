@@ -21,100 +21,35 @@ const scopes = [
   'update.list'
 ]
 
-export const requestTokenFromGoogle = params => {
-  return {
-    type: 'REQUEST_TOKEN_FROM_GOOGLE',
-    debugInfo: params
-  }
-}
-
-export const requestTokenFromFacebook = params => {
-  return {
-    type: 'REQUEST_TOKEN_FROM_FACEBOOK',
-    debugInfo: params
-  }
-}
-
-export const requestUrlFromSignere = params => {
-  return {
-    type: 'REQUEST_URL_FROM_SIGNERE',
-    debugInfo: params
-  }
-}
-
-export const receiveUrlFromSignere = params => {
-  return {
-    type: 'RECEIVE_URL_FROM_SIGNERE',
-    ...params
-  }
-}
-
-export const requestTokenFromAmodahl = params => {
-  return {
-    type: 'REQUEST_TOKEN_FROM_AMODAHL',
-    debugInfo: params
-  }
-}
-
-export const requestTokenFromLocalStorage = params => {
-  return {
-    type: 'REQUEST_TOKEN_FROM_LOCAL_STORAGE',
-    debugInfo: params
-  }
-}
-
-export const receiveTokenFromFacebook = params => {
-  return {
-    type: 'RECEIVE_TOKEN_FROM_FACEBOOK',
-    debugInfo: params
-  }
-}
-
-export const receiveTokenFromGoogle = params => {
-  return {
-    type: 'RECEIVE_TOKEN_FROM_GOOGLE',
-    debugInfo: params
-  }
-}
-
-export const receiveTokenFromSignere = params => {
-  return {
-    type: 'RECEIVE_TOKEN_FROM_SIGNERE',
-    debugInfo: params
-  }
-}
-
-export const receiveTokenFromAmodahl = (jwToken, name, email) => {
+export const receiveAmodahlToken = (jwToken, name, email) => {
   return {
     jwToken: jwToken,
     name: name,
     email: email,
-    type: 'RECEIVE_TOKEN_FROM_AMODAHL'
+    type: 'RECEIVE_AMODAHL_TOKEN'
   }
 }
 
-export const receiveTokenFromLocalStorage = (jwToken, name, email) => {
+export const receiveAmodahlTokenFailed = () => {
   return {
-    jwToken: jwToken,
-    name: name,
-    email: email,
-    type: 'RECEIVE_TOKEN_FROM_LOCAL_STORAGE'
+    type: 'RECEIVE_AMODAHL_TOKEN_FAILED'
   }
 }
 
-export const requestTokenFailed = (message, displayMessage) => {
+export const deleteAmodahlToken = (dispatcher) => {
+  return {
+    jwToken: null,
+    type: '@@' + dispatcher + '/DELETE_AMODAHL_TOKEN'
+  }
+}
+
+export const updateLoginInfo = (message, displayMessage, loading, additionalInfo) => {
   return {
     message: message,
     displayMessage: displayMessage,
-    jwToken: null,
-    type: 'REQUEST_TOKEN_FAILED'
-  }
-}
-
-export const deleteToken = (dispatcher) => {
-  return {
-    jwToken: null,
-    type: '@@' + dispatcher + '/DELETE_TOKEN'
+    loading: loading,
+    additionalInfo: additionalInfo,
+    type: 'UPDATE_LOGIN_INFO'
   }
 }
 
@@ -128,12 +63,11 @@ export const deleteToken = (dispatcher) => {
  * @param {string[]} scopes The scopes to request for the token
  * @param {onSuccess} onSuccess Callback when token is received
  */
-function fetchJwToken (dispatch, params, callback) {
-  dispatch(requestTokenFromAmodahl(params))
-  if (!callback) {
-    callback = () => {}
-  }
+const fetchJwToken = params => dispatch => {
+  dispatch(updateLoginInfo('Logging in to amodahl.no...', true, true, params))
+
   // prepare body
+  // TODO JSON?
   var form = new FormData()
   form.append('requested_scopes', JSON.stringify(scopes))
   if (params.fbAccessToken) {
@@ -176,47 +110,43 @@ function fetchJwToken (dispatch, params, callback) {
     }
     return response
   }).then(response => {
-    dispatch(receiveTokenFromAmodahl(response.token,
+    dispatch(receiveAmodahlToken(response.token,
       response.user.name, response.user.email))
+    dispatch(updateLoginInfo('You logged in as ' + response.user.name, true, false, response))
 
     // store user info in browser (for next time app is started)
     localStorage.setItem('loginType', params.type)
     localStorage.setItem('jwToken', response.token)
     localStorage.setItem('name', response.user.name)
     localStorage.setItem('email', response.user.email)
-
-    callback(response.token)
   })
   .catch(error => {
-    dispatch(requestTokenFailed(error, true))
+    dispatch(receiveAmodahlTokenFailed())
+    dispatch(updateLoginInfo('Failed to log in to amodahl.no.'), true, false, error)
   })
 }
 
-export const login = (params, callback) => dispatch => {
+export const login = params => dispatch => {
   if (!params) {
     // use same login type as last time
     params = {
       type: localStorage.loginType
     }
   }
-  if (!callback) {
-    callback = () => {}
-  }
 
   // try offline login
-  dispatch(requestTokenFromLocalStorage(params))
+  dispatch(updateLoginInfo('Looking for user info in local storage...', false, false, params))
   if (localStorage.loginType && localStorage.loginType === params.type) {
-    dispatch(receiveTokenFromLocalStorage(localStorage.jwToken,
+    dispatch(receiveAmodahlToken(localStorage.jwToken,
           localStorage.name, localStorage.email))
-
-    callback(localStorage.jwToken)
 
     return
   }
-  dispatch(requestTokenFailed(`No ${params.type} login info found in local storage`, false))
+  dispatch(updateLoginInfo(`No ${params.type} login info found in local storage`,
+    false, false, localStorage))
 
   if (params.type === 'signere') {
-    dispatch(requestUrlFromSignere(params))
+    dispatch(updateLoginInfo('Requesting url from Signere.no', true, true, params))
 
     // get url for iframe
     var form = new FormData()
@@ -238,75 +168,84 @@ export const login = (params, callback) => dispatch => {
     })
     .then(result => {
       // TODO
-      dispatch(receiveUrlFromSignere(result))
+      dispatch(updateLoginInfo('Received url from Signere.no', true, true, result))
       params.navigate('/signere-login')
     })
   }
 
   if (params.type === 'google') {
-    dispatch(requestTokenFromGoogle(params))
-
-    const signInGoogle = () => {
-      console.info('Signing in with google')
-      window.gapi.auth2.getAuthInstance().signIn()
-      .then(result => {
-        dispatch(receiveTokenFromGoogle(result.Zi.id_token))
-        fetchJwToken(dispatch, {
-          ...params,
-          googleIdToken: result.Zi.id_token
-        }, callback)
-      }, error => {
-        dispatch(requestTokenFailed('Could not log in with google', true))
-      })
-    }
+    dispatch(updateLoginInfo('Logging in with Google...', true, true, params))
 
     const clId = '778219340101-tf221dbeeho9frka8js86iv460hfuse0.apps.googleusercontent.com'
+
+    const errorCallback = error => {
+      dispatch(updateLoginInfo('Failed to log in to google: ' +
+        JSON.stringify(error), true, false, error))
+    }
+
     window.signinCallback = () => {
-      console.info('Done initializing google sdk')
-      window.gapi.load('auth2', () => {
+      console.log('Signing in with google')
+
+      window.gapi.load('auth2', function () {
+        // Retrieve the singleton for the GoogleAuth library and set up the client.
         window.gapi.auth2.init({
-          client_id: clId
+          client_id: clId,
+          cookiepolicy: 'single_host_origin'
         })
-        // window.gapi.auth2.getAuthInstance().isSignedIn.listen(signInGoogle)
-        signInGoogle()
-        // dispatch(requestTokenFailed('Failed to log in to google: '
-        //    + JSON.stringify(error), true))
+        .then(args => {
+          window.gapi.auth2.getAuthInstance()
+          .then(googleAuth => {
+            googleAuth.signIn()
+            .then(result => {
+              let authResponse = googleAuth.currentUser.get().getAuthResponse(true)
+
+              // finally we got google token and can trade it for an amodahl token
+              dispatch(updateLoginInfo('Received token from Google', true, true, authResponse))
+              dispatch(fetchJwToken({
+                googleIdToken: authResponse.id_token,
+                ...params
+              }))
+            }, errorCallback) // these are weird promises
+          }, errorCallback)
+        }, errorCallback)
       })
     }
 
-    if (window.gapi) {
-      signInGoogle()
-    } else { // init google sdk first
-      console.info('Initializing google sdk')
-      var jsElm = document.createElement('script')
+    if (window.document.getElementById('google-lib')) {
+      window.signinCallback()
+    } else {
+      // init google sdk first
+      console.log('Initializing google sdk')
+      var jsElm = window.document.createElement('script')
       jsElm.type = 'application/javascript'
-      jsElm.src = 'https://apis.google.com/js/platform.js?onload=signinCallback'
+      jsElm.src = 'https://apis.google.com/js/client.js?onload=signinCallback'
       jsElm.id = 'google-lib'
-      document.body.appendChild(jsElm)
+      window.document.body.appendChild(jsElm)
     }
   }
 
   if (params.type === 'facebook') {
-    dispatch(requestTokenFromFacebook())
+    dispatch(updateLoginInfo('Logging in with Facebook...', true, true, params))
 
     // to be called after init facebook sdk
     const fbLogin = () => {
       window.FB.login(fbResponse => {
         if (!fbResponse.authResponse) { // ensure facebook login was successful
-          dispatch(requestTokenFailed('Failed to log in to facebook: ' +
-            JSON.stringify(fbResponse), true))
+          dispatch(updateLoginInfo('Failed to log in to facebook: ' +
+            JSON.stringify(fbResponse), true, false, fbResponse))
           return
         }
 
-        dispatch(receiveTokenFromFacebook(fbResponse.authResponse))
+        dispatch(updateLoginInfo('Received token from Facebook',
+          true, true, fbResponse.authResponse))
 
         let fbAccessToken = fbResponse.authResponse.accessToken
         // fetch token from amodahl.no using facebook token
 
-        fetchJwToken(dispatch, {
+        dispatch(fetchJwToken({
           ...params,
           fbAccessToken: fbAccessToken
-        }, callback)
+        }))
       }, {scope: 'public_profile,email'})
     }
 
@@ -336,7 +275,7 @@ export const login = (params, callback) => dispatch => {
   }
 
   if (params.type === 'test') {
-    fetchJwToken(dispatch, params, callback)
+    dispatch(fetchJwToken(params))
   }
 }
 
@@ -422,18 +361,18 @@ export const myFetch = dispatch => (jwToken, attempts = 0) => (what, props, myFe
  * @param {string} dispatcher Identifies from which page user clicked log out
  */
 export const logout = (dispatcher) => dispatch => {
-  dispatch(deleteToken(dispatcher))
+  dispatch(deleteAmodahlToken(dispatcher))
   localStorage.clear()
 
   // log out of facebook
   try {
     if (window.FB) {
       window.FB.logout((response) => {
-        console.info('Successfully logged out of facebook', response)
+        console.log('Successfully logged out of facebook', response)
       })
     }
   } catch (err) {
-    console.info('There was a problem logging out of facebook', err)
+    console.log('There was a problem logging out of facebook', err)
   }
 
   // TODO log out with google sdk?
