@@ -12,26 +12,20 @@ export default function update (state = initialState, action) {
       return Object.assign({}, state, {
         readMore: action.readMore
       })
-    case 'RECEIVE_TOKEN_FROM_AMODAHL':
-      return Object.assign({}, state, {
-        jwToken: action.jwToken,
-        myEmail: action.email,
-        myName: action.name
-      })
-    case 'RECEIVE_TOKEN_FROM_LOCAL_STORAGE': {
+    case 'RECEIVE_AMODAHL_TOKEN': {
       return Object.assign({}, state, {
         jwToken: action.jwToken,
         myEmail: action.email,
         myName: action.name
       })
     }
-    case '@@me/DELETE_TOKEN':
+    case '@@me/DELETE_AMODAHL_TOKEN':
       return Object.assign({}, state, {
         jwToken: null,
         myEmail: null,
         myName: null
       })
-    case '@@login/DELETE_TOKEN':
+    case '@@login/DELETE_AMODAHL_TOKEN':
       return Object.assign({}, state, {
         jwToken: null,
         myEmail: null,
