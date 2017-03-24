@@ -1,13 +1,11 @@
 import fetch from 'isomorphic-fetch'
 
-// import initializer, {CreateIdentificationRequest} from 'IdentiSignIdentification'
-
 // determine where to send requests
 const www = window.location.href.indexOf('www.') !== -1 ? 'www.' : ''
 const url = process.env.NODE_ENV === 'production'
   ? `https://${www}amodahl.no/api/public` : `http://${www}local.amodahl.no:3000`
 
-/* The scopes to request for the token */
+// The scopes to request for the token
 const scopes = [
   'user.all',
   'user.list',
@@ -51,22 +49,32 @@ export const deleteAmodahlToken = (dispatcher) => {
   }
 }
 
-export const updateLoginInfo = (message, displayMessage,
-  loading, additionalInfo) => {
+export const updateLoginInfo = (message, displayMsg, loading, info) => {
   return {
     message: message,
-    displayMessage: displayMessage,
+    displayMessage: displayMsg,
     loading: loading,
-    additionalInfo: additionalInfo,
+    additionalInfo: info,
     type: 'UPDATE_LOGIN_INFO'
   }
 }
 
 /**
- * Ask the API for a token using a facebook/google token.
- * The API checks that the facebook/google token is valid
+ * Ask the API for a token using a facebook or google token, or a
+ * signere request id.
+ * The API checks that the token or id is valid
  * and then responds with a JSON web token.
  *
+ * @param params Login parameters
+ * @param params.fbAccessToken a facebook access token (facebook)
+ * @param params.googleIdToken a google id token (google)
+ * @param params.signereRequestId a signere.no request id (signere)
+ * @param params.signereAccessToken a signere.no OAuth2 access token (signere, optional)
+ * @param params.name the users name (test)
+ * @param params.email the users email (test)
+ * @param params.type the type of login (test/signere/google/facebook)
+ *
+ * @return the API's response containing a JSON web token for amodahl.no-api
  */
 const fetchJwToken = params => dispatch => {
   dispatch(updateLoginInfo('Logging in to amodahl.no...', true, true, params))
@@ -74,7 +82,7 @@ const fetchJwToken = params => dispatch => {
   // prepare body
   // TODO JSON?
   var form = new FormData()
-  form.append('requested_scopes', JSON.stringify(scopes))
+  form.append('requested_scopes', JSON.stringify(scopes)) // defined top of doc
   if (params.fbAccessToken) {
     form.append('fb_access_token', params.fbAccessToken)
   }
@@ -116,9 +124,7 @@ const fetchJwToken = params => dispatch => {
     return response.json()
   })
   .then(response => { // ensure query was accepted
-    let ok = response.status === 'ok'
-
-    if (!ok) {
+    if (response.status !== 'ok') {
       throw new Error('Received: ' + JSON.stringify(response))
     }
     return response
@@ -135,10 +141,25 @@ const fetchJwToken = params => dispatch => {
   .catch(error => {
     dispatch(receiveAmodahlTokenFailed())
     dispatch(updateLoginInfo('Failed to log in to amodahl.no: '
-      + JSON.stringify(error), true, false, error))
+      + error.message, true, false, error))
   })
 }
 
+/**
+ * Log in to amodahl.no-api.
+ * This means authenticating with (google/facebook/signere)
+ * and then requesting an amodahl.no-api token using the token/requestId
+ * from (google/facebook/signere).
+ *
+ * In addition test users defined by the API can log
+ * without further identification.
+ * @param params Login parameters
+ * @param params.signereRequestId a signere.no request id (signere)
+ * @param params.signereAccessToken a signere.no OAuth2 access token (signere, optional)
+ * @param params.name the users name (test)
+ * @param params.email the users email (test)
+ * @param params.type the type of login (test/signere/google/facebook)
+ */
 export const login = params => dispatch => {
   if (!params) {
     // use same login type as last time
@@ -314,40 +335,33 @@ export const login = params => dispatch => {
  */
 
 /**
- * @function myFetch
- * @param {string} what The url describing what to fetch
- * @param {Object} props Additional fetch properties
- * @param {myFetchCallback} what Called after successfully fetching resource
- */
-
-/**
  * Method for fetching resources from amodahl.no API.
  * If request fails because of expired token a login action is dispatched and
  * the fetch request is repeated after successfull login.
  * @param dispatch The redux dispatch function
- * @param {string} jwToken a token for amodahl.no API
- * @param {number} attempts Number fetch attempts for 'what'
- * @param {string} what The url describing what to fetch
- * @param {Object} props Additional fetch properties
- * @param {myFetchCallback} what Called after successfully fetching resource
+ * @param jwToken a token for amodahl.no API
+ * @param attempts Number fetch attempts for 'what'
+ * @param what The url describing what to fetch
+ * @param params Additional fetch parameters
+ * @param callback {myFetchCallback} called when resource has been fetched
  *
  * Uses callback instead of .then because
  * I could not figure out how to
  * pass both body and headers otherwise.
  */
-export const myFetch = dispatch => (jwToken, attempts = 0) =>
-  (what, props, myFetchCallback) => {
-    var headers = props.headers ? props.headers : new Headers()
+export const myFetch = dispatch => jwToken =>
+  (path, params) => {
+    var headers = params.headers ? params.headers : new Headers()
     headers.append('Authorization', 'Bearer ' + jwToken)
     headers.append('pragma', 'no-cache')
     headers.append('cache-control', 'no-store')
 
     const properties = {
       headers: headers,
-      ...props
+      ...params
     }
 
-    return fetch(url + what, properties)
+    return fetch(url + path, properties)
     .then(response => {
       // ensure its json
       let contentType = response.headers.get('content-type')
@@ -355,41 +369,33 @@ export const myFetch = dispatch => (jwToken, attempts = 0) =>
       if (!gotJson) {
         throw new Error('Oops, we haven\'t got JSON: ' + JSON.stringify(response))
       }
-      return response.json().then(json => {
-        // check if token has expired
-
-        if (json.status === 'error' && json.message === 'Expired token') {
-          // try to get new token and then repeat fetch
-          if (attempts < 2) {
-            let callback = (newToken) =>
-              myFetch(newToken, dispatch, attempts + 1)(what, props, callback)
-
-            dispatch(login({
-              type: localStorage.loginType
-            }, callback))
-
-            throw new Error('Token expired')
-          }
-          throw new Error('Token expired, no more relog attempts')
-        }
-
-        // ensure query was accepted
-        if (json.status && json.status !== 'ok') {
-          throw new Error('Received: ' + JSON.stringify(json))
-        }
-        if (myFetchCallback) {
-          myFetchCallback(json, response.headers)
-        }
-      })
+      return response.json().then(json =>
+      ({ headers: headers, body: json }))
+    })
+    .then(({body, headers}) => {
+      console.log(body)
+      // check if token has expired
+      if (body.status === 'error' && body.message === 'Expired token') {
+        // TODO deal with it
+        throw new Error('Token expired')
+      }
+      return ({body, headers})
+    })
+    .then(({body, headers}) => {
+      // ensure query was accepted
+      if (body.status && body.status !== 'ok') {
+        throw new Error('Received: ' + JSON.stringify(body))
+      }
+      return ({body, headers})
     })
   }
 
 /**
  * Clears local storage and dispatches an action to tell
  * other components that user has logged out.
- * @param {string} dispatcher Identifies from which page user clicked log out
+ * @param {string} dispatcher From which page user clicked log out
  */
-export const logout = (dispatcher) => dispatch => {
+export const logout = dispatcher => dispatch => {
   dispatch(deleteAmodahlToken(dispatcher))
   localStorage.clear()
 
