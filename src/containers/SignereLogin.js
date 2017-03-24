@@ -12,9 +12,6 @@ const SignereLoginContainer = ((Target, namespace) => {
       },
       navigate: (...args) => {
         dispatch(push(...args))
-      },
-      navigate: (...args) => {
-        dispatch(push(...args))
       }
     }
   }
