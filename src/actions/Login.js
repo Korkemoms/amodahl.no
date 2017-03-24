@@ -128,7 +128,8 @@ const fetchJwToken = params => dispatch => {
       throw new Error('Received: ' + JSON.stringify(response))
     }
     return response
-  }).then(response => {
+  })
+  .then(response => {
     dispatch(receiveAmodahlToken(response.token, response.user))
     dispatch(updateLoginInfo('You logged in as ' + response.user.name,
         true, false, response))
@@ -345,9 +346,7 @@ export const login = params => dispatch => {
  * @param params Additional fetch parameters
  * @param callback {myFetchCallback} called when resource has been fetched
  *
- * Uses callback instead of .then because
- * I could not figure out how to
- * pass both body and headers otherwise.
+ * @return promise that is resolved with headers and body of API response
  */
 export const myFetch = dispatch => jwToken =>
   (path, params) => {
