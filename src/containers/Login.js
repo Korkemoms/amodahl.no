@@ -24,8 +24,7 @@ const LoginContainer = ((Target, namespace) => {
 
     return {
       jwToken: localState.jwToken,
-      name: localState.name,
-      email: localState.email,
+      user: localState.user,
       message: localState.message,
       displayMessage: localState.displayMessage,
       loading: localState.loading,

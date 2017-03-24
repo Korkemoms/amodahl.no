@@ -7,10 +7,10 @@ import {
   NavDropdown
 } from 'react-bootstrap'
 
-const MyNavbar = ({ name, page }) => {
-  const userSpecific = name === null
+const MyNavbar = ({ user, page }) => {
+  const userSpecific = user === null
   ? <NavLink eventKey={4} to={{ pathname: '/login' }}>Log in</NavLink>
-  : <NavLink eventKey={4} to={{ pathname: '/me' }}>Logged in: {name}</NavLink>
+  : <NavLink eventKey={4} to={{ pathname: '/me' }}>Logged in: {user.name}</NavLink>
 
   return (
     <Navbar
@@ -46,7 +46,7 @@ const MyNavbar = ({ name, page }) => {
 }
 
 MyNavbar.propTypes = {
-  name: PropTypes.string,
+  user: PropTypes.object,
   page: PropTypes.string
 }
 

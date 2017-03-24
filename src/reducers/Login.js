@@ -1,8 +1,7 @@
 const initialState = {
-  name: null,
   message: null,
   displayMessage: true,
-  email: null,
+  user: null,
   history: []
 }
 
@@ -24,20 +23,17 @@ export default function update (state = initialState, action) {
       })
     case 'RECEIVE_AMODAHL_TOKEN':
       return Object.assign({}, state, {
-        name: action.name,
-        email: action.email
+        user: action.user
       })
     case '@@login/DELETE_AMODAHL_TOKEN':
       return Object.assign({}, state, {
-        name: null,
-        email: null,
+        user: null,
         message: 'You logged out.',
         displayMessage: true
       })
     case '@@me/DELETE_AMODAHL_TOKEN':
       return Object.assign({}, state, {
-        name: null,
-        email: null,
+        user: null,
         message: null,
         displayMessage: false
       })

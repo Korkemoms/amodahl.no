@@ -21,8 +21,7 @@ const ChessContainer = ((Target, namespace) => {
     const localState = namespace ? state[namespace] : state
     let props = {
       readMore: localState.readMore,
-      myEmail: localState.myEmail,
-      myName: localState.myName,
+      user: localState.user,
       jwToken: localState.jwToken
     }
 

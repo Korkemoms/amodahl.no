@@ -25,7 +25,7 @@ import {
   )
 } */
 
-const Me = ({ logout, token, name, email, message }) => {
+const Me = ({ logout, token, user, message }) => {
   const logoutButton = token !== null
     ? <Button bsStyle='warning' onClick={() => { logout('me') }}>
         Log out
@@ -44,14 +44,21 @@ const Me = ({ logout, token, name, email, message }) => {
       <FormGroup>
         <ControlLabel>Name</ControlLabel>
         <FormControl.Static>
-          {name}
+          {user.name}
         </FormControl.Static>
       </FormGroup>
 
       <FormGroup>
         <ControlLabel>Email</ControlLabel>
         <FormControl.Static>
-          {email}
+          {user.email}
+        </FormControl.Static>
+      </FormGroup>
+
+      <FormGroup>
+        <ControlLabel>ID</ControlLabel>
+        <FormControl.Static>
+          {user.uid}
         </FormControl.Static>
       </FormGroup>
 

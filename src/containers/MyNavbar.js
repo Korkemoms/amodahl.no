@@ -9,7 +9,7 @@ const MyNavbarContainer = ((Target, namespace) => {
     const localState = namespace ? state[namespace] : state
 
     return {
-      name: localState.name,
+      user: localState.user,
       page: localState.page
     }
   }

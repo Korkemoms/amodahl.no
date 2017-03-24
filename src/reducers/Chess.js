@@ -15,8 +15,7 @@ export default function update (state = initialState, action) {
     case 'RECEIVE_AMODAHL_TOKEN': {
       return Object.assign({}, state, {
         jwToken: action.jwToken,
-        myEmail: action.email,
-        myName: action.name
+        user: action.user
       })
     }
     case '@@me/DELETE_AMODAHL_TOKEN':

@@ -1,5 +1,5 @@
 const initialState = {
-  name: null,
+  user: null,
   page: null
 }
 
@@ -7,15 +7,15 @@ export default function update (state = initialState, action) {
   switch (action.type) {
     case 'RECEIVE_AMODAHL_TOKEN':
       return Object.assign({}, state, {
-        name: action.name
+        user: action.user
       })
     case '@@me/DELETE_AMODAHL_TOKEN':
       return Object.assign({}, state, {
-        name: null
+        user: null
       })
     case '@@login/DELETE_AMODAHL_TOKEN':
       return Object.assign({}, state, {
-        name: null
+        user: null
       })
     case '@@router/LOCATION_CHANGE':
       {

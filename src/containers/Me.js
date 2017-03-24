@@ -17,8 +17,7 @@ const MeContainer = ((Target, namespace) => {
     const localState = namespace ? state[namespace] : state
     return {
       token: localState.token,
-      name: localState.name,
-      email: localState.email,
+      user: localState.user,
       message: localState.message
     }
   }

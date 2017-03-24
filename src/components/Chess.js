@@ -11,7 +11,7 @@ import {
   PageHeader
 } from 'react-bootstrap'
 
-const Chess = ({ readMore, toggleReadMore, myFetch, myEmail, myName, jwToken, navigate }) => {
+const Chess = ({ readMore, toggleReadMore, myFetch, user, jwToken, navigate }) => {
   return (
     <DocumentTitle title='Chess game'>
       <div>
@@ -20,8 +20,8 @@ const Chess = ({ readMore, toggleReadMore, myFetch, myEmail, myName, jwToken, na
         <div className='mycontent'>
 
           <ChessGame
-            myEmail={myEmail}
-            myName={myName}
+            myUid={user ? user.uid : null}
+            myName={user ? user.name : null}
             myFetch={jwToken !== null ? myFetch(jwToken) : null}
             navigate={navigate}
             />
