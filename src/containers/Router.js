@@ -8,6 +8,7 @@ import Home from './Home'
 import Chess from './Chess'
 import About from './About'
 import Login from './Login'
+import SignereLogin from './SignereLogin'
 import Me from './Me'
 import AmodahlNo from './AmodahlNo'
 import MatrixMultiplication from './MatrixMultiplication'
@@ -30,6 +31,7 @@ export default class MyRouter extends React.Component {
           <Route path='/matrix-multiplication' component={MatrixMultiplication} />
           <Route path='/leveringmontering' component={LeveringMontering} />
           <Route path='/login' component={Login} />
+          <Route path='/signere-login' component={SignereLogin} />
           <Route path='/me' component={Me} />
         </Route>
       </Router>
