@@ -14,10 +14,10 @@ import {
   MenuItem
 } from 'react-bootstrap'
 
-const Login = ({login, logout, name,
-  loading, message, displayMessage, history, navigate}) => {
+const Login = ({login, logout, user, loading, message,
+                    displayMessage, history, navigate}) => {
   let key = 1
-  let isLoggedIn = name !== null
+  let isLoggedIn = user !== null
 
   const googleButton = !isLoggedIn
   ? <Button
@@ -29,7 +29,7 @@ const Login = ({login, logout, name,
       })
     }}
     disabled={loading}>
-      Log in with google
+    <i className='fa fa-google' aria-hidden='true' / > Log in with google
     </Button>
   : null
 
@@ -43,7 +43,7 @@ const Login = ({login, logout, name,
       })
     }}
     disabled={loading}>
-      Log in with facebook
+    <i className='fa fa-facebook' aria-hidden='true' /> Log in with facebook
     </Button>
   : null
 
@@ -89,24 +89,24 @@ const Login = ({login, logout, name,
         onClick={() => login({
           type: 'test',
           name: "Gul'dan(Test)",
-          email: 'guldan@hotmail.com',
-          mockFacebookId: '123'})}
+          email: 'guldan@hotmail.com'
+        })}
         >Gul'dan(Test)
       </MenuItem>
       <MenuItem eventKey='3'
         onClick={() => login({
           type: 'test',
           name: 'Krosus(Test)',
-          email: 'krosus@google.com',
-          mockFacebookId: '456'})}
+          email: 'krosus@google.com'
+        })}
         >Krosus(Test)
       </MenuItem>
       <MenuItem eventKey='4'
         onClick={() => login({
           type: 'test',
           name: 'Elisande(Test)',
-          email: 'elisande@amazon.com',
-          mockFacebookId: '789'})}
+          email: 'elisande@amazon.com'
+        })}
           >Elisande(Test)
       </MenuItem>
     </DropdownButton>
@@ -137,7 +137,7 @@ const Login = ({login, logout, name,
   : null
 
   const experimentalButtons = [signereButton]
-  const experimentalButtonsToolbar = name === null
+  const experimentalButtonsToolbar = !isLoggedIn
   ? <div>
     <p style={{marginTop: '3em'}}>Experimental: </p>
     <ButtonToolbar>{experimentalButtons}</ButtonToolbar>
