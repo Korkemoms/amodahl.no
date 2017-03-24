@@ -21,12 +21,20 @@ const scopes = [
   'update.list'
 ]
 
-export const receiveAmodahlToken = (jwToken, name, email) => {
+export const receiveAmodahlToken = (jwToken, user) => {
   return {
     jwToken: jwToken,
-    name: name,
-    email: email,
+    user: user,
     type: 'RECEIVE_AMODAHL_TOKEN'
+  }
+}
+
+export const receiveUrlFromSignere = (url, accessToken, requestId) => {
+  return {
+    type: 'RECEIVE_SIGNERE_URL',
+    url: url,
+    accessToken: accessToken,
+    requestId: requestId
   }
 }
 
@@ -43,7 +51,8 @@ export const deleteAmodahlToken = (dispatcher) => {
   }
 }
 
-export const updateLoginInfo = (message, displayMessage, loading, additionalInfo) => {
+export const updateLoginInfo = (message, displayMessage,
+  loading, additionalInfo) => {
   return {
     message: message,
     displayMessage: displayMessage,
@@ -54,14 +63,10 @@ export const updateLoginInfo = (message, displayMessage, loading, additionalInfo
 }
 
 /**
- * Ask the API for a token using a facebook token.
- * The API will checks that the facebook token is valid
+ * Ask the API for a token using a facebook/google token.
+ * The API checks that the facebook/google token is valid
  * and then responds with a JSON web token.
  *
- * @param dispatch The redux dispatch function
- * @param {string} fbAccessToken A valid facebook token
- * @param {string[]} scopes The scopes to request for the token
- * @param {onSuccess} onSuccess Callback when token is received
  */
 const fetchJwToken = params => dispatch => {
   dispatch(updateLoginInfo('Logging in to amodahl.no...', true, true, params))
@@ -76,21 +81,29 @@ const fetchJwToken = params => dispatch => {
   if (params.googleIdToken) {
     form.append('google_id_token', params.googleIdToken)
   }
+  if (params.signereRequestId) {
+    form.append('signere_request_id', params.signereRequestId)
+  }
+  if (params.signereAccessToken) {
+    form.append('signere_access_token', params.signereAccessToken)
+  }
   if (params.name) {
     form.append('name', params.name)
   }
   if (params.email) {
     form.append('email', params.email)
   }
-  if (params.mockFacebookId) {
-    form.append('mock_facebook_id', params.mockFacebookId)
-  }
   if (params.type) {
     form.append('type', params.type)
   }
 
+  var headers = new Headers()
+  headers.append('pragma', 'no-cache')
+  headers.append('cache-control', 'no-cache')
+
   return fetch(url + '/token', {
     method: 'POST',
+    headers,
     body: form
   })
   .then(response => { // ensure its json
@@ -110,19 +123,19 @@ const fetchJwToken = params => dispatch => {
     }
     return response
   }).then(response => {
-    dispatch(receiveAmodahlToken(response.token,
-      response.user.name, response.user.email))
-    dispatch(updateLoginInfo('You logged in as ' + response.user.name, true, false, response))
+    dispatch(receiveAmodahlToken(response.token, response.user))
+    dispatch(updateLoginInfo('You logged in as ' + response.user.name,
+        true, false, response))
 
     // store user info in browser (for next time app is started)
     localStorage.setItem('loginType', params.type)
     localStorage.setItem('jwToken', response.token)
-    localStorage.setItem('name', response.user.name)
-    localStorage.setItem('email', response.user.email)
+    localStorage.setItem('user', JSON.stringify(response.user))
   })
   .catch(error => {
     dispatch(receiveAmodahlTokenFailed())
-    dispatch(updateLoginInfo('Failed to log in to amodahl.no.'), true, false, error)
+    dispatch(updateLoginInfo('Failed to log in to amodahl.no: '
+      + JSON.stringify(error), true, false, error))
   })
 }
 
@@ -135,17 +148,29 @@ export const login = params => dispatch => {
   }
 
   // try offline login
-  dispatch(updateLoginInfo('Looking for user info in local storage...', false, false, params))
+  dispatch(updateLoginInfo('Looking for user info in local storage...',
+    false, false, params))
   if (localStorage.loginType && localStorage.loginType === params.type) {
-    dispatch(receiveAmodahlToken(localStorage.jwToken,
-          localStorage.name, localStorage.email))
-
-    return
+    let user
+    try {
+      user = JSON.parse(localStorage.user)
+      dispatch(receiveAmodahlToken(localStorage.jwToken, user))
+      dispatch(updateLoginInfo('You logged in as ' + user.name,
+        true, false, user))
+      return
+    } catch (e) {
+      dispatch(updateLoginInfo(`Invalid login info found in local storage, clearing`,
+        false, false, localStorage))
+      localStorage.clear()
+    }
+  } else {
+    dispatch(updateLoginInfo(`No ${params.type} login info found in local storage`,
+      false, false, localStorage))
   }
-  dispatch(updateLoginInfo(`No ${params.type} login info found in local storage`,
-    false, false, localStorage))
 
-  if (params.type === 'signere') {
+  if (params.type === 'signere' && params.signereRequestId) {
+    dispatch(fetchJwToken(params))
+  } else if (params.type === 'signere') {
     dispatch(updateLoginInfo('Requesting url from Signere.no', true, true, params))
 
     // get url for iframe
@@ -167,8 +192,9 @@ export const login = params => dispatch => {
       return response.json()
     })
     .then(result => {
-      // TODO
       dispatch(updateLoginInfo('Received url from Signere.no', true, true, result))
+      dispatch(receiveUrlFromSignere(result.Url, result.AccessToken, result.RequestId))
+      
       params.navigate('/signere-login')
     })
   }
@@ -197,16 +223,18 @@ export const login = params => dispatch => {
           .then(googleAuth => {
             googleAuth.signIn()
             .then(result => {
-              let authResponse = googleAuth.currentUser.get().getAuthResponse(true)
+              let authResponse = googleAuth.currentUser.get()
+                                  .getAuthResponse(true)
 
               // finally we got google token and can trade it for an amodahl token
-              dispatch(updateLoginInfo('Received token from Google', true, true, authResponse))
+              dispatch(updateLoginInfo('Received token from Google',
+                true, true, authResponse))
               dispatch(fetchJwToken({
                 googleIdToken: authResponse.id_token,
                 ...params
               }))
-            }, errorCallback) // these are weird promises
-          }, errorCallback)
+            }, errorCallback) //
+          }, errorCallback) // these are weird promises
         }, errorCallback)
       })
     }
@@ -307,18 +335,19 @@ export const login = params => dispatch => {
  * I could not figure out how to
  * pass both body and headers otherwise.
  */
-export const myFetch = dispatch => (jwToken, attempts = 0) => (what, props, myFetchCallback) => {
-  var headers = props.headers ? props.headers : new Headers()
-  headers.append('Authorization', 'Bearer ' + jwToken)
-  headers.append('pragma', 'no-cache')
-  headers.append('cache-control', 'no-store')
+export const myFetch = dispatch => (jwToken, attempts = 0) =>
+  (what, props, myFetchCallback) => {
+    var headers = props.headers ? props.headers : new Headers()
+    headers.append('Authorization', 'Bearer ' + jwToken)
+    headers.append('pragma', 'no-cache')
+    headers.append('cache-control', 'no-store')
 
-  const properties = {
-    headers: headers,
-    ...props
-  }
+    const properties = {
+      headers: headers,
+      ...props
+    }
 
-  return fetch(url + what, properties)
+    return fetch(url + what, properties)
     .then(response => {
       // ensure its json
       let contentType = response.headers.get('content-type')
@@ -353,7 +382,7 @@ export const myFetch = dispatch => (jwToken, attempts = 0) => (what, props, myFe
         }
       })
     })
-}
+  }
 
 /**
  * Clears local storage and dispatches an action to tell
