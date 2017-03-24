@@ -194,7 +194,7 @@ export const login = params => dispatch => {
     .then(result => {
       dispatch(updateLoginInfo('Received url from Signere.no', true, true, result))
       dispatch(receiveUrlFromSignere(result.Url, result.AccessToken, result.RequestId))
-      
+
       params.navigate('/signere-login')
     })
   }
