@@ -1,6 +1,6 @@
 {
   "name": "amodahl.no",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "private": true,
   "devDependencies": {
     "autoprefixer": "6.5.1",
@@ -116,7 +116,8 @@
     "globals": [
       "localStorage",
       "Headers",
-      "FormData"
+      "FormData",
+      "location"
     ]
   },
   "eslintConfig": {
