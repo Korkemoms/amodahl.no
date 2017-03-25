@@ -13,6 +13,7 @@ import {
   Button
 } from 'react-bootstrap'
 
+/* Purely presentational component */
 export default class SignereLogin extends React.Component {
 
   render () {

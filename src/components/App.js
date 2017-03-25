@@ -2,6 +2,7 @@ import React from 'react'
 import MyNavbar from '../containers/MyNavbar'
 import DocumentTitle from 'react-document-title'
 
+/* Purely presentational component */
 export default class App extends React.Component {
   render () {
     const footerInstance = (

@@ -234,6 +234,7 @@ export const login = params => dispatch => {
     window.signinCallback = () => {
       console.log('Signing in with google')
 
+      // TODO improve
       window.gapi.load('auth2', function () {
         // Retrieve the singleton for the GoogleAuth library and set up the client.
         window.gapi.auth2.init({
@@ -256,7 +257,7 @@ export const login = params => dispatch => {
                 ...params
               }))
             }, errorCallback) //
-          }, errorCallback) // these are weird promises
+          }, errorCallback) //
         }, errorCallback)
       })
     }
@@ -330,7 +331,7 @@ export const login = params => dispatch => {
 }
 
 /**
- * @callback myFetchCallback
+ * @callback MyFetchCallback
  * @param {Object} body The response body
  * @param {Object} header The response header
  */
@@ -344,23 +345,22 @@ export const login = params => dispatch => {
  * @param attempts Number fetch attempts for 'what'
  * @param what The url describing what to fetch
  * @param params Additional fetch parameters
- * @param callback {myFetchCallback} called when resource has been fetched
+ * @param callback {MyFetchCallback} called when resource has been fetched
  *
  * @return promise that is resolved with headers and body of API response
  */
-export const myFetch = dispatch => jwToken =>
-  (path, params) => {
-    var headers = params.headers ? params.headers : new Headers()
-    headers.append('Authorization', 'Bearer ' + jwToken)
-    headers.append('pragma', 'no-cache')
-    headers.append('cache-control', 'no-store')
+export const myFetch = dispatch => jwToken => (path, params) => {
+  var headers = params.headers ? params.headers : new Headers()
+  headers.append('Authorization', 'Bearer ' + jwToken)
+  headers.append('pragma', 'no-cache')
+  headers.append('cache-control', 'no-store')
 
-    const properties = {
-      headers: headers,
-      ...params
-    }
+  const properties = {
+    headers: headers,
+    ...params
+  }
 
-    return fetch(url + path, properties)
+  return fetch(url + path, properties)
     .then(response => {
       // ensure its json
       let contentType = response.headers.get('content-type')
@@ -387,10 +387,10 @@ export const myFetch = dispatch => jwToken =>
       }
       return ({body, headers})
     })
-  }
+}
 
 /**
- * Clears local storage and dispatches an action to tell
+ * Clear local storage and dispatch an action to tell
  * other components that user has logged out.
  * @param {string} dispatcher From which page user clicked log out
  */

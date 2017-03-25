@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react'
 import { NavItem } from 'react-bootstrap'
 import {IndexLinkContainer} from 'react-router-bootstrap'
 
+/* Purely presentational component */
 const NavIndexLink = ({ children, to, disableFadeIn }) => {
   return (
     <IndexLinkContainer to={to}>

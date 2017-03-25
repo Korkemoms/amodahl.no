@@ -7,6 +7,7 @@ import {
   NavDropdown
 } from 'react-bootstrap'
 
+/* Purely presentational component */
 const MyNavbar = ({ user, page }) => {
   const userSpecific = user === null
   ? <NavLink eventKey={4} to={{ pathname: '/login' }}>Log in</NavLink>

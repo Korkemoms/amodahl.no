@@ -14,6 +14,7 @@ import {
   PageHeader
 } from 'react-bootstrap'
 
+/* Purely presentational component */
 const MatrixMultiplication = () => {
   return (
     <DocumentTitle title='Matrix multiplication game'>

@@ -10,6 +10,7 @@ import {
   PageHeader
 } from 'react-bootstrap'
 
+/* Purely presentational component */
 const AmodahlNo = () => {
   return (
     <DocumentTitle title='About this website'>

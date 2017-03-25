@@ -13,8 +13,8 @@ import {
   Image
 } from 'react-bootstrap'
 
+/* Purely presentational component */
 class About extends Component {
-
   render () {
     return (
       <DocumentTitle title='About me'>

@@ -8,7 +8,7 @@ import {login} from './actions/Login'
 import configureStore from './store/configureStore'
 
 const store = configureStore()
-store.dispatch(login())
+store.dispatch(login()) // attempt to log in using local storage
 
 import Root from './containers/Root'
 

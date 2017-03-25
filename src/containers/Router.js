@@ -14,6 +14,7 @@ import AmodahlNo from './AmodahlNo'
 import MatrixMultiplication from './MatrixMultiplication'
 import LeveringMontering from './LeveringMontering'
 
+/* Keeps url in sync with application */
 export default class MyRouter extends React.Component {
 
   render () {

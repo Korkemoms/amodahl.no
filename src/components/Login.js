@@ -14,6 +14,7 @@ import {
   MenuItem
 } from 'react-bootstrap'
 
+/* Purely presentational component */
 const Login = ({login, logout, user, loading, message,
                     displayMessage, history, navigate}) => {
   let key = 1

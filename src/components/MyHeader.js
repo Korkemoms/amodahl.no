@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 
+/* Purely presentational component */
 const MyHeader = ({ headline }) => {
   return (
     <div className='bs-docs-header Header'>

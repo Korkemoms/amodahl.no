@@ -11,6 +11,7 @@ import {
   PageHeader
 } from 'react-bootstrap'
 
+/* Purely presentational component */
 const Chess = ({ readMore, toggleReadMore, myFetch, user, jwToken, navigate }) => {
   return (
     <DocumentTitle title='Chess game'>

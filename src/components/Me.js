@@ -25,6 +25,7 @@ import {
   )
 } */
 
+/* Purely presentational component */
 const Me = ({ logout, token, user, message }) => {
   const logoutButton = token !== null
     ? <Button bsStyle='warning' onClick={() => { logout('me') }}>

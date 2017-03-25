@@ -16,6 +16,7 @@ import {
   MenuItem
 } from 'react-bootstrap'
 
+/* Purely presentational component */
 const Home = ({ fadeInEnabled, disableFadeIn, navigate }) => {
   return (
     <DocumentTitle title='amodahl.no'>

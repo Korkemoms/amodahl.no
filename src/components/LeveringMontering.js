@@ -17,6 +17,7 @@ import {
   Carousel
 } from 'react-bootstrap'
 
+/* Purely presentational component */
 const LeveringMontering = ({carouselIndex, carouselDirection, carouselSelect}) => {
   const carousel =
     <Carousel className='myimage'
