@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 import NavLink from '../containers/NavLink'
 import NavIndexLink from '../containers/NavIndexLink'
 import {
@@ -44,11 +44,6 @@ const MyNavbar = ({ user, page }) => {
       </Navbar.Collapse>
     </Navbar>
   )
-}
-
-MyNavbar.propTypes = {
-  user: PropTypes.object,
-  page: PropTypes.string
 }
 
 export default MyNavbar

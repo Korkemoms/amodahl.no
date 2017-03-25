@@ -1,7 +1,20 @@
-const initialState = {
-  user: null,
-  page: null
+import { PropTypes } from 'react'
+import MyNavbar from '../components/MyNavbar'
+
+/** Define initial Redux state and React PropTypes */
+const def = (props = false) => {
+  const f = props ? (_, type) => type : (val, _) => val
+  let r = { // initial Redux state and React PropTypes
+    user: f(null, PropTypes.object),
+    page: f(null, PropTypes.string)
+  }
+  if (props) { // add more React PropTypes
+    r = { ...r}
+  }
+  return r
 }
+const initialState = def()
+MyNavbar.propTypes = def(true)
 
 export default function update (state = initialState, action) {
   switch (action.type) {

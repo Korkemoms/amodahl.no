@@ -1,8 +1,21 @@
-const initialState = {
-  token: null,
-  user: null,
-  message: null
+import { PropTypes } from 'react'
+import Me from '../components/Me'
+
+/** Define initial Redux state and React PropTypes */
+const def = (props = false) => {
+  const f = props ? (_, type) => type : (val, _) => val
+  let r = { // initial Redux state and React PropTypes
+    token: f(null, PropTypes.string),
+    user: f(null, PropTypes.object),
+    message: f(null, PropTypes.string)
+  }
+  if (props) { // add more React PropTypes
+    r = { ...r}
+  }
+  return r
 }
+const initialState = def()
+Me.propTypes = def(true)
 
 export default function update (state = initialState, action) {
   switch (action.type) {

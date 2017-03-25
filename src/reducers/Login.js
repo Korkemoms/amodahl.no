@@ -1,9 +1,22 @@
-const initialState = {
-  message: null,
-  displayMessage: true,
-  user: null,
-  history: []
+import { PropTypes } from 'react'
+import Login from '../components/Login'
+
+/** Define initial Redux state and React PropTypes */
+const def = (props = false) => {
+  const f = props ? (_, type) => type : (val, _) => val
+  let r = { // initial Redux state and React PropTypes
+    message: f(null, PropTypes.string),
+    displayMessage: f(false, PropTypes.bool),
+    user: f(null, PropTypes.object),
+    history: f([], PropTypes.array)
+  }
+  if (props) { // add more React PropTypes
+    r = { ...r}
+  }
+  return r
 }
+const initialState = def()
+Login.propTypes = def(true)
 
 export default function update (state = initialState, action) {
   switch (action.type) {
