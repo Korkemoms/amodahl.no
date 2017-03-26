@@ -12,7 +12,7 @@ const def = (props = false) => {
     history: f([], PropTypes.array)
   }
   if (props) { // add more React PropTypes
-    r = { ...r}
+    r = {...r}
   }
   return r
 }
@@ -39,7 +39,7 @@ export default function update (state = initialState, action) {
       return Object.assign({}, state, {
         user: action.user
       })
-    case types.login.DELETE_AMODAHL_TOKEN:
+    case types.login.USER_LOGGED_OUT:
       return Object.assign({}, state, {
         user: null,
         message: 'You logged out.',

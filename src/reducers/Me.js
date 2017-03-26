@@ -11,7 +11,7 @@ const def = (props = false) => {
     message: f(null, PropTypes.string)
   }
   if (props) { // add more React PropTypes
-    r = { ...r}
+    r = {...r}
   }
   return r
 }
@@ -20,7 +20,6 @@ Me.propTypes = def(true)
 
 export default function update (state = initialState, action) {
   switch (action.type) {
-
     case types.login.RECEIVE_AMODAHL_TOKEN:
       return Object.assign({}, state, {
         token: action.token,
@@ -33,7 +32,7 @@ export default function update (state = initialState, action) {
         user: null,
         message: null
       })
-    case types.login.DELETE_AMODAHL_TOKEN:
+    case types.login.USER_LOGGED_OUT:
       return Object.assign({}, state, {
         token: null,
         user: null,
