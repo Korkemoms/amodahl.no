@@ -14,6 +14,6 @@ export const types = {
     UPDATE_LOGIN_INFO: 'UPDATE_LOGIN_INFO'
   },
   router: {
-    LOCATION_CHANGE: 'LOCATION_CHANGE'
+    LOCATION_CHANGE: '@@router/LOCATION_CHANGE'
   }
 }
