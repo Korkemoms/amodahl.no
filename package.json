@@ -48,7 +48,7 @@
     "recursive-readdir": "2.1.0",
     "redux-logger": "^2.8.1",
     "sass-loader": "^4.1.1",
-    "standard": "*",
+    "standard": "^9.0.2",
     "strip-ansi": "3.0.1",
     "style-loader": "0.13.1",
     "url-loader": "0.5.7",
