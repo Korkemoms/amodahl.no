@@ -27,10 +27,6 @@ export default function update (state = initialState, action) {
       return Object.assign({}, state, {
         user: null
       })
-    case types.login.DELETE_AMODAHL_TOKEN:
-      return Object.assign({}, state, {
-        user: null
-      })
     case types.router.LOCATION_CHANGE:
       {
         return Object.assign({}, state, {
