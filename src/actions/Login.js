@@ -2,9 +2,13 @@ import fetch from 'isomorphic-fetch'
 import { types } from '../constants/ActionTypes'
 
 // determine where to send requests
-const www = window.location.href.indexOf('www.') !== -1 ? 'www.' : ''
-const url = process.env.NODE_ENV === 'production'
-  ? `https://${www}amodahl.no/api/public` : `http://${www}local.amodahl.no:3000`
+const url = () => {
+  const www = window.location.href.indexOf('www.') !== -1 ? 'www.' : ''
+  return process.env.NODE_ENV === 'production'
+    ? `https://${www}amodahl.no/api/public` : `http://${www}local.amodahl.no:3000`
+}
+
+const googleClientId = '778219340101-tf221dbeeho9frka8js86iv460hfuse0.apps.googleusercontent.com'
 
 // The scopes to request for the token
 const scopes = [
@@ -20,46 +24,35 @@ const scopes = [
   'update.list'
 ]
 
-export const receiveAmodahlToken = (jwToken, user) => {
-  return {
-    jwToken: jwToken,
-    user: user,
-    type: types.login.RECEIVE_AMODAHL_TOKEN
-  }
-}
+export const receiveAmodahlToken = (jwToken, user) => ({
+  jwToken: jwToken,
+  user: user,
+  type: types.login.RECEIVE_AMODAHL_TOKEN
+})
 
-export const receievSignereUrl = (url, accessToken, requestId) => {
-  return {
-    type: types.login.RECEIVE_SIGNERE_URL,
-    url: url,
-    accessToken: accessToken,
-    requestId: requestId
-  }
-}
+export const receiveSignereUrl = (url, accessToken, requestId) => ({
+  type: types.login.RECEIVE_SIGNERE_URL,
+  url: url,
+  accessToken: accessToken,
+  requestId: requestId
+})
 
-export const receiveAmodahlTokenFailed = () => {
-  return {
-    type: types.login.RECEIVE_AMODAHL_TOKEN_FAILED
-  }
-}
+export const requestAmodahlTokenFailed = () => ({
+  type: types.login.REQUEST_AMODAHL_TOKEN_FAILED
+})
 
-export const deleteAmodahlToken = (dispatchedFrom) => {
-  return {
-    jwToken: null,
-    dispatchedFrom: dispatchedFrom,
-    type: types.login.DELETE_AMODAHL_TOKEN
-  }
-}
+export const userLoggedOut = (dispatchedFrom) => ({
+  dispatchedFrom: dispatchedFrom,
+  type: types.login.USER_LOGGED_OUT
+})
 
-export const updateLoginInfo = (message, displayMsg, loading, info) => {
-  return {
-    message: message,
-    displayMessage: displayMsg,
-    loading: loading,
-    additionalInfo: info,
-    type: types.login.UPDATE_LOGIN_INFO
-  }
-}
+export const updateLoginInfo = (message, displayMsg, loading, info) => ({
+  message: message,
+  displayMessage: displayMsg,
+  loading: loading,
+  additionalInfo: info,
+  type: types.login.UPDATE_LOGIN_INFO
+})
 
 /**
  * Ask the API for a token using a facebook or google token, or a
@@ -78,7 +71,7 @@ export const updateLoginInfo = (message, displayMsg, loading, info) => {
  *
  * @return the API's response containing a JSON web token for amodahl.no-api
  */
-const fetchJwToken = params => dispatch => {
+export const fetchJwToken = params => dispatch => {
   dispatch(updateLoginInfo('Logging in to amodahl.no...', true, true, params))
 
   // prepare body
@@ -111,7 +104,7 @@ const fetchJwToken = params => dispatch => {
   headers.append('pragma', 'no-cache')
   headers.append('cache-control', 'no-cache')
 
-  return fetch(url + '/token', {
+  return fetch(url() + '/token', {
     method: 'POST',
     headers,
     body: form
@@ -142,7 +135,7 @@ const fetchJwToken = params => dispatch => {
     localStorage.setItem('user', JSON.stringify(response.user))
   })
   .catch(error => {
-    dispatch(receiveAmodahlTokenFailed())
+    dispatch(requestAmodahlTokenFailed())
     dispatch(updateLoginInfo('Failed to log in to amodahl.no: '
       + error.message, true, false, error))
   })
@@ -201,7 +194,7 @@ export const login = params => dispatch => {
     var form = new FormData()
     form.append('requested_scopes', JSON.stringify(scopes))
     form.append('type', 'signere')
-    fetch(url + '/token', {
+    fetch(url() + '/token', {
       method: 'POST',
       body: form
 
@@ -217,7 +210,7 @@ export const login = params => dispatch => {
     })
     .then(result => {
       dispatch(updateLoginInfo('Received url from Signere.no', true, true, result))
-      dispatch(receievSignereUrl(result.Url, result.AccessToken, result.RequestId))
+      dispatch(receiveSignereUrl(result.Url, result.AccessToken, result.RequestId))
 
       params.navigate('/signere-login')
     })
@@ -225,8 +218,6 @@ export const login = params => dispatch => {
 
   if (params.type === 'google') {
     dispatch(updateLoginInfo('Logging in with Google...', true, true, params))
-
-    const clId = '778219340101-tf221dbeeho9frka8js86iv460hfuse0.apps.googleusercontent.com'
 
     const errorCallback = error => {
       dispatch(updateLoginInfo('Failed to log in to google: ' +
@@ -240,7 +231,7 @@ export const login = params => dispatch => {
       window.gapi.load('auth2', function () {
         // Retrieve the singleton for the GoogleAuth library and set up the client.
         window.gapi.auth2.init({
-          client_id: clId,
+          client_id: googleClientId,
           cookiepolicy: 'single_host_origin'
         })
         .then(args => {
@@ -258,7 +249,7 @@ export const login = params => dispatch => {
                 googleIdToken: authResponse.id_token,
                 ...params
               }))
-            }, errorCallback) //
+            }, errorCallback) // asdf
           }, errorCallback) //
         }, errorCallback)
       })
@@ -362,32 +353,32 @@ export const myFetch = dispatch => jwToken => (path, params) => {
     ...params
   }
 
-  return fetch(url + path, properties)
-    .then(response => {
-      // ensure its json
-      let contentType = response.headers.get('content-type')
-      let gotJson = contentType && contentType.indexOf('application/json') !== -1
-      if (!gotJson) {
-        throw new Error('Oops, we haven\'t got JSON: ' + JSON.stringify(response))
-      }
-      return response.json().then(json =>
-      ({ headers: headers, body: json }))
-    })
-    .then(({body, headers}) => {
-      // check if token has expired
-      if (body.status === 'error' && body.message === 'Expired token') {
-        // TODO deal with it
-        throw new Error('Token expired')
-      }
-      return ({body, headers})
-    })
-    .then(({body, headers}) => {
-      // ensure query was accepted
-      if (body.status && body.status !== 'ok') {
-        throw new Error('Received: ' + JSON.stringify(body))
-      }
-      return ({body, headers})
-    })
+  return fetch(url() + path, properties)
+  .then(response => {
+    // ensure its json
+    let contentType = response.headers.get('content-type')
+    let gotJson = contentType && contentType.indexOf('application/json') !== -1
+    if (!gotJson) {
+      throw new Error('Oops, we haven\'t got JSON: ' + JSON.stringify(response))
+    }
+    return response.json().then(json =>
+    ({ headers: headers, body: json }))
+  })
+  .then(({body, headers}) => {
+    // check if token has expired
+    if (body.status === 'error' && body.message === 'Expired token') {
+      // TODO deal with it
+      throw new Error('Token expired')
+    }
+    return ({body, headers})
+  })
+  .then(({body, headers}) => {
+    // ensure query was accepted
+    if (body.status && body.status !== 'ok') {
+      throw new Error('Received: ' + JSON.stringify(body))
+    }
+    return ({body, headers})
+  })
 }
 
 /**
@@ -395,8 +386,8 @@ export const myFetch = dispatch => jwToken => (path, params) => {
  * other components that user has logged out.
  * @param {string} dispatcher From which page user clicked log out
  */
-export const logout = dispatcher => dispatch => {
-  dispatch(deleteAmodahlToken(dispatcher))
+export const logout = dispatchedFrom => dispatch => {
+  dispatch(userLoggedOut(dispatchedFrom))
   localStorage.clear()
 
   // log out of facebook

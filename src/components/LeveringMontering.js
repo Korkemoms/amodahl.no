@@ -23,7 +23,7 @@ const LeveringMontering = ({carouselIndex, carouselDirection, carouselSelect}) =
     <Carousel className='myimage'
       activeIndex={carouselIndex}
       direction={carouselDirection}
-      onSelect={carouselSelect}>
+      onSelect={(index, e) => carouselSelect(index, e.direction)}>
       <Carousel.Item>
         <img width={800} height={930} alt='New order'
           src={ImageNewOrder} />
