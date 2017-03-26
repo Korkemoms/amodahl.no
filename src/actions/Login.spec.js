@@ -4,6 +4,26 @@ import { types } from '../constants/ActionTypes'
 import * as actions from './Login'
 
 describe('actions', () => {
+  it('should create an action carrying updated login info', () => {
+    let message = (Math.random() + 1).toString(36).substring(16)
+    let displayMessage = Math.random() < 0.5
+    let loading = Math.random() < 0.5
+    let additionalInfo = {
+      a: (Math.random() + 1).toString(36).substring(16),
+      b: (Math.random() + 1).toString(36).substring(16)
+    }
+
+    const expectedAction = {
+      message,
+      displayMessage,
+      loading,
+      additionalInfo,
+      type: types.login.UPDATE_LOGIN_INFO
+    }
+    expect(actions.updateLoginInfo(message, displayMessage, loading, additionalInfo))
+    .toEqual(expectedAction)
+  })
+
   it('should create an action notifying that the user initiated log out', () => {
     let dispatchedFrom = (Math.random() + 1).toString(36).substring(16)
 
@@ -11,7 +31,7 @@ describe('actions', () => {
       type: types.login.USER_LOGGED_OUT,
       dispatchedFrom
     }
-    expect(actions.deleteAmodahlToken(dispatchedFrom)).toEqual(expectedAction)
+    expect(actions.userLoggedOut(dispatchedFrom)).toEqual(expectedAction)
   })
 
   it('should create an action carrying received token and user details', () => {
