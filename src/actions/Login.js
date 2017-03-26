@@ -74,30 +74,9 @@ export const updateLoginInfo = (message, displayMsg, loading, info) => ({
 export const fetchJwToken = params => dispatch => {
   dispatch(updateLoginInfo('Logging in to amodahl.no...', true, true, params))
 
-  // prepare body
-  // TODO JSON?
-  var form = new FormData()
-  form.append('requested_scopes', JSON.stringify(scopes)) // defined top of doc
-  if (params.fbAccessToken) {
-    form.append('fb_access_token', params.fbAccessToken)
-  }
-  if (params.googleIdToken) {
-    form.append('google_id_token', params.googleIdToken)
-  }
-  if (params.signereRequestId) {
-    form.append('signere_request_id', params.signereRequestId)
-  }
-  if (params.signereAccessToken) {
-    form.append('signere_access_token', params.signereAccessToken)
-  }
-  if (params.name) {
-    form.append('name', params.name)
-  }
-  if (params.email) {
-    form.append('email', params.email)
-  }
-  if (params.type) {
-    form.append('type', params.type)
+  params = {
+    ...params,
+    requestedScopes: JSON.stringify(scopes)
   }
 
   var headers = new Headers()
@@ -107,7 +86,7 @@ export const fetchJwToken = params => dispatch => {
   return fetch(url() + '/token', {
     method: 'POST',
     headers,
-    body: form
+    body: JSON.stringify(params)
   })
   .then(response => { // ensure its json
     let contentType = response.headers.get('content-type')
@@ -136,8 +115,8 @@ export const fetchJwToken = params => dispatch => {
   })
   .catch(error => {
     dispatch(requestAmodahlTokenFailed())
-    dispatch(updateLoginInfo('Failed to log in to amodahl.no: '
-      + error.message, true, false, error))
+    dispatch(updateLoginInfo('Failed to log in to amodahl.no: ' +
+      error.message, true, false, error))
   })
 }
 
@@ -191,13 +170,14 @@ export const login = params => dispatch => {
     dispatch(updateLoginInfo('Requesting url from Signere.no', true, true, params))
 
     // get url for iframe
-    var form = new FormData()
-    form.append('requested_scopes', JSON.stringify(scopes))
-    form.append('type', 'signere')
+    let body = {
+      requested_scopes: JSON.stringify(scopes),
+      type: 'signere'
+    }
+
     fetch(url() + '/token', {
       method: 'POST',
-      body: form
-
+      body: JSON.stringify(body)
     })
     .then(response => { // ensure its json
       let contentType = response.headers.get('content-type')
