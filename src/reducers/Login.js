@@ -29,17 +29,17 @@ export default function update (state = initialState, action) {
         history: history
       })
     }
-    case types.home.UPDATE_LOGIN_INFO:
+    case types.login.UPDATE_LOGIN_INFO:
       return Object.assign({}, state, {
         message: action.message,
         displayMessage: action.displayMessage,
         loading: action.loading
       })
-    case types.home.RECEIVE_AMODAHL_TOKEN:
+    case types.login.RECEIVE_AMODAHL_TOKEN:
       return Object.assign({}, state, {
         user: action.user
       })
-    case types.home.DELETE_AMODAHL_TOKEN:
+    case types.login.DELETE_AMODAHL_TOKEN:
       return Object.assign({}, state, {
         user: null,
         message: 'You logged out.',
