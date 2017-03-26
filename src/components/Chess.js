@@ -21,8 +21,8 @@ const Chess = ({ readMore, toggleReadMore, myFetch, user, jwToken, navigate }) =
         <div className='mycontent'>
 
           <ChessGame
-            myUid={user ? user.uid : null}
-            myName={user ? user.name : null}
+            playerUid={user ? user.uid : null}
+            playerName={user ? user.name : null}
             myFetch={jwToken !== null ? myFetch(jwToken) : null}
             navigate={navigate}
             />
