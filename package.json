@@ -118,7 +118,9 @@
       "localStorage",
       "Headers",
       "FormData",
-      "location"
+      "location",
+      "it",
+      "describe"
     ]
   },
   "eslintConfig": {
