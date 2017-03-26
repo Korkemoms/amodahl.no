@@ -374,7 +374,6 @@ export const myFetch = dispatch => jwToken => (path, params) => {
       ({ headers: headers, body: json }))
     })
     .then(({body, headers}) => {
-      console.log(body)
       // check if token has expired
       if (body.status === 'error' && body.message === 'Expired token') {
         // TODO deal with it

@@ -20,7 +20,6 @@ const initialState = def()
 Chess.propTypes = def(true)
 
 export default function update (state = initialState, action) {
-  console.log(types)
   switch (action.type) {
     case types.login.RECEIVE_AMODAHL_TOKEN: {
       return Object.assign({}, state, {
