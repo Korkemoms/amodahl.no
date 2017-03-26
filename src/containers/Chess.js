@@ -1,5 +1,4 @@
 import { connect } from 'react-redux'
-import { toggleReadMore } from '../actions/Chess'
 import { myFetch } from '../actions/Login'
 import Chess from '../components/Chess'
 import { push } from 'react-router-redux'
@@ -7,9 +6,6 @@ import { push } from 'react-router-redux'
 const ChessContainer = ((Target, namespace) => {
   const mapDispatchToProps = (dispatch) => {
     return {
-      toggleReadMore: (readMore) => {
-        dispatch(toggleReadMore(readMore))
-      },
       myFetch: myFetch(dispatch),
       navigate: (path) => {
         dispatch(push(path))

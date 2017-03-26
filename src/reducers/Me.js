@@ -1,5 +1,6 @@
 import { PropTypes } from 'react'
 import Me from '../components/Me'
+import { types } from '../constants/ActionTypes'
 
 /** Define initial Redux state and React PropTypes */
 const def = (props = false) => {
@@ -20,25 +21,19 @@ Me.propTypes = def(true)
 export default function update (state = initialState, action) {
   switch (action.type) {
 
-    case 'RECEIVE_AMODAHL_TOKEN':
+    case types.login.RECEIVE_AMODAHL_TOKEN:
       return Object.assign({}, state, {
         token: action.token,
         user: action.user,
         message: null
       })
-    case 'REQUEST_AMODAHL_TOKEN_FAILED':
+    case types.login.REQUEST_AMODAHL_TOKEN_FAILED:
       return Object.assign({}, state, {
         token: null,
         user: null,
         message: null
       })
-    case '@@me/DELETE_AMODAHL_TOKEN':
-      return Object.assign({}, state, {
-        token: null,
-        user: null,
-        message: 'You logged out.'
-      })
-    case '@@login/DELETE_AMODAHL_TOKEN':
+    case types.login.DELETE_AMODAHL_TOKEN:
       return Object.assign({}, state, {
         token: null,
         user: null,

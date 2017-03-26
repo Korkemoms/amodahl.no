@@ -1,10 +1,12 @@
+import { types } from '../constants/ActionTypes'
+
 export const enableFadeIn = () => {
   return {
-    type: 'ENABLE_FADE_IN'
+    type: types.home.ENABLE_FADE_IN
   }
 }
 export const disableFadeIn = () => {
   return {
-    type: 'DISABLE_FADE_IN'
+    type: types.home.DISABLE_FADE_IN
   }
 }

@@ -1,5 +1,6 @@
 import { PropTypes } from 'react'
 import Chess from '../components/Chess'
+import { types } from '../constants/ActionTypes'
 
 /** Define initial Redux state and React PropTypes */
 const def = (props = false) => {
@@ -19,24 +20,15 @@ const initialState = def()
 Chess.propTypes = def(true)
 
 export default function update (state = initialState, action) {
+  console.log(types)
   switch (action.type) {
-    case 'TOGGLE_READ_MORE':
-      return Object.assign({}, state, {
-        readMore: action.readMore
-      })
-    case 'RECEIVE_AMODAHL_TOKEN': {
+    case types.login.RECEIVE_AMODAHL_TOKEN: {
       return Object.assign({}, state, {
         jwToken: action.jwToken,
         user: action.user
       })
     }
-    case '@@me/DELETE_AMODAHL_TOKEN':
-      return Object.assign({}, state, {
-        jwToken: null,
-        myEmail: null,
-        myName: null
-      })
-    case '@@login/DELETE_AMODAHL_TOKEN':
+    case types.login.DELETE_AMODAHL_TOKEN:
       return Object.assign({}, state, {
         jwToken: null,
         myEmail: null,

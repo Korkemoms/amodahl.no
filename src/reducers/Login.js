@@ -1,5 +1,6 @@
 import { PropTypes } from 'react'
 import Login from '../components/Login'
+import { types } from '../constants/ActionTypes'
 
 /** Define initial Redux state and React PropTypes */
 const def = (props = false) => {
@@ -20,7 +21,7 @@ Login.propTypes = def(true)
 
 export default function update (state = initialState, action) {
   switch (action.type) {
-    case '@@router/LOCATION_CHANGE': {
+    case types.router.LOCATION_CHANGE: {
       let history = state.history.slice(0, 10)
       history.push(action.payload.pathname)
 
@@ -28,27 +29,21 @@ export default function update (state = initialState, action) {
         history: history
       })
     }
-    case 'UPDATE_LOGIN_INFO':
+    case types.home.UPDATE_LOGIN_INFO:
       return Object.assign({}, state, {
         message: action.message,
         displayMessage: action.displayMessage,
         loading: action.loading
       })
-    case 'RECEIVE_AMODAHL_TOKEN':
+    case types.home.RECEIVE_AMODAHL_TOKEN:
       return Object.assign({}, state, {
         user: action.user
       })
-    case '@@login/DELETE_AMODAHL_TOKEN':
+    case types.home.DELETE_AMODAHL_TOKEN:
       return Object.assign({}, state, {
         user: null,
         message: 'You logged out.',
-        displayMessage: true
-      })
-    case '@@me/DELETE_AMODAHL_TOKEN':
-      return Object.assign({}, state, {
-        user: null,
-        message: null,
-        displayMessage: false
+        displayMessage: action.dispatchedFrom === 'login'
       })
     default:
       return state

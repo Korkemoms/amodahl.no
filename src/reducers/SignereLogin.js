@@ -1,5 +1,6 @@
 import { PropTypes } from 'react'
 import SignereLogin from '../components/SignereLogin'
+import { types } from '../constants/ActionTypes'
 
 /** Define initial Redux state and React PropTypes */
 const def = (props = false) => {
@@ -17,7 +18,7 @@ SignereLogin.propTypes = def(true)
 
 export default function update (state = initialState, action) {
   switch (action.type) {
-    case 'RECEIVE_SIGNERE_URL':
+    case types.login.RECEIVE_SIGNERE_URL:
       return Object.assign({}, state, {
         url: action.url,
         accessToken: action.accessToken

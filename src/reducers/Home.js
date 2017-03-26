@@ -1,5 +1,6 @@
 import { PropTypes } from 'react'
 import Home from '../components/Chess'
+import { types } from '../constants/ActionTypes'
 
 /** Define initial Redux state and React PropTypes */
 const def = (props = false) => {
@@ -17,11 +18,11 @@ Home.propTypes = def(true)
 
 export default function update (state = initialState, action) {
   switch (action.type) {
-    case 'DISABLE_FADE_IN':
+    case types.home.DISABLE_FADE_IN:
       return Object.assign({}, state, {
         fadeInEnabled: false
       })
-    case 'ENABLE_FADE_IN':
+    case types.home.ENABLE_FADE_IN:
       return Object.assign({}, state, {
         fadeInEnabled: true
       })

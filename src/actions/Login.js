@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch'
+import { types } from '../constants/ActionTypes'
 
 // determine where to send requests
 const www = window.location.href.indexOf('www.') !== -1 ? 'www.' : ''
@@ -23,13 +24,13 @@ export const receiveAmodahlToken = (jwToken, user) => {
   return {
     jwToken: jwToken,
     user: user,
-    type: 'RECEIVE_AMODAHL_TOKEN'
+    type: types.login.RECEIVE_AMODAHL_TOKEN
   }
 }
 
-export const receiveUrlFromSignere = (url, accessToken, requestId) => {
+export const receievSignereUrl = (url, accessToken, requestId) => {
   return {
-    type: 'RECEIVE_SIGNERE_URL',
+    type: types.login.RECEIVE_SIGNERE_URL,
     url: url,
     accessToken: accessToken,
     requestId: requestId
@@ -38,14 +39,15 @@ export const receiveUrlFromSignere = (url, accessToken, requestId) => {
 
 export const receiveAmodahlTokenFailed = () => {
   return {
-    type: 'RECEIVE_AMODAHL_TOKEN_FAILED'
+    type: types.login.RECEIVE_AMODAHL_TOKEN_FAILED
   }
 }
 
-export const deleteAmodahlToken = (dispatcher) => {
+export const deleteAmodahlToken = (dispatchedFrom) => {
   return {
     jwToken: null,
-    type: '@@' + dispatcher + '/DELETE_AMODAHL_TOKEN'
+    dispatchedFrom: dispatchedFrom,
+    type: types.login.DELETE_AMODAHL_TOKEN
   }
 }
 
@@ -55,7 +57,7 @@ export const updateLoginInfo = (message, displayMsg, loading, info) => {
     displayMessage: displayMsg,
     loading: loading,
     additionalInfo: info,
-    type: 'UPDATE_LOGIN_INFO'
+    type: types.login.UPDATE_LOGIN_INFO
   }
 }
 
@@ -215,7 +217,7 @@ export const login = params => dispatch => {
     })
     .then(result => {
       dispatch(updateLoginInfo('Received url from Signere.no', true, true, result))
-      dispatch(receiveUrlFromSignere(result.Url, result.AccessToken, result.RequestId))
+      dispatch(receievSignereUrl(result.Url, result.AccessToken, result.RequestId))
 
       params.navigate('/signere-login')
     })

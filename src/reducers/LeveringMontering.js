@@ -1,5 +1,6 @@
 import { PropTypes } from 'react'
 import LeveringMontering from '../components/LeveringMontering'
+import { types } from '../constants/ActionTypes'
 
 /** Define initial Redux state and React PropTypes */
 const def = (props = false) => {
@@ -19,7 +20,7 @@ LeveringMontering.propTypes = def(true)
 
 export default function update (state = initialState, action) {
   switch (action.type) {
-    case '@@leveringMontering/CAROUSEL_SELECT':
+    case types.leveringMontering.CAROUSEL_SELECT:
       return Object.assign({}, state, {
         carouselIndex: action.selectedIndex,
         carouselDirection: action.direction
