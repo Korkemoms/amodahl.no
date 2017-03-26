@@ -17,6 +17,9 @@ About.propTypes = def(true)
 
 export default function update (state = initialState, action) {
   switch (action.type) {
+    case undefined: {
+      throw new Error('Undefined action type!!')
+    }
 
     default:
       return state

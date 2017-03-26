@@ -21,6 +21,9 @@ Login.propTypes = def(true)
 
 export default function update (state = initialState, action) {
   switch (action.type) {
+    case undefined: {
+      throw new Error('Undefined action type!!')
+    }
     case types.router.LOCATION_CHANGE: {
       let history = state.history.slice(0, 10)
       history.push(action.payload.pathname)

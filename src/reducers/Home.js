@@ -9,7 +9,7 @@ const def = (props = false) => {
     fadeInEnabled: f(true, PropTypes.bool)
   }
   if (props) { // add more React PropTypes
-    r = { ...r}
+    r = {...r}
   }
   return r
 }
@@ -18,6 +18,9 @@ Home.propTypes = def(true)
 
 export default function update (state = initialState, action) {
   switch (action.type) {
+    case undefined: {
+      throw new Error('Undefined action type!!')
+    }
     case types.home.DISABLE_FADE_IN:
       return Object.assign({}, state, {
         fadeInEnabled: false

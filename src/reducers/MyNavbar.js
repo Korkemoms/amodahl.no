@@ -10,7 +10,7 @@ const def = (props = false) => {
     page: f(null, PropTypes.string)
   }
   if (props) { // add more React PropTypes
-    r = { ...r}
+    r = {...r}
   }
   return r
 }
@@ -19,6 +19,9 @@ MyNavbar.propTypes = def(true)
 
 export default function update (state = initialState, action) {
   switch (action.type) {
+    case undefined: {
+      throw new Error('Undefined action type!!')
+    }
     case types.login.RECEIVE_AMODAHL_TOKEN:
       return Object.assign({}, state, {
         user: action.user
