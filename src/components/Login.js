@@ -158,7 +158,7 @@ const Login = ({login, logout, user, loading, message,
             </p>
             <ButtonToolbar>{buttons}</ButtonToolbar>
 
-            <p style={{height: '1em'}}><label>{displayMessage ? message : ''}</label></p>
+            <p style={{minHeight: '1em'}}><label>{displayMessage ? message : ''}</label></p>
             {experimentalButtonsToolbar}
             <p style={{marginTop: '5em'}}>
               <small>
