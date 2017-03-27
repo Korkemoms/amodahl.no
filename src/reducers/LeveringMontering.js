@@ -20,9 +20,6 @@ LeveringMontering.propTypes = def(true)
 
 export default function update (state = initialState, action) {
   switch (action.type) {
-    case undefined: {
-      throw new Error('Undefined action type!!')
-    }
     case types.leveringMontering.CAROUSEL_SELECT:
       return Object.assign({}, state, {
         carouselIndex: action.selectedIndex,

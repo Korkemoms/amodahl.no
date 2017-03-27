@@ -18,9 +18,6 @@ SignereLogin.propTypes = def(true)
 
 export default function update (state = initialState, action) {
   switch (action.type) {
-    case undefined: {
-      throw new Error('Undefined action type!!')
-    }
     case types.login.RECEIVE_SIGNERE_URL:
       return Object.assign({}, state, {
         url: action.url,
