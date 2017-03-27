@@ -27,7 +27,7 @@ const Home = ({ fadeInEnabled, disableFadeIn, navigate }) => {
           <Grid>
             <Row className='Center' style={{color: '#e9e9e9'}}>
               <Col xs={12}>
-                <Jumbotron style={{backgroundColor: 'transparent'}}>
+                <Jumbotron style={{backgroundColor: 'transparent', textShadow: '0 1px 0 black'}}>
                   <h1>Hi</h1>
                   <p>
                   I'm Andreas and I like to code. My latest passion is making
