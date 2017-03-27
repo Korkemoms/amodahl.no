@@ -15,7 +15,6 @@ import {
 
 /* Purely presentational component */
 export default class SignereLogin extends React.Component {
-
   render () {
     const urlParameters = queryString.parse(location.search)
 
@@ -24,6 +23,7 @@ export default class SignereLogin extends React.Component {
       loginButton = <Button
         bsStyle='primary'
         onClick={() => {
+          this.props.navigate('/login')
           this.props.login({
             type: 'signere',
             signereRequestId: urlParameters.signereRequestId
