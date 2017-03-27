@@ -5,12 +5,32 @@ body {
   min-height: 100%;
   word-wrap: break-word;
 
-  background: url('./images/Magic-forest.jpg') no-repeat fixed;
+
+}
+
+.background-a {
+  background: url('./images/backgrounds/Magic-forest.jpg') no-repeat fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
 }
+.background-b {
+  background: url('./images/backgrounds/nasa-89127.jpg') no-repeat fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+.background-c {
+  background: url('./images/backgrounds/lobostudio-hamburg-134977.jpg') no-repeat fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+
 
 html {
   height: 100%;

@@ -8,6 +8,18 @@
     <title>Andreas Modahl</title>
   </head>
   <body>
+    <script>
+    var body = document.getElementsByTagName("BODY")[0];
+
+    var r = Math.random() < 0.5;
+    if(Math.random() < 1/3){
+      body.className = 'background-a';
+    } else if(Math.random() < 2/3){
+      body.className = 'background-b';
+    } else if(Math.random() < 3/3){
+      body.className = 'background-c';
+    }
+    </script>
     <div id="reactRoot"></div>
 
   </body>
