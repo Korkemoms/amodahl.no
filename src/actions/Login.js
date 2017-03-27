@@ -103,6 +103,23 @@ export const fetchJwToken = params => dispatch => {
     }
     return response
   })
+  .then(response => { // ensure we got what we wanted
+    if (!response.user || !response.user.name || !response.user.uid || !response.token) {
+      throw new Error('Received: ' + JSON.stringify(response))
+    }
+    if (typeof (response.user.name) !== 'string' ||
+        typeof (response.user.uid) !== 'string' ||
+        typeof (response.token) !== 'string') {
+      throw new Error('Received: ' + JSON.stringify(response))
+    }
+    if (response.user.name.length === 0 ||
+        response.user.uid.length === 0 ||
+        response.token.length === 0) {
+      throw new Error('Received: ' + JSON.stringify(response))
+    }
+
+    return response
+  })
   .then(response => {
     dispatch(receiveAmodahlToken(response.token, response.user))
     dispatch(updateLoginInfo('You logged in as ' + response.user.name,
