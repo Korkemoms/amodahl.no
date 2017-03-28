@@ -85,7 +85,8 @@ const Login = ({login, logout, user, loading, message,
   const showTestUserButton = !isLoggedIn // && process.env.NODE_ENV !== 'production'
 
   const testUserButton = showTestUserButton
-    ? <DropdownButton key={key++} title='Test users' id='test-users'>
+    ? <DropdownButton key={key++} title='Test users'
+      id='test-users' disabled={loading}>>
       <MenuItem eventKey='2'
         onClick={() => login({
           type: 'test',

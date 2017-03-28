@@ -7,6 +7,8 @@ const def = (props = false) => {
   const f = props ? (_, type) => type : (val, _) => val
   let r = { // initial Redux state and React PropTypes
     message: f(null, PropTypes.string),
+    loading: f(null, PropTypes.bool),
+    cancelled: f(null, PropTypes.bool),
     displayMessage: f(false, PropTypes.bool),
     user: f(null, PropTypes.object),
     history: f([], PropTypes.array)
@@ -25,15 +27,28 @@ export default function update (state = initialState, action) {
       let history = state.history.slice(0, 10)
       history.push(action.payload.pathname)
 
+      let additional = {}
+      // if navigate away from login page while loading then cancel login procedure
+      if (state.loading && action.payload.pathname !== '/login') {
+        additional = {
+          loading: false,
+          cancelled: true,
+          displayMessage: true,
+          message: 'Login cancelled by user'
+        }
+      }
+
       return Object.assign({}, state, {
-        history: history
+        history: history,
+        ...additional
       })
     }
     case types.login.UPDATE_LOGIN_INFO:
       return Object.assign({}, state, {
         message: action.message,
         displayMessage: action.displayMessage,
-        loading: action.loading
+        loading: action.loading,
+        cancelled: action.cancelled
       })
     case types.login.RECEIVE_AMODAHL_TOKEN:
       return Object.assign({}, state, {
