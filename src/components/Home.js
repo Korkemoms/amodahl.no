@@ -56,19 +56,18 @@ const Home = ({ fadeInEnabled, navigate }) => {
                     Here are some of the things I have made that are not totally useless. 😄
                   </p>
                     <DropdownButton id='projects-dropdown-menu-button' bsStyle='success' title='Projects'>
-                      <MenuItem onClick={() => navigate('/chess-project')}>
-                    Chess
-                    </MenuItem>
                       <MenuItem onClick={() => navigate('/amodahl-no')}>
-                    amodahl.no
-                    </MenuItem>
+                        Amodahl.no
+                      </MenuItem>
+                      <MenuItem onClick={() => navigate('/chess-project')}>
+                          Chess
+                      </MenuItem>
                       <MenuItem onClick={() => navigate('/matrix-multiplication')}>
-                      Matrix multiplication game
-                    </MenuItem>
-                      {<MenuItem onClick={() => navigate('/leveringmontering')}>
-                      Leveringmontering.no (Order management system)
-                    </MenuItem>}
-
+                          Matrix multiplication game
+                      </MenuItem>
+                      <MenuItem onClick={() => navigate('/leveringmontering')}>
+                          Leveringmontering.no (Order management system)
+                      </MenuItem>
                     </DropdownButton>
                   </Jumbotron>
                 </Col>

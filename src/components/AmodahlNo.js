@@ -15,7 +15,7 @@ const AmodahlNo = () => {
   return (
     <DocumentTitle title='About this website'>
       <div>
-        <MyHeader headline='amodahl.no' />
+        <MyHeader headline='Amodahl.no' />
         <div className='mycontent'>
           <Grid>
             <PageHeader>About this website</PageHeader>

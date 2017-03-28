@@ -28,7 +28,7 @@ const MyNavbar = ({ user, page }) => {
         <Nav>
           <NavIndexLink eventKey={1} to={{ pathname: '/' }}>Home</NavIndexLink>
           <NavDropdown id='MyProjectsDrowndown' eventKey={2} title='My projects'>
-            <NavLink eventKey={2.1} to={{ pathname: '/amodahl-no' }}>amodahl.no</NavLink>
+            <NavLink eventKey={2.1} to={{ pathname: '/amodahl-no' }}>Amodahl.no</NavLink>
             <NavLink eventKey={2.2} to={{ pathname: '/chess-project' }}>Chess</NavLink>
             <NavLink eventKey={2.3} to={{ pathname: '/matrix-multiplication' }}>
               Matrix multiplication game</NavLink>

@@ -95,7 +95,7 @@ class LeveringMontering extends React.Component {
     return (
       <DocumentTitle title='Leveringmontering.no'>
         <div>
-          <MyHeader headline='leveringmontering.no' />
+          <MyHeader headline='Leveringmontering.no' />
           <div style={{minHeight: '325px'}} className='mycontent'>
             <Grid>
               <PageHeader>About Leveringmontering.no</PageHeader>

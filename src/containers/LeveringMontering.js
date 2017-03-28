@@ -12,7 +12,7 @@ const LeveringMonteringContainer = ((Target, namespace) => {
   }
 
   const mapStateToProps = (state) => {
-    //const localState = namespace ? state[namespace] : state
+    // const localState = namespace ? state[namespace] : state
     return {
     }
   }
