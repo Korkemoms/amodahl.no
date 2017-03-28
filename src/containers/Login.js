@@ -11,7 +11,7 @@ const LoginContainer = ((Target, namespace) => {
         dispatch(login(...args))
       },
       logout: () => {
-        dispatch(logout('login'))
+        dispatch(logout())
       },
       navigate: (...args) => {
         dispatch(push(...args))

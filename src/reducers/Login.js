@@ -43,7 +43,7 @@ export default function update (state = initialState, action) {
       return Object.assign({}, state, {
         user: null,
         message: 'You logged out.',
-        displayMessage: action.dispatchedFrom === 'login'
+        displayMessage: true
       })
     default:
       return state

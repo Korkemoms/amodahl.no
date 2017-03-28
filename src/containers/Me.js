@@ -2,13 +2,16 @@
 import { connect } from 'react-redux'
 import { logout } from '../actions/Login'
 import Me from '../components/Me'
+import { push } from 'react-router-redux'
 
 const MeContainer = ((Target, namespace) => {
   const mapDispatchToProps = (dispatch) => {
     return {
       logout: () => {
-        let action = logout('me')
-        dispatch(action)
+        dispatch(logout())
+      },
+      navigate: (...args) => {
+        dispatch(push(...args))
       }
     }
   }

@@ -36,7 +36,7 @@ export default function update (state = initialState, action) {
       return Object.assign({}, state, {
         token: null,
         user: null,
-        message: 'You logged out.'
+        message: null
       })
     default:
       return state

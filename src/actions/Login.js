@@ -41,8 +41,7 @@ export const requestAmodahlTokenFailed = () => ({
   type: types.login.REQUEST_AMODAHL_TOKEN_FAILED
 })
 
-export const userLoggedOut = (dispatchedFrom) => ({
-  dispatchedFrom: dispatchedFrom,
+export const userLoggedOut = () => ({
   type: types.login.USER_LOGGED_OUT
 })
 
@@ -383,8 +382,8 @@ export const myFetch = dispatch => jwToken => (path, params) => {
  * other components that user has logged out.
  * @param {string} dispatcher From which page user clicked log out
  */
-export const logout = dispatchedFrom => dispatch => {
-  dispatch(userLoggedOut(dispatchedFrom))
+export const logout = () => dispatch => {
+  dispatch(userLoggedOut())
   localStorage.clear()
 
   // log out of facebook

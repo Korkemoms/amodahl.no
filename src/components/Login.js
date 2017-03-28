@@ -68,7 +68,7 @@ const Login = ({login, logout, user, loading, message,
 
   // determine the 'last page' for the go-back button
   let lastPage = null
-  let ignorePages = ['/login', '/me', '/', '']
+  let ignorePages = ['/login', '/me', '/', '', '/signere-login']
   for (let i = history.length - 1; i >= 0; i--) {
     if (ignorePages.indexOf(history[i]) === -1) {
       lastPage = history[i]
@@ -133,7 +133,7 @@ const Login = ({login, logout, user, loading, message,
       })
     }}
     disabled={loading}>
-        Log in with Signere
+        Log in with bank ID (test)
       </Button>
   : null
 

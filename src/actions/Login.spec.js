@@ -25,13 +25,10 @@ describe('actions', () => {
   })
 
   it('should create an action notifying that the user initiated log out', () => {
-    let dispatchedFrom = (Math.random() + 1).toString(36).substring(16)
-
     const expectedAction = {
-      type: types.login.USER_LOGGED_OUT,
-      dispatchedFrom
+      type: types.login.USER_LOGGED_OUT
     }
-    expect(actions.userLoggedOut(dispatchedFrom)).toEqual(expectedAction)
+    expect(actions.userLoggedOut()).toEqual(expectedAction)
   })
 
   it('should create an action carrying received token and user details', () => {
