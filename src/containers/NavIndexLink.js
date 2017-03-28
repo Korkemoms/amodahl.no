@@ -1,11 +1,9 @@
 
 import { connect } from 'react-redux'
 import NavIndexLink from '../components/NavIndexLink'
-import { disableFadeIn } from '../actions/Home'
 
 const NavIndexLinkContainer = ((Target, namespace) => {
   const mapDispatchToProps = {
-    disableFadeIn
   }
 
   const mapStateToProps = (state) => {
