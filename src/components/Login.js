@@ -86,7 +86,7 @@ const Login = ({login, logout, user, loading, message,
 
   const testUserButton = showTestUserButton
     ? <DropdownButton key={key++} title='Test users'
-      id='test-users' disabled={loading}>>
+      id='test-users' disabled={loading}>
       <MenuItem eventKey='2'
         onClick={() => login({
           type: 'test',
