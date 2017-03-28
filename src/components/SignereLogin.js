@@ -15,6 +15,17 @@ import {
 
 /* Purely presentational component */
 export default class SignereLogin extends React.Component {
+  componentDidMount () {
+    const urlParameters = queryString.parse(location.search)
+    if (urlParameters.signereRequestId) {
+      this.props.navigate('/login')
+      this.props.login({
+        type: 'signere',
+        signereRequestId: urlParameters.signereRequestId
+      })
+    }
+  }
+
   render () {
     const urlParameters = queryString.parse(location.search)
 
@@ -44,7 +55,7 @@ export default class SignereLogin extends React.Component {
           </Button>
     }
 
-    const content = this.props.url
+    const testUserInfo = this.props.url
      ? <div>
        <iframe style={{width: '100%', height: '400px', border: '0'}} src={this.props.url} />
        <PageHeader>Test users</PageHeader>
@@ -94,7 +105,7 @@ export default class SignereLogin extends React.Component {
           <div className='mycontent'>
             <Grid>
               {loginButton}
-              {content}
+              {testUserInfo}
             </Grid>
           </div>
         </div>
