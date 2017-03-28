@@ -27,7 +27,7 @@ export default function update (state = initialState, action) {
         user: action.user
       })
     }
-    case types.login.DELETE_AMODAHL_TOKEN:
+    case types.login.USER_LOGGED_OUT:
       return Object.assign({}, state, {
         jwToken: null,
         myEmail: null,
