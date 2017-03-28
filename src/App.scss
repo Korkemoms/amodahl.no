@@ -4,8 +4,37 @@ body {
   margin: 0;
   min-height: 100%;
   word-wrap: break-word;
+}
 
+.sidenav {
+  visibility: hidden;
+  text-align: right;
+  & a{
+    padding-top: 0.3em !important;
+    padding-bottom: 0.3em !important;
+  }
+}
 
+.sidenav-fixed {
+  visibility: hidden;
+  text-align: right;
+  & a{
+    text-shadow: 0 1px 1px white;
+    padding-top: 0.3em !important;
+    padding-bottom: 0.3em !important;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .sidenav-fixed {
+    position: fixed;
+    top: 10px;
+    visibility: visible;
+    width:200px;
+  }
+  .sidenav {
+    visibility: visible;
+  }
 }
 
 .background-a {
@@ -23,14 +52,12 @@ body {
   background-size: cover;
 }
 .background-c {
-  background: url('./images/backgrounds/lobostudio-hamburg-134977.jpg') no-repeat fixed;
+  background: url('./images/backgrounds/sora-sagano-103742.jpg') no-repeat fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
 }
-
-
 
 html {
   height: 100%;
