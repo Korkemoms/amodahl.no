@@ -70,7 +70,7 @@ class LeveringMontering extends React.Component {
         <PageHeader style={{cursor: 'pointer'}} id='lm-overview' onClick={(e) => {
           this.props.navigate(`/leveringmontering#lm-overview`)
         }}>Overview</PageHeader>
-        <Thumbnail  alt='Overview of orders' src={ImageOverview} />
+        <Thumbnail alt='Overview of orders' src={ImageOverview} />
         <p>Employees get an overview of all the orders.</p>
       </div>
 
@@ -79,7 +79,7 @@ class LeveringMontering extends React.Component {
         <PageHeader style={{cursor: 'pointer'}} id='lm-users' onClick={(e) => {
           this.props.navigate(`/leveringmontering#lm-users`)
         }}>Users</PageHeader>
-        <Thumbnail  alt='Users' src={ImageUsers} />
+        <Thumbnail alt='Users' src={ImageUsers} />
         <p>Admins can access user settings here.</p>
       </div>
 
@@ -88,7 +88,7 @@ class LeveringMontering extends React.Component {
         <PageHeader style={{cursor: 'pointer'}} id='lm-settings' onClick={(e) => {
           this.props.navigate(`/leveringmontering#lm-settings`)
         }}>Settings</PageHeader>
-        <Thumbnail  alt='Account settings' src={ImageMyAccount} />
+        <Thumbnail alt='Account settings' src={ImageMyAccount} />
         <p>Users can change some properties from this page.</p>
       </div>
 
