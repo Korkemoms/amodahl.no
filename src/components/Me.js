@@ -26,9 +26,12 @@ import {
 } */
 
 /* Purely presentational component */
-const Me = ({ logout, token, user, message }) => {
+const Me = ({ logout, token, user, message, navigate }) => {
   const logoutButton = token !== null
-    ? <Button bsStyle='warning' onClick={() => { logout('me') }}>
+    ? <Button bsStyle='warning' onClick={() => {
+      navigate('/login')
+      logout()
+    }}>
         Log out
       </Button>
     : ''
