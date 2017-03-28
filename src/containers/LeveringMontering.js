@@ -1,8 +1,14 @@
 import { connect } from 'react-redux'
 import LeveringMontering from '../components/LeveringMontering'
+import { push } from 'react-router-redux'
 
 const LeveringMonteringContainer = ((Target, namespace) => {
-  const mapDispatchToProps = {
+  const mapDispatchToProps = dispatch => {
+    return {
+      navigate: (path) => {
+        dispatch(push(path))
+      }
+    }
   }
 
   const mapStateToProps = (state) => {
