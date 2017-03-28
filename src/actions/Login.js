@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch'
 import { types } from '../constants/ActionTypes'
+import { push } from 'react-router-redux'
 
 // determine where to send requests
 const url = () => {
@@ -380,7 +381,11 @@ export const myFetch = dispatch => jwToken => (path, params) => {
   .then(({body, headers}) => {
     // check if token has expired
     if (body.status === 'error' && body.message === 'Expired token') {
-      // TODO deal with it
+      // clear login info, go to login page and tell user to log in again
+      dispatch(logout())
+      dispatch(updateLoginInfo('Token expired, please log in again',
+        true, false, {body, headers}, false))
+      dispatch(push('/login'))
       throw new Error('Token expired')
     }
     return ({body, headers})
