@@ -14,86 +14,128 @@ import {
   Grid,
   Row,
   Col,
-  Carousel
+  Thumbnail,
+  PageHeader,
+  Nav,
+  NavItem
 } from 'react-bootstrap'
 
 /* Purely presentational component */
-const LeveringMontering = ({carouselIndex, carouselDirection, carouselSelect}) => {
-  const carousel =
-    <Carousel className='myimage'
-      activeIndex={carouselIndex}
-      direction={carouselDirection}
-      onSelect={(index, e) => carouselSelect(index, e.direction)}>
-      <Carousel.Item>
-        <img width={800} height={930} alt='New order'
-          src={ImageNewOrder} />
-        <Carousel.Caption>
-          <h3>New order</h3>
-          <p>Warehouse employees and customers can create a new order on this page.</p>
-        </Carousel.Caption>
-      </Carousel.Item>
-      <Carousel.Item>
-        <img width={800} height={930} alt='Overview of orders' src={ImageOverview} />
-        <Carousel.Caption>
-          <h3>Overview</h3>
-          <p>Employees get an overview of all the orders.</p>
-        </Carousel.Caption>
-      </Carousel.Item>
-      <Carousel.Item>
-        <img width={800} height={930} alt='Users' src={ImageUsers} />
-        <Carousel.Caption>
-          <h3>Users</h3>
-          <p>Admins can access user settings from this page.</p>
-        </Carousel.Caption>
-      </Carousel.Item>
-      <Carousel.Item>
-        <img width={800} height={930} alt='Account settings' src={ImageMyAccount} />
-        <Carousel.Caption>
-          <h3>Account settings</h3>
-          <p>Users can change a few properties from this page.</p>
-        </Carousel.Caption>
-      </Carousel.Item>
-    </Carousel>
+class LeveringMontering extends React.Component {
+  componentDidMount () {
+    this.handleScroll = () => {
+      if (document.body.scrollTop > 304) {
+        this.sidebar.className = 'sidenav-fixed'
+      } else {
+        this.sidebar.className = 'sidenav'
+      }
+    }
+    window.addEventListener('scroll', this.handleScroll)
+    this.handleScroll()
+  }
 
-  return (
-    <DocumentTitle title='leveringmontering.no'>
-      <div>
-        <MyHeader headline='leveringmontering.no' />
-        <div className='mycontent'>
-          <Grid>
-            <Row>
-              <Col xs={12} sm={8}>
-                <h1>About leveringmontering.no</h1>
-                <p>This is a order management system I made for a company that delivers furniture.
-                  The system is used on a daily basis and I am
-                  Although I am not overwhelmed with pride by the design,
+  componentWillUnmount () {
+    window.removeEventListener('scroll', this.handleScroll)
+  }
 
-                  This is my first non-trivial web project
-                </p>
-              </Col>
-              <Col xs={12} sm={4}>
-                {carousel}
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={12}>
-                <p>
-                  <label>Play store:</label>{' '}
-                  <a href='https://play.google.com/store/apps/details?id=org.ajm.laforkids'>
-                    {'https://play.google.com/store/apps/details?id=org.ajm.laforkids'}</a>
-                  <br />
-                  <label>Source code:</label>{' '}
-                  <a href='https://github.com/Korkemoms/Matrix-Multiplication'>
-                    {'https://github.com/Korkemoms/Matrix-Multiplication'}</a>
-                </p>
-              </Col>
-            </Row>
-          </Grid>
+  render () {
+    const navInstance =
 
+      <div style={{position: 'absolute', right: '0', width: '200px'}}>
+        <div className='sidenav' ref={sidebar => { this.sidebar = sidebar }}>
+          <Nav stacked activeKey={1} onSelect={(e) => {
+            this.props.navigate(`/leveringmontering#${e}`)
+          }}>
+
+            <NavItem style={{fontWeight: 'bold'}} eventKey={''}>Leveringmontering.no</NavItem>
+            <NavItem eventKey={'lm-new-order'}>New order</NavItem>
+            <NavItem eventKey={'lm-overview'}>Overview</NavItem>
+            <NavItem eventKey={'lm-users'}>Users</NavItem>
+            <NavItem eventKey={'lm-settings'}>Settings</NavItem>
+          </Nav>
         </div>
       </div>
-    </DocumentTitle>
-  )
+
+    const img1 =
+      <div style={{maxWidth: '600px'}} >
+        <PageHeader style={{cursor: 'pointer'}} id='lm-new-order' onClick={(e) => {
+          this.props.navigate(`/leveringmontering#lm-new-order`)
+        }}>New order</PageHeader>
+        <Thumbnail alt='New order' src={ImageNewOrder} />
+        <p>Warehouse employees and customers can create new orders.</p>
+      </div>
+
+    const img2 =
+      <div style={{maxWidth: '600px'}} >
+        <PageHeader style={{cursor: 'pointer'}} id='lm-overview' onClick={(e) => {
+          this.props.navigate(`/leveringmontering#lm-overview`)
+        }}>Overview</PageHeader>
+        <Thumbnail  alt='Overview of orders' src={ImageOverview} />
+        <p>Employees get an overview of all the orders.</p>
+      </div>
+
+    const img3 =
+      <div style={{maxWidth: '600px'}} >
+        <PageHeader style={{cursor: 'pointer'}} id='lm-users' onClick={(e) => {
+          this.props.navigate(`/leveringmontering#lm-users`)
+        }}>Users</PageHeader>
+        <Thumbnail  alt='Users' src={ImageUsers} />
+        <p>Admins can access user settings here.</p>
+      </div>
+
+    const img4 =
+      <div style={{maxWidth: '600px'}} >
+        <PageHeader style={{cursor: 'pointer'}} id='lm-settings' onClick={(e) => {
+          this.props.navigate(`/leveringmontering#lm-settings`)
+        }}>Settings</PageHeader>
+        <Thumbnail  alt='Account settings' src={ImageMyAccount} />
+        <p>Users can change some properties from this page.</p>
+      </div>
+
+    return (
+      <DocumentTitle title='Leveringmontering.no'>
+        <div>
+          <MyHeader headline='leveringmontering.no' />
+          <div style={{minHeight: '325px'}} className='mycontent'>
+            <Grid>
+              <PageHeader>About Leveringmontering.no</PageHeader>
+              <Row>
+                <Col xs={12} sm={8}>
+                  <p>
+                    This is a simple order management system I made in autumn 2016
+                    for a company
+                    that delivers furniture. It was one of my first experiences with
+                    web development and there are many things I would do different if I was to
+                    make something similar again. It is still in use and there has
+                    been very few problems with it since I quit working on it.
+                  </p>
+                  <p>
+                    The system is written primarily in PHP and MySql.
+                  </p>
+                </Col>
+                <Col xs={12} sm={4}>
+                  {navInstance}
+                </Col>
+              </Row>
+            </Grid>
+          </div>
+          <div style={{ marginTop: '3em' }} className='mycontent'>
+            <Grid>
+              <Row>
+                <Col xs={12} sm={8}>
+                  {img1}
+                  {img2}
+                  {img3}
+                  {img4}
+                </Col>
+                <Col xs={12} sm={4} />
+              </Row>
+            </Grid>
+          </div>
+        </div>
+      </DocumentTitle>
+    )
+  }
 }
 
 export default LeveringMontering

@@ -17,7 +17,7 @@ import {
 } from 'react-bootstrap'
 
 /* Purely presentational component */
-const Home = ({ fadeInEnabled, disableFadeIn, navigate }) => {
+const Home = ({ fadeInEnabled, navigate }) => {
   return (
     <DocumentTitle title='amodahl.no'>
       <div>
@@ -25,7 +25,7 @@ const Home = ({ fadeInEnabled, disableFadeIn, navigate }) => {
 
         <div className={fadeInEnabled ? 'Fade-in' : ''}>
           <Grid>
-            <Row className='Center' style={{color: '#e9e9e9'}}>
+            <Row className='Center' style={{color: 'white'}}>
               <Col xs={12}>
                 <Jumbotron style={{backgroundColor: 'transparent', textShadow: '0 1px 0 black'}}>
                   <h1>Hi</h1>
@@ -46,9 +46,7 @@ const Home = ({ fadeInEnabled, disableFadeIn, navigate }) => {
                     <p>
                     I am working on a chess app for the browser. It is made with React, Redux, Bootstrap and PHP.
                   </p>
-                    <Link to='/chess-project' onClick={() => {
-                      disableFadeIn()
-                    }}><Button bsStyle='success'>Play</Button></Link>
+                    <Link to='/chess-project'><Button bsStyle='success'>Play</Button></Link>
                   </Jumbotron>
                 </Col>
                 <Col xs={12} md={4}>
@@ -67,9 +65,9 @@ const Home = ({ fadeInEnabled, disableFadeIn, navigate }) => {
                       <MenuItem onClick={() => navigate('/matrix-multiplication')}>
                       Matrix multiplication game
                     </MenuItem>
-                      {/* <MenuItem onClick={() => navigate('/leveringmontering')}>
+                      {<MenuItem onClick={() => navigate('/leveringmontering')}>
                       Leveringmontering.no (Order management system)
-                    </MenuItem> */}
+                    </MenuItem>}
 
                     </DropdownButton>
                   </Jumbotron>
@@ -82,9 +80,7 @@ const Home = ({ fadeInEnabled, disableFadeIn, navigate }) => {
                   I enjoy turning complex problems into simple solutions and I
                   love to build stuff.
                   </p>
-                    <Link to='/about' onClick={() => {
-                      disableFadeIn()
-                    }}><Button bsStyle='success'>Read more</Button></Link>
+                    <Link to='/about'><Button bsStyle='success'>Read more</Button></Link>
                   </Jumbotron>
                 </Col>
               </Row>
