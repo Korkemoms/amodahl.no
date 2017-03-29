@@ -19,15 +19,15 @@ MyNavbar.propTypes = def(true)
 
 export default function update (state = initialState, action) {
   switch (action.type) {
-    case types.login.RECEIVE_AMODAHL_TOKEN:
+    case types.login.RECEIVE_AMODAHL_TOKEN():
       return Object.assign({}, state, {
         user: action.user
       })
-    case types.login.USER_LOGGED_OUT:
+    case types.login.USER_LOGGED_OUT():
       return Object.assign({}, state, {
         user: null
       })
-    case types.router.LOCATION_CHANGE:
+    case types.router.LOCATION_CHANGE():
       {
         return Object.assign({}, state, {
           page: action.payload.pathname

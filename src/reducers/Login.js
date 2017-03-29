@@ -23,7 +23,7 @@ Login.propTypes = def(true)
 
 export default function update (state = initialState, action) {
   switch (action.type) {
-    case types.router.LOCATION_CHANGE: {
+    case types.router.LOCATION_CHANGE(): {
       let history = state.history.slice(0, 10)
       history.push(action.payload.pathname)
 
@@ -43,18 +43,18 @@ export default function update (state = initialState, action) {
         ...additional
       })
     }
-    case types.login.UPDATE_LOGIN_INFO:
+    case types.login.UPDATE_LOGIN_INFO():
       return Object.assign({}, state, {
         message: action.message,
         displayMessage: action.displayMessage,
         loading: action.loading,
         cancelled: action.cancelled
       })
-    case types.login.RECEIVE_AMODAHL_TOKEN:
+    case types.login.RECEIVE_AMODAHL_TOKEN():
       return Object.assign({}, state, {
         user: action.user
       })
-    case types.login.USER_LOGGED_OUT:
+    case types.login.USER_LOGGED_OUT():
       return Object.assign({}, state, {
         user: null,
         message: 'You logged out.',

@@ -18,7 +18,7 @@ Home.propTypes = def(true)
 
 export default function update (state = initialState, action) {
   switch (action.type) {
-    case types.router.LOCATION_CHANGE:
+    case types.router.LOCATION_CHANGE():
       return Object.assign({}, state, {
         fadeInEnabled: state.fadeInEnabled && action.payload.pathname === '/'
       })

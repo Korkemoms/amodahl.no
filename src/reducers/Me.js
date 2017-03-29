@@ -20,19 +20,19 @@ Me.propTypes = def(true)
 
 export default function update (state = initialState, action) {
   switch (action.type) {
-    case types.login.RECEIVE_AMODAHL_TOKEN:
+    case types.login.RECEIVE_AMODAHL_TOKEN():
       return Object.assign({}, state, {
         token: action.token,
         user: action.user,
         message: null
       })
-    case types.login.REQUEST_AMODAHL_TOKEN_FAILED:
+    case types.login.REQUEST_AMODAHL_TOKEN_FAILED():
       return Object.assign({}, state, {
         token: null,
         user: null,
         message: null
       })
-    case types.login.USER_LOGGED_OUT:
+    case types.login.USER_LOGGED_OUT():
       return Object.assign({}, state, {
         token: null,
         user: null,

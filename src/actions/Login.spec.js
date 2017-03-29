@@ -18,7 +18,7 @@ describe('actions', () => {
       displayMessage,
       loading,
       additionalInfo,
-      type: types.login.UPDATE_LOGIN_INFO
+      type: types.login.UPDATE_LOGIN_INFO()
     }
     expect(actions.updateLoginInfo(message, displayMessage, loading, additionalInfo))
     .toEqual(expectedAction)
@@ -26,7 +26,7 @@ describe('actions', () => {
 
   it('should create an action notifying that the user initiated log out', () => {
     const expectedAction = {
-      type: types.login.USER_LOGGED_OUT
+      type: types.login.USER_LOGGED_OUT()
     }
     expect(actions.userLoggedOut()).toEqual(expectedAction)
   })
@@ -44,7 +44,7 @@ describe('actions', () => {
     let jwToken = (Math.random() + 1).toString(36).substring(16)
 
     const expectedAction = {
-      type: types.login.RECEIVE_AMODAHL_TOKEN,
+      type: types.login.RECEIVE_AMODAHL_TOKEN(),
       user,
       jwToken
     }
@@ -57,7 +57,7 @@ describe('actions', () => {
     let requestId = (Math.random() + 1).toString(36).substring(16)
 
     const expectedAction = {
-      type: types.login.RECEIVE_SIGNERE_URL,
+      type: types.login.RECEIVE_SIGNERE_URL(),
       url,
       accessToken,
       requestId
@@ -67,7 +67,7 @@ describe('actions', () => {
 
   it('should create an action notifying that a request for an amodahl token has failed', () => {
     const expectedAction = {
-      type: types.login.REQUEST_AMODAHL_TOKEN_FAILED
+      type: types.login.REQUEST_AMODAHL_TOKEN_FAILED()
     }
     expect(actions.requestAmodahlTokenFailed()).toEqual(expectedAction)
   })

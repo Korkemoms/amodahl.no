@@ -28,22 +28,22 @@ const scopes = [
 export const receiveAmodahlToken = (jwToken, user) => ({
   jwToken: jwToken,
   user: user,
-  type: types.login.RECEIVE_AMODAHL_TOKEN
+  type: types.login.RECEIVE_AMODAHL_TOKEN()
 })
 
 export const receiveSignereUrl = (url, accessToken, requestId) => ({
-  type: types.login.RECEIVE_SIGNERE_URL,
+  type: types.login.RECEIVE_SIGNERE_URL(),
   url: url,
   accessToken: accessToken,
   requestId: requestId
 })
 
 export const requestAmodahlTokenFailed = () => ({
-  type: types.login.REQUEST_AMODAHL_TOKEN_FAILED
+  type: types.login.REQUEST_AMODAHL_TOKEN_FAILED()
 })
 
 export const userLoggedOut = () => ({
-  type: types.login.USER_LOGGED_OUT
+  type: types.login.USER_LOGGED_OUT()
 })
 
 export const updateLoginInfo = (message, displayMsg, loading, info, cancelled) => ({
@@ -52,8 +52,31 @@ export const updateLoginInfo = (message, displayMsg, loading, info, cancelled) =
   loading: loading,
   additionalInfo: info,
   cancelled: cancelled,
-  type: types.login.UPDATE_LOGIN_INFO
+  type: types.login.UPDATE_LOGIN_INFO()
 })
+
+/**
+ * Clear local storage and dispatch an action to tell
+ * other components that user has logged out.
+ * @param {string} dispatcher From which page user clicked log out
+ */
+export const logout = () => dispatch => {
+  dispatch(userLoggedOut())
+  localStorage.clear()
+
+  // log out of facebook
+  try {
+    if (window.FB) {
+      window.FB.logout((response) => {
+        console.log('Successfully logged out of facebook', response)
+      })
+    }
+  } catch (err) {
+    console.log('There was a problem logging out of facebook', err)
+  }
+
+  // TODO log out with google sdk?
+}
 
 /**
  * Ask the API for a token using a facebook or google token, or a
@@ -397,27 +420,4 @@ export const myFetch = dispatch => jwToken => (path, params) => {
     }
     return ({body, headers})
   })
-}
-
-/**
- * Clear local storage and dispatch an action to tell
- * other components that user has logged out.
- * @param {string} dispatcher From which page user clicked log out
- */
-export const logout = () => dispatch => {
-  dispatch(userLoggedOut())
-  localStorage.clear()
-
-  // log out of facebook
-  try {
-    if (window.FB) {
-      window.FB.logout((response) => {
-        console.log('Successfully logged out of facebook', response)
-      })
-    }
-  } catch (err) {
-    console.log('There was a problem logging out of facebook', err)
-  }
-
-  // TODO log out with google sdk?
 }
