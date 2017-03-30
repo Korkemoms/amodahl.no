@@ -1,27 +1,27 @@
 // @flow
 import { types } from '../constants/ActionTypes'
 
-class State {
-  message: ?string
-  loading: boolean
-  cancelled: boolean
-  displayMessage: boolean
-  user: ?Object
+export type State = {
+  message: ?string,
+  loading: boolean,
+  cancelled: boolean,
+  displayMessage: boolean,
+  user: ?Object,
   history: Array<string>
 }
 
-const initialState = new State()
-initialState.message = null
-initialState.loading = false
-initialState.cancelled = false
-initialState.displayMessage = false
-initialState.user = null
-initialState.history = []
-
+const initialState = {
+  message: null,
+  loading: false,
+  cancelled: false,
+  displayMessage: false,
+  user: null,
+  history: []
+}
 
 export default function update (state: State = initialState, action: Object) {
   switch (action.type) {
-    case types.router.LOCATION_CHANGE(): {
+    case '@@router/LOCATION_CHANGE': {
       let history = state.history.slice(0, 10)
       history.push(action.payload.pathname)
 

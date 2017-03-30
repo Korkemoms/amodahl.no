@@ -32,11 +32,11 @@ const Me = (props: {
   token: ?string,
   user: Object,
   message: string,
-  navigate: Function
+  push: Function
 }) => {
   const logoutButton = props.token !== null
     ? <Button bsStyle='warning' onClick={() => {
-      props.navigate('/login')
+      props.push('/login')
       props.logout()
     }}>
         Log out

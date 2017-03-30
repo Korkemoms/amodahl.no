@@ -5,10 +5,7 @@ import About from '../components/About'
 const AboutContainer = ((Target, namespace) => {
   const mapDispatchToProps = {}
 
-  const mapStateToProps = (state) => {
-    // const localState = namespace ? state[namespace] : state
-    return {}
-  }
+  const mapStateToProps = (state) => ({})
 
   return connect(mapStateToProps, mapDispatchToProps)(Target)
 })(About, 'about')

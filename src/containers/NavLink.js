@@ -3,14 +3,9 @@ import { connect } from 'react-redux'
 import NavLink from '../components/NavLink'
 
 const NavLinkContainer = ((Target, namespace) => {
-  const mapDispatchToProps = {
-  }
+  const mapDispatchToProps = {}
 
-  const mapStateToProps = (state) => {
-    // const localState = namespace ? state[namespace] : state
-    return {
-    }
-  }
+  const mapStateToProps = (state) => ({})
 
   return connect(mapStateToProps, mapDispatchToProps)(Target)
 })(NavLink, 'navLink')

@@ -24,7 +24,7 @@ const Login = (props: {
   message: ?string,
   displayMessage: ?boolean,
   history: Array<string>,
-  navigate: Function
+  push: Function
 }) => {
   let key = 1
   let isLoggedIn = props.user !== null
@@ -86,7 +86,7 @@ const Login = (props: {
   }
 
   const goBackButton = isLoggedIn && lastPage !== ''
-    ? <Button key={key++} bsStyle='success' onClick={() => props.navigate(lastPage)} >
+    ? <Button key={key++} bsStyle='success' onClick={() => props.push(lastPage)} >
       {(lastPage: string).replace('/', '')}
     </Button>
     : null
@@ -139,7 +139,7 @@ const Login = (props: {
     onClick={() => {
       props.login({
         type: 'signere',
-        navigate: props.navigate
+        navigate: props.push
       })
     }}
     disabled={props.loading}>
@@ -174,7 +174,7 @@ const Login = (props: {
               <small>
                 Read about the login implementation {' '}
                 <a style={{cursor: 'pointer'}}
-                  onClick={() => { props.navigate('amodahl-no') }}>here
+                  onClick={() => { props.push('amodahl-no') }}>here
                 </a>.
                 <br />
                 Note: To change user you may

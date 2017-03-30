@@ -2,19 +2,12 @@
 import { connect } from 'react-redux'
 import LeveringMontering from '../components/LeveringMontering'
 import { push } from 'react-router-redux'
+import type { State } from '../reducers/Login'
 
 const LeveringMonteringContainer = ((Target, namespace) => {
-  const mapDispatchToProps = dispatch => {
-    return {
-      navigate: (path) => dispatch(push(path))
-    }
-  }
+  const mapDispatchToProps = { push }
 
-  const mapStateToProps = (state) => {
-    // const localState = namespace ? state[namespace] : state
-    return {
-    }
-  }
+  const mapStateToProps = (state) => ({})
 
   return connect(mapStateToProps, mapDispatchToProps)(Target)
 })(LeveringMontering, 'leveringMontering')

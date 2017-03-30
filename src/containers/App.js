@@ -5,10 +5,7 @@ import App from '../components/App'
 const AppContainer = ((Target, namespace) => {
   const mapDispatchToProps = {}
 
-  const mapStateToProps = (state) => {
-    // const localState = namespace ? state[namespace] : state
-    return {}
-  }
+  const mapStateToProps = (state) => ({})
 
   return connect(mapStateToProps, mapDispatchToProps)(Target)
 })(App, 'app')

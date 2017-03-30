@@ -1,16 +1,17 @@
 // @flow
 import { types } from '../constants/ActionTypes'
 
-class State {
-  jwToken: ?string
-  myEmail: ?string
+type State = {
+  jwToken: ?string,
+  myEmail: ?string,
   myName: ?string
 }
 
-const initialState = new State()
-initialState.jwToken = null
-initialState.myEmail = null
-initialState.myName = null
+const initialState = {
+  jwToken: null,
+  myEmail: null,
+  myName: null
+}
 
 const update = (state: State = initialState, action: Object) => {
   switch (action.type) {

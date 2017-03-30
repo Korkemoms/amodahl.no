@@ -3,7 +3,6 @@ import expect from 'expect'
 
 import { types } from '../constants/ActionTypes'
 import * as actions from './Login'
-import { describe, it } from 'jasmine'
 
 describe('actions', () => {
   it('should create an action carrying updated login info', () => {

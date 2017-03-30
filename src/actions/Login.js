@@ -2,6 +2,7 @@
 import { types } from '../constants/ActionTypes'
 import fetch from 'isomorphic-fetch'
 import { push } from 'react-router-redux'
+import type { Action, LoginParams } from './Types'
 
 // determine where to send requests
 const url = () => {
@@ -30,48 +31,48 @@ const scopes = [
 
 export const receiveAmodahlToken = (
   jwToken: string,
-  user: Object) => ({
+  user: Object): Action => ({
+    type: 'RECEIVE_AMODAHL_TOKEN',
     jwToken: jwToken,
-    user: user,
-    type: types.login.RECEIVE_AMODAHL_TOKEN()
+    user: user
   })
+
 
 export const receiveSignereUrl = (
   url: string,
   accessToken: string,
-  requestId: string) => ({
-    type: types.login.RECEIVE_SIGNERE_URL(),
+  requestId: string): Action => ({
+    type: 'RECEIVE_SIGNERE_URL',
     url: url,
     accessToken: accessToken,
     requestId: requestId
   })
 
-export const requestAmodahlTokenFailed = () => ({
-  type: types.login.REQUEST_AMODAHL_TOKEN_FAILED()
+export const requestAmodahlTokenFailed = (): Action => ({
+  type: 'REQUEST_AMODAHL_TOKEN_FAILED'
 })
 
-export const userLoggedOut = () => ({
-  type: types.login.USER_LOGGED_OUT()
+export const userLoggedOut = (): Action => ({
+  type: 'USER_LOGGED_OUT'
 })
 
 export const updateLoginInfo = (
-  message: string,
-  displayMsg:boolean,
-  loading:boolean,
-  info:Object,
-  cancelled:boolean) => ({
+  message: ?string,
+  displayMessage: ?boolean,
+  loading: ?boolean,
+  additionalInfo: ?Object,
+  cancelled: ?boolean): Action => ({
+    type: 'UPDATE_LOGIN_INFO',
     message: message,
-    displayMessage: displayMsg,
+    displayMessage: displayMessage,
     loading: loading,
-    additionalInfo: info,
-    cancelled: cancelled,
-    type: types.login.UPDATE_LOGIN_INFO()
+    additionalInfo: additionalInfo,
+    cancelled: cancelled
   })
 
 /**
  * Clear local storage and dispatch an action to tell
  * other components that user has logged out.
- * @param {string} dispatcher From which page user clicked log out
  */
 export const logout = () => (dispatch:Function) => {
   dispatch(userLoggedOut())
@@ -91,22 +92,7 @@ export const logout = () => (dispatch:Function) => {
   // TODO log out with google sdk?
 }
 
-/**
- * @type {string} type the type of login: test |signere | google | facebook
- * @type {string} signereRequestId a signere.no request id (req when type is signere)
- * @type {string} signereAccessToken a signere.no OAuth2 access token (optional when type is signere)
- * @type {string} googleIdToken a a google id token (req when type is google)
- * @type {string} fbAccessToken a facebook access token (req when type is facebook)
- * @type {string} name the users name (req when type is test)
- * @type {string} email the users email (req when type is test)
- */
-class LoginParams {
-  type: 'google' | 'facebook' | ' signere' | 'test'
-  requestedScopes: string
-  navigate: Function
-  googleIdToken: string
-  fbAccessToken: string
-}
+
 
 /**
  * Ask the API for a token using a facebook or google token, or a
@@ -118,7 +104,8 @@ class LoginParams {
  *
  * @return the API's response containing a JSON web token for amodahl.no-api
  */
-export const fetchJwToken = (params: LoginParams) => (dispatch:Function, getState:Function) => {
+export const fetchJwToken = (params: LoginParams) =>
+           (dispatch: Function, getState: Function) => {
   dispatch(updateLoginInfo('Logging in to amodahl.no...', true, true, params, false))
   let state = getState()
 
@@ -186,6 +173,36 @@ export const fetchJwToken = (params: LoginParams) => (dispatch:Function, getStat
   })
 }
 
+export const offlineLogin = () =>
+  (dispatch: Function, getState: Function) => {
+
+  let params = {
+    // $FlowFixMe
+    type: localStorage.loginType
+  }
+
+  // try offline login
+  dispatch(updateLoginInfo('Looking for user info in local storage...',
+    false, false, params, false))
+  if (localStorage.loginType && localStorage.loginType === params.type) {
+    let user
+    try {
+      user = JSON.parse(localStorage.user)
+      dispatch(receiveAmodahlToken(localStorage.jwToken, user))
+      dispatch(updateLoginInfo('You logged in as ' + user.name,
+        true, false, user, false))
+
+    } catch (e) {
+      dispatch(updateLoginInfo('Invalid login info found in local storage, clearing',
+        false, false, localStorage, false))
+      localStorage.clear()
+    }
+  } else {
+    dispatch(updateLoginInfo(`No ${params.type} login info found in local storage`,
+      false, false, localStorage, false))
+  }
+}
+
 /**
  * Log in to amodahl.no-api.
  * This means authenticating with (google/facebook/signere)
@@ -196,47 +213,17 @@ export const fetchJwToken = (params: LoginParams) => (dispatch:Function, getStat
  * without further identification.
  * @param {LoginParams} params Login parameters
  */
-export const login = (_params: ?LoginParams) =>
+export const login = (_params: LoginParams) =>
   (dispatch: Function, getState: Function) => {
+  const params = _params
 
-  let params: LoginParams
-  if (!_params) {
-    // use same login type as last time
-    params = new LoginParams()
-    // $FlowFixMe
-    params.type = localStorage.loginType
-  }else{
-    params = _params
-  }
-  
   let state = getState()
-
-  // try offline login
-  dispatch(updateLoginInfo('Looking for user info in local storage...',
-    false, false, params, false))
-  if (localStorage.loginType && localStorage.loginType === params.type) {
-    let user
-    try {
-      // $FlowFixMe
-      user = JSON.parse(localStorage.user)
-      // $FlowFixMe
-      dispatch(receiveAmodahlToken(localStorage.jwToken, user))
-      dispatch(updateLoginInfo('You logged in as ' + user.name,
-        true, false, user, false))
-      return
-    } catch (e) {
-      dispatch(updateLoginInfo('Invalid login info found in local storage, clearing',
-        false, false, localStorage, false))
-      localStorage.clear()
-    }
-  } else {
-    dispatch(updateLoginInfo(`No ${params.type} login info found in local storage`,
-      false, false, localStorage, false))
-  }
 
   if (params.type === 'signere' && params.signereRequestId) {
     dispatch(fetchJwToken(params))
   } else if (params.type === 'signere') {
+
+
     dispatch(updateLoginInfo('Requesting url from Signere.no',
       true, true, params, false))
 
@@ -344,7 +331,9 @@ export const login = (_params: ?LoginParams) =>
             true, true, fbResponse.authResponse, false))
           // fetch token from amodahl.no using facebook token
 
-          params.fbAccessToken = fbAccessToken
+
+            params.fbAccessToken = fbAccessToken
+
           dispatch(fetchJwToken(params))
         }
       }, {scope: 'public_profile,email'})

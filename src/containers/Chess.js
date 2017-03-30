@@ -8,21 +8,13 @@ const ChessContainer = ((Target, namespace) => {
   const mapDispatchToProps = (dispatch) => {
     return {
       myFetch: myFetch(dispatch),
-      navigate: (path) => dispatch(push(path))
+      push: (path) => dispatch(push(path))
     }
   }
 
-  const mapStateToProps = (state) => {
-    const localState = namespace ? state[namespace] : state
-    let props = {
-      readMore: localState.readMore,
-      user: localState.user,
-      jwToken: localState.jwToken
-    }
+  const mapStateToProps = (state) => state[namespace]
 
-    return props
-  }
-
+  // $FlowFixMe
   return connect(mapStateToProps, mapDispatchToProps)(Target)
 })(Chess, 'chess')
 

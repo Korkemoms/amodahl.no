@@ -4,18 +4,9 @@ import Home from '../components/Home'
 import { push } from 'react-router-redux'
 
 const HomeContainer = ((Target, namespace) => {
-  const mapDispatchToProps = dispatch => {
-    return {
-      navigate: (path) => dispatch(push(path))
-    }
-  }
+  const mapDispatchToProps = { push }
 
-  const mapStateToProps = (state) => {
-    const localState = namespace ? state[namespace] : state
-    return {
-      fadeInEnabled: localState.fadeInEnabled
-    }
-  }
+  const mapStateToProps = (state) => state[namespace]
 
   return connect(mapStateToProps, mapDispatchToProps)(Target)
 })(Home, 'home')

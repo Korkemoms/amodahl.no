@@ -1,8 +1,9 @@
 // @flow
-class State {
+type State = {
 }
 
-const initialState = new State()
+const initialState = {
+}
 
 const update = (state: State = initialState, action: Object) => {
   switch (action.type) {

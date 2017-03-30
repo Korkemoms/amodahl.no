@@ -1,14 +1,15 @@
 // @flow
 import { types } from '../constants/ActionTypes'
 
-class State {
-  user: ?Object
+type State = {
+  user: ?Object,
   page: ?string
 }
 
-const initialState = new State()
-initialState.user = null
-initialState.page = null
+const initialState = {
+  user: null,
+  page: null
+}
 
 const update = (state: State = initialState, action: Object) => {
   switch (action.type) {
@@ -20,8 +21,7 @@ const update = (state: State = initialState, action: Object) => {
       return Object.assign({}, state, {
         user: null
       })
-    case types.router.LOCATION_CHANGE():
-      {
+    case '@@router/LOCATION_CHANGE': {
         return Object.assign({}, state, {
           page: action.payload.pathname
         })

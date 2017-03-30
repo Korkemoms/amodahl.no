@@ -3,29 +3,13 @@ import { connect } from 'react-redux'
 import { login, logout } from '../actions/Login'
 import Login from '../components/Login'
 import { push } from 'react-router-redux'
+import type { Action, LoginParams } from '../actions/Types'
+import type { State } from '../reducers/Login'
 
 const LoginContainer = ((Target, namespace) => {
-  const mapDispatchToProps = (dispatch) => {
-    return {
-      login: (...args) => dispatch(login(...args)),
-      logout: (...args) => dispatch(logout(...args)),
-      navigate: (...args) => dispatch(push(...args))
+  const mapDispatchToProps = { login, logout, push }
 
-    }
-  }
-
-  const mapStateToProps = (state, ownProps) => {
-    const localState = namespace ? state[namespace] : state
-
-    return {
-      jwToken: localState.jwToken,
-      user: localState.user,
-      message: localState.message,
-      displayMessage: localState.displayMessage,
-      loading: localState.loading,
-      history: localState.history
-    }
-  }
+  const mapStateToProps = (state, ownProps) => state[namespace]
 
   return connect(mapStateToProps, mapDispatchToProps)(Target)
 })(Login, 'login')

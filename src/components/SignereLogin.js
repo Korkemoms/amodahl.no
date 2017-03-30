@@ -19,7 +19,7 @@ export default class SignereLogin extends React.Component {
   componentDidMount () {
     const urlParameters = queryString.parse(location.search)
     if (urlParameters.signereRequestId) {
-      this.props.navigate('/login')
+      this.props.push('/login')
       this.props.login({
         type: 'signere',
         signereRequestId: urlParameters.signereRequestId
@@ -35,7 +35,7 @@ export default class SignereLogin extends React.Component {
       loginButton = <Button
         bsStyle='primary'
         onClick={() => {
-          this.props.navigate('/login')
+          this.props.push('/login')
           this.props.login({
             type: 'signere',
             signereRequestId: urlParameters.signereRequestId
@@ -49,7 +49,7 @@ export default class SignereLogin extends React.Component {
         onClick={() => {
           this.props.login({
             type: 'signere',
-            navigate: this.props.navigate
+            navigate: this.props.push
           })
         }}>
             Log in with Signere (stage 1)

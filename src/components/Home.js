@@ -20,7 +20,7 @@ import {
 /* Purely presentational component */
 const Home = (props: {
   fadeInEnabled: boolean,
-  navigate: Function
+  push: Function
 }) =>
   <DocumentTitle title='amodahl.no'>
     <div>
@@ -59,16 +59,16 @@ const Home = (props: {
                   Here are some of the things I have made that are not totally useless. 😄
                 </p>
                   <DropdownButton id='projects-dropdown-menu-button' bsStyle='success' title='Projects'>
-                    <MenuItem onClick={() => props.navigate('/amodahl-no')}>
+                    <MenuItem onClick={() => props.push('/amodahl-no')}>
                       Amodahl.no
                     </MenuItem>
-                    <MenuItem onClick={() => props.navigate('/chess-project')}>
+                    <MenuItem onClick={() => props.push('/chess-project')}>
                         Chess
                     </MenuItem>
-                    <MenuItem onClick={() => props.navigate('/matrix-multiplication')}>
+                    <MenuItem onClick={() => props.push('/matrix-multiplication')}>
                         Matrix multiplication game
                     </MenuItem>
-                    <MenuItem onClick={() => props.navigate('/leveringmontering')}>
+                    <MenuItem onClick={() => props.push('/leveringmontering')}>
                         Leveringmontering.no (Order management system)
                     </MenuItem>
                   </DropdownButton>

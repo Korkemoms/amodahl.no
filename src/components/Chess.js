@@ -3,10 +3,10 @@ import React from 'react'
 
 import '../MyContent.scss'
 import '../App.scss'
-import MyHeader from '../components/MyHeader'
-// $FlowFixMe
+
 import ChessGame from 'chess-client'
 import DocumentTitle from 'react-document-title'
+import MyHeader from '../components/MyHeader'
 
 import {
   Grid,
@@ -20,7 +20,7 @@ const Chess = (props: {
   myFetch: Function,
   user: ?Object,
   jwToken: ?string,
-  navigate: Function
+  push: Function
 }) =>
   <DocumentTitle title='Chess game'>
     <div>
@@ -32,7 +32,7 @@ const Chess = (props: {
           playerUid={props.user ? props.user.uid : null}
           playerName={props.user ? props.user.name : null}
           myFetch={props.jwToken !== null ? props.myFetch(props.jwToken) : null}
-          navigate={props.navigate}
+          navigate={props.push}
           />
 
       </div>

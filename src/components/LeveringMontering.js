@@ -50,7 +50,7 @@ class LeveringMontering extends React.Component {
       <div style={{position: 'absolute', right: '0', width: '200px'}}>
         <div className='sidenav' ref={sidebar => { this.sidebar = sidebar }}>
           <Nav stacked activeKey={1} onSelect={(e) => {
-            this.props.navigate(`/leveringmontering#${e}`)
+            this.props.push(`/leveringmontering#${e}`)
           }}>
 
             <NavItem style={{fontWeight: 'bold'}} eventKey={''}>Leveringmontering.no</NavItem>
@@ -65,7 +65,7 @@ class LeveringMontering extends React.Component {
     const img1 =
       <div style={{maxWidth: '600px'}} >
         <PageHeader style={{cursor: 'pointer'}} id='lm-new-order' onClick={(e) => {
-          this.props.navigate(`/leveringmontering#lm-new-order`)
+          this.props.push(`/leveringmontering#lm-new-order`)
         }}>New order</PageHeader>
         <Thumbnail alt='New order' src={ImageNewOrder} />
         <p>Warehouse employees and customers can create new orders.</p>
@@ -74,7 +74,7 @@ class LeveringMontering extends React.Component {
     const img2 =
       <div style={{maxWidth: '600px'}} >
         <PageHeader style={{cursor: 'pointer'}} id='lm-overview' onClick={(e) => {
-          this.props.navigate(`/leveringmontering#lm-overview`)
+          this.props.push(`/leveringmontering#lm-overview`)
         }}>Overview</PageHeader>
         <Thumbnail alt='Overview of orders' src={ImageOverview} />
         <p>Employees get an overview of all the orders.</p>
@@ -83,7 +83,7 @@ class LeveringMontering extends React.Component {
     const img3 =
       <div style={{maxWidth: '600px'}} >
         <PageHeader style={{cursor: 'pointer'}} id='lm-users' onClick={(e) => {
-          this.props.navigate(`/leveringmontering#lm-users`)
+          this.props.push(`/leveringmontering#lm-users`)
         }}>Users</PageHeader>
         <Thumbnail alt='Users' src={ImageUsers} />
         <p>Admins can access user settings here.</p>
@@ -92,7 +92,7 @@ class LeveringMontering extends React.Component {
     const img4 =
       <div style={{maxWidth: '600px'}} >
         <PageHeader style={{cursor: 'pointer'}} id='lm-settings' onClick={(e) => {
-          this.props.navigate(`/leveringmontering#lm-settings`)
+          this.props.push(`/leveringmontering#lm-settings`)
         }}>Settings</PageHeader>
         <Thumbnail alt='Account settings' src={ImageMyAccount} />
         <p>Users can change some properties from this page.</p>

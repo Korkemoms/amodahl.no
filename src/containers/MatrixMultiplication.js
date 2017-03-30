@@ -3,13 +3,9 @@ import { connect } from 'react-redux'
 import MatrixMultiplication from '../components/MatrixMultiplication'
 
 const MatrixMultiplicationContainer = ((Target, namespace) => {
-  const mapDispatchToProps = {
-  }
+  const mapDispatchToProps = {}
 
-  const mapStateToProps = (state) => {
-    // const localState = namespace ? state[namespace] : state
-    return {}
-  }
+  const mapStateToProps = (state) => ({})
 
   return connect(mapStateToProps, mapDispatchToProps)(Target)
 })(MatrixMultiplication, 'matrixMultiplication')
