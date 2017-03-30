@@ -1,3 +1,4 @@
+// @flow
 import { createStore, applyMiddleware } from 'redux'
 import rootReducer from '../reducers'
 
@@ -25,6 +26,8 @@ const middleware = applyMiddleware(
 
 const enhancer = middleware
 
-export default function configureStore (initialState) {
+const configureStore = (initialState: Object) => {
   return createStore(rootReducer, initialState, enhancer)
-};
+}
+
+export default configureStore

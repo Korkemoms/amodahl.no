@@ -1,22 +1,14 @@
-import { PropTypes } from 'react'
-import SignereLogin from '../components/SignereLogin'
+// @flow
 import { types } from '../constants/ActionTypes'
 
-/** Define initial Redux state and React PropTypes */
-const def = (props = false) => {
-  const f = props ? (_, type) => type : (val, _) => val
-  let r = { // initial Redux state and React PropTypes
-    url: f(null, PropTypes.string)
-  }
-  if (props) { // add more React PropTypes
-    r = {...r}
-  }
-  return r
+class State {
+  url: ?string
 }
-const initialState = def()
-SignereLogin.propTypes = def(true)
 
-export default function update (state = initialState, action) {
+const initialState = new State()
+initialState.url = null
+
+const update = (state: State = initialState, action: Object) => {
   switch (action.type) {
     case types.login.RECEIVE_SIGNERE_URL():
       return Object.assign({}, state, {
@@ -28,3 +20,5 @@ export default function update (state = initialState, action) {
       return state
   }
 }
+
+export default update

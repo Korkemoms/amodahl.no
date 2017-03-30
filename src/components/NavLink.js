@@ -1,22 +1,21 @@
-import React, { PropTypes } from 'react'
+// @flow
+import React from 'react'
 
 import { NavItem } from 'react-bootstrap'
 import {LinkContainer} from 'react-router-bootstrap'
 
 /* Purely presentational component */
-const NavLink = ({ children, to }) => {
+const NavLink = (props: {
+  children: Array<mixed>,
+  to: string
+ }) => {
   return (
-    <LinkContainer to={to}>
+    <LinkContainer to={props.to}>
       <NavItem role='navigation'>
-        {children}
+        {props.children}
       </NavItem>
     </LinkContainer>
   )
-}
-
-NavLink.propTypes = {
-  children: PropTypes.any,
-  to: PropTypes.object.isRequired
 }
 
 export default NavLink

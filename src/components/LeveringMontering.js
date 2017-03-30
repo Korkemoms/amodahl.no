@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 
 import '../MyContent.scss'
@@ -22,8 +23,13 @@ import {
 
 /* Purely presentational component */
 class LeveringMontering extends React.Component {
+
+  handleScroll: Function
+  sidebar: Object
+
   componentDidMount () {
     this.handleScroll = () => {
+      // $FlowFixMe
       if (document.body.scrollTop > 304) {
         this.sidebar.className = 'sidenav-fixed'
       } else {

@@ -1,4 +1,4 @@
-
+// @flow
 import { connect } from 'react-redux'
 import Home from '../components/Home'
 import { push } from 'react-router-redux'
@@ -6,9 +6,7 @@ import { push } from 'react-router-redux'
 const HomeContainer = ((Target, namespace) => {
   const mapDispatchToProps = dispatch => {
     return {
-      navigate: (path) => {
-        dispatch(push(path))
-      }
+      navigate: (path) => dispatch(push(path))
     }
   }
 

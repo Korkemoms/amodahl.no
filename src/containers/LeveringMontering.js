@@ -1,3 +1,4 @@
+// @flow
 import { connect } from 'react-redux'
 import LeveringMontering from '../components/LeveringMontering'
 import { push } from 'react-router-redux'
@@ -5,9 +6,7 @@ import { push } from 'react-router-redux'
 const LeveringMonteringContainer = ((Target, namespace) => {
   const mapDispatchToProps = dispatch => {
     return {
-      navigate: (path) => {
-        dispatch(push(path))
-      }
+      navigate: (path) => dispatch(push(path))
     }
   }
 

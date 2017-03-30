@@ -1,4 +1,4 @@
-
+// @flow
 import { connect } from 'react-redux'
 import { login, logout } from '../actions/Login'
 import Login from '../components/Login'
@@ -7,15 +7,10 @@ import { push } from 'react-router-redux'
 const LoginContainer = ((Target, namespace) => {
   const mapDispatchToProps = (dispatch) => {
     return {
-      login: (...args) => {
-        dispatch(login(...args))
-      },
-      logout: () => {
-        dispatch(logout())
-      },
-      navigate: (...args) => {
-        dispatch(push(...args))
-      }
+      login: (...args) => dispatch(login(...args)),
+      logout: (...args) => dispatch(logout(...args)),
+      navigate: (...args) => dispatch(push(...args))
+
     }
   }
 

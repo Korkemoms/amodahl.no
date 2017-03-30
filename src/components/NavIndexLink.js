@@ -1,22 +1,21 @@
-import React, { PropTypes } from 'react'
+// @flow
+import React from 'react'
 
 import { NavItem } from 'react-bootstrap'
 import {IndexLinkContainer} from 'react-router-bootstrap'
 
 /* Purely presentational component */
-const NavIndexLink = ({ children, to }) => {
+const NavIndexLink = (props: {
+  children: Array<mixed>,
+  to: string
+}) => {
   return (
-    <IndexLinkContainer to={to}>
+    <IndexLinkContainer to={props.to}>
       <NavItem role='navigation'>
-        {children}
+        {props.children}
       </NavItem>
     </IndexLinkContainer>
   )
-}
-
-NavIndexLink.propTypes = {
-  children: PropTypes.any,
-  to: PropTypes.object.isRequired
 }
 
 export default NavIndexLink

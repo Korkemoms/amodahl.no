@@ -1,15 +1,18 @@
-import fetch from 'isomorphic-fetch'
+// @flow
 import { types } from '../constants/ActionTypes'
+import fetch from 'isomorphic-fetch'
 import { push } from 'react-router-redux'
 
 // determine where to send requests
 const url = () => {
   const www = window.location.href.indexOf('www.') !== -1 ? 'www.' : ''
   return process.env.NODE_ENV === 'production'
-    ? `https://${www}amodahl.no/api/public` : `http://${www}local.amodahl.no:3000`
+    ? `https://${www}amodahl.no/api/public`
+    : `http://${www}local.amodahl.no:3000`
 }
 
-const googleClientId = '778219340101-tf221dbeeho9frka8js86iv460hfuse0.apps.googleusercontent.com'
+const googleClientId = '778219340101-tf221dbeeho9frka8js86iv460hfuse0' +
+                        '.apps.googleusercontent.com'
 
 // The scopes to request for the token
 const scopes = [
@@ -25,18 +28,23 @@ const scopes = [
   'update.list'
 ]
 
-export const receiveAmodahlToken = (jwToken, user) => ({
-  jwToken: jwToken,
-  user: user,
-  type: types.login.RECEIVE_AMODAHL_TOKEN()
-})
+export const receiveAmodahlToken = (
+  jwToken: string,
+  user: Object) => ({
+    jwToken: jwToken,
+    user: user,
+    type: types.login.RECEIVE_AMODAHL_TOKEN()
+  })
 
-export const receiveSignereUrl = (url, accessToken, requestId) => ({
-  type: types.login.RECEIVE_SIGNERE_URL(),
-  url: url,
-  accessToken: accessToken,
-  requestId: requestId
-})
+export const receiveSignereUrl = (
+  url: string,
+  accessToken: string,
+  requestId: string) => ({
+    type: types.login.RECEIVE_SIGNERE_URL(),
+    url: url,
+    accessToken: accessToken,
+    requestId: requestId
+  })
 
 export const requestAmodahlTokenFailed = () => ({
   type: types.login.REQUEST_AMODAHL_TOKEN_FAILED()
@@ -46,21 +54,26 @@ export const userLoggedOut = () => ({
   type: types.login.USER_LOGGED_OUT()
 })
 
-export const updateLoginInfo = (message, displayMsg, loading, info, cancelled) => ({
-  message: message,
-  displayMessage: displayMsg,
-  loading: loading,
-  additionalInfo: info,
-  cancelled: cancelled,
-  type: types.login.UPDATE_LOGIN_INFO()
-})
+export const updateLoginInfo = (
+  message: string,
+  displayMsg:boolean,
+  loading:boolean,
+  info:Object,
+  cancelled:boolean) => ({
+    message: message,
+    displayMessage: displayMsg,
+    loading: loading,
+    additionalInfo: info,
+    cancelled: cancelled,
+    type: types.login.UPDATE_LOGIN_INFO()
+  })
 
 /**
  * Clear local storage and dispatch an action to tell
  * other components that user has logged out.
  * @param {string} dispatcher From which page user clicked log out
  */
-export const logout = () => dispatch => {
+export const logout = () => (dispatch:Function) => {
   dispatch(userLoggedOut())
   localStorage.clear()
 
@@ -79,30 +92,37 @@ export const logout = () => dispatch => {
 }
 
 /**
+ * @type {string} type the type of login: test |signere | google | facebook
+ * @type {string} signereRequestId a signere.no request id (req when type is signere)
+ * @type {string} signereAccessToken a signere.no OAuth2 access token (optional when type is signere)
+ * @type {string} googleIdToken a a google id token (req when type is google)
+ * @type {string} fbAccessToken a facebook access token (req when type is facebook)
+ * @type {string} name the users name (req when type is test)
+ * @type {string} email the users email (req when type is test)
+ */
+class LoginParams {
+  type: 'google' | 'facebook' | ' signere' | 'test'
+  requestedScopes: string
+  navigate: Function
+  googleIdToken: string
+  fbAccessToken: string
+}
+
+/**
  * Ask the API for a token using a facebook or google token, or a
  * signere request id.
  * The API checks that the token or id is valid
  * and then responds with a JSON web token.
  *
- * @param params Login parameters
- * @param params.fbAccessToken a facebook access token (facebook)
- * @param params.googleIdToken a google id token (google)
- * @param params.signereRequestId a signere.no request id (signere)
- * @param params.signereAccessToken a signere.no OAuth2 access token (signere, optional)
- * @param params.name the users name (test)
- * @param params.email the users email (test)
- * @param params.type the type of login (test/signere/google/facebook)
+ * @param {LoginParams} params Login parameters
  *
  * @return the API's response containing a JSON web token for amodahl.no-api
  */
-export const fetchJwToken = params => (dispatch, getState) => {
+export const fetchJwToken = (params: LoginParams) => (dispatch:Function, getState:Function) => {
   dispatch(updateLoginInfo('Logging in to amodahl.no...', true, true, params, false))
   let state = getState()
 
-  params = {
-    ...params,
-    requestedScopes: JSON.stringify(scopes)
-  }
+  params.requestedScopes = JSON.stringify(scopes)
 
   var headers = new Headers()
   headers.append('pragma', 'no-cache')
@@ -174,21 +194,21 @@ export const fetchJwToken = params => (dispatch, getState) => {
  *
  * In addition test users defined by the API can log
  * without further identification.
- * @param params Login parameters
- * @param params.signereRequestId a signere.no request id (signere)
- * @param params.signereAccessToken a signere.no OAuth2 access token (signere, optional)
- * @param params.name the users name (test)
- * @param params.email the users email (test)
- * @param params.type the type of login (test/signere/google/facebook)
+ * @param {LoginParams} params Login parameters
  */
-export const login = params => (dispatch, getState) => {
-  if (!params) {
-    // use same login type as last time
-    params = {
-      type: localStorage.loginType
-    }
-  }
+export const login = (_params: ?LoginParams) =>
+  (dispatch: Function, getState: Function) => {
 
+  let params: LoginParams
+  if (!_params) {
+    // use same login type as last time
+    params = new LoginParams()
+    // $FlowFixMe
+    params.type = localStorage.loginType
+  }else{
+    params = _params
+  }
+  
   let state = getState()
 
   // try offline login
@@ -197,13 +217,15 @@ export const login = params => (dispatch, getState) => {
   if (localStorage.loginType && localStorage.loginType === params.type) {
     let user
     try {
+      // $FlowFixMe
       user = JSON.parse(localStorage.user)
+      // $FlowFixMe
       dispatch(receiveAmodahlToken(localStorage.jwToken, user))
       dispatch(updateLoginInfo('You logged in as ' + user.name,
         true, false, user, false))
       return
     } catch (e) {
-      dispatch(updateLoginInfo(`Invalid login info found in local storage, clearing`,
+      dispatch(updateLoginInfo('Invalid login info found in local storage, clearing',
         false, false, localStorage, false))
       localStorage.clear()
     }
@@ -279,10 +301,9 @@ export const login = params => (dispatch, getState) => {
                 // finally we got google token and can trade it for an amodahl token
                 dispatch(updateLoginInfo('Received token from Google',
                                       true, true, authResponse, false))
-                dispatch(fetchJwToken({
-                  googleIdToken: authResponse.id_token,
-                  ...params
-                }))
+
+                params.googleIdToken = authResponse.id_token
+                dispatch(fetchJwToken(params))
               }
             }, errorCallback) // asdf
           }, errorCallback) //
@@ -322,10 +343,9 @@ export const login = params => (dispatch, getState) => {
           dispatch(updateLoginInfo('Received token from Facebook',
             true, true, fbResponse.authResponse, false))
           // fetch token from amodahl.no using facebook token
-          dispatch(fetchJwToken({
-            ...params,
-            fbAccessToken: fbAccessToken
-          }))
+
+          params.fbAccessToken = fbAccessToken
+          dispatch(fetchJwToken(params))
         }
       }, {scope: 'public_profile,email'})
     }
@@ -350,6 +370,7 @@ export const login = params => (dispatch, getState) => {
         if (d.getElementById(id)) { return }
         js = d.createElement(s); js.id = id
         js.src = '//connect.facebook.net/en_US/sdk.js'
+        // $FlowFixMe
         fjs.parentNode.insertBefore(js, fjs)
       }(document, 'script', 'facebook-jssdk'))
     }
@@ -359,12 +380,6 @@ export const login = params => (dispatch, getState) => {
     dispatch(fetchJwToken(params))
   }
 }
-
-/**
- * @callback MyFetchCallback
- * @param {Object} body The response body
- * @param {Object} header The response header
- */
 
 /**
  * Method for fetching resources from amodahl.no API.
@@ -379,7 +394,9 @@ export const login = params => (dispatch, getState) => {
  *
  * @return promise that is resolved with headers and body of API response
  */
-export const myFetch = dispatch => jwToken => (path, params) => {
+export const myFetch = (dispatch: Function) =>
+(jwToken: string) =>
+(path: string, params: Object) => {
   var headers = params.headers ? params.headers : new Headers()
   headers.append('Authorization', 'Bearer ' + jwToken)
   headers.append('pragma', 'no-cache')

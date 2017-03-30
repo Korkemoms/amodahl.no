@@ -1,13 +1,16 @@
+// @flow
 import expect from 'expect'
 
 import { types } from '../constants/ActionTypes'
 import * as actions from './Login'
+import { describe, it } from 'jasmine'
 
 describe('actions', () => {
   it('should create an action carrying updated login info', () => {
     let message = (Math.random() + 1).toString(36).substring(16)
     let displayMessage = Math.random() < 0.5
     let loading = Math.random() < 0.5
+    let cancelled = Math.random() < 0.5
     let additionalInfo = {
       a: (Math.random() + 1).toString(36).substring(16),
       b: (Math.random() + 1).toString(36).substring(16)
@@ -18,9 +21,10 @@ describe('actions', () => {
       displayMessage,
       loading,
       additionalInfo,
+      cancelled,
       type: types.login.UPDATE_LOGIN_INFO()
     }
-    expect(actions.updateLoginInfo(message, displayMessage, loading, additionalInfo))
+    expect(actions.updateLoginInfo(message, displayMessage, loading, additionalInfo, cancelled))
     .toEqual(expectedAction)
   })
 

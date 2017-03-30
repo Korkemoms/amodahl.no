@@ -1,4 +1,4 @@
-
+// @flow
 import { connect } from 'react-redux'
 import NavIndexLink from '../components/NavIndexLink'
 

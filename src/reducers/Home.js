@@ -1,22 +1,14 @@
-import { PropTypes } from 'react'
-import Home from '../components/Chess'
+// @flow
 import { types } from '../constants/ActionTypes'
 
-/** Define initial Redux state and React PropTypes */
-const def = (props = false) => {
-  const f = props ? (_, type) => type : (val, _) => val
-  let r = { // initial Redux state and React PropTypes
-    fadeInEnabled: f(true, PropTypes.bool)
-  }
-  if (props) { // add more React PropTypes
-    r = {...r}
-  }
-  return r
+class State {
+  fadeInEnabled: boolean
 }
-const initialState = def()
-Home.propTypes = def(true)
 
-export default function update (state = initialState, action) {
+const initialState = new State()
+initialState.fadeInEnabled = true
+
+const update = (state: State = initialState, action: Object) => {
   switch (action.type) {
     case types.router.LOCATION_CHANGE():
       return Object.assign({}, state, {
@@ -27,3 +19,5 @@ export default function update (state = initialState, action) {
       return state
   }
 }
+
+export default update

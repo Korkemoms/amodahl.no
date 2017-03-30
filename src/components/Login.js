@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 
 import '../MyContent.scss'
@@ -15,21 +16,29 @@ import {
 } from 'react-bootstrap'
 
 /* Purely presentational component */
-const Login = ({login, logout, user, loading, message,
-                    displayMessage, history, navigate}) => {
+const Login = (props: {
+  login: Function,
+  logout: Function,
+  user: ?Object,
+  loading: ?boolean,
+  message: ?string,
+  displayMessage: ?boolean,
+  history: Array<string>,
+  navigate: Function
+}) => {
   let key = 1
-  let isLoggedIn = user !== null
+  let isLoggedIn = props.user !== null
 
   const googleButton = !isLoggedIn
   ? <Button
     key={key++}
     bsStyle='success'
     onClick={() => {
-      login({
+      props.login({
         type: 'google'
       })
     }}
-    disabled={loading}>
+    disabled={props.loading}>
     <i className='fa fa-google' aria-hidden='true' / > Log in with google
     </Button>
   : null
@@ -39,11 +48,11 @@ const Login = ({login, logout, user, loading, message,
     key={key++}
     bsStyle='primary'
     onClick={() => {
-      login({
+      props.login({
         type: 'facebook'
       })
     }}
-    disabled={loading}>
+    disabled={props.loading}>
     <i className='fa fa-facebook' aria-hidden='true' /> Log in with facebook
     </Button>
   : null
@@ -52,8 +61,8 @@ const Login = ({login, logout, user, loading, message,
     ? <Button
       key={key++}
       bsStyle='warning'
-      onClick={() => { logout() }}
-      disabled={loading}>
+      onClick={() => { props.logout() }}
+      disabled={props.loading}>
         Log out
       </Button>
       : null
@@ -61,24 +70,24 @@ const Login = ({login, logout, user, loading, message,
   const meButton = isLoggedIn
   ? <LinkContainer to={{ pathname: '/me' }} key={key++}><Button
     bsStyle='primary'
-    disabled={loading}>
+    disabled={props.loading}>
       Details
     </Button></LinkContainer>
   : null
 
   // determine the 'last page' for the go-back button
-  let lastPage = null
+  let lastPage: string = ''
   let ignorePages = ['/login', '/me', '/', '', '/signere-login']
-  for (let i = history.length - 1; i >= 0; i--) {
-    if (ignorePages.indexOf(history[i]) === -1) {
-      lastPage = history[i]
+  for (let i = props.history.length - 1; i >= 0; i--) {
+    if (ignorePages.indexOf(props.history[i]) === -1) {
+      lastPage = props.history[i]
       break
     }
   }
 
-  const goBackButton = isLoggedIn && lastPage !== null
-    ? <Button key={key++} bsStyle='success' onClick={() => navigate(lastPage)} >
-      {lastPage.replace('/', '')}
+  const goBackButton = isLoggedIn && lastPage !== ''
+    ? <Button key={key++} bsStyle='success' onClick={() => props.navigate(lastPage)} >
+      {(lastPage: string).replace('/', '')}
     </Button>
     : null
 
@@ -86,9 +95,9 @@ const Login = ({login, logout, user, loading, message,
 
   const testUserButton = showTestUserButton
     ? <DropdownButton key={key++} title='Test users'
-      id='test-users' disabled={loading}>
+      id='test-users' disabled={props.loading}>
       <MenuItem eventKey='2'
-        onClick={() => login({
+        onClick={() => props.login({
           type: 'test',
           name: "Gul'dan(Test)",
           email: 'guldan@hotmail.com'
@@ -96,7 +105,7 @@ const Login = ({login, logout, user, loading, message,
         >Gul'dan(Test)
       </MenuItem>
       <MenuItem eventKey='3'
-        onClick={() => login({
+        onClick={() => props.login({
           type: 'test',
           name: 'Krosus(Test)',
           email: 'krosus@google.com'
@@ -104,7 +113,7 @@ const Login = ({login, logout, user, loading, message,
         >Krosus(Test)
       </MenuItem>
       <MenuItem eventKey='4'
-        onClick={() => login({
+        onClick={() => props.login({
           type: 'test',
           name: 'Elisande(Test)',
           email: 'elisande@amazon.com'
@@ -128,12 +137,12 @@ const Login = ({login, logout, user, loading, message,
     key={key++}
     bsStyle='warning'
     onClick={() => {
-      login({
+      props.login({
         type: 'signere',
-        navigate: navigate
+        navigate: props.navigate
       })
     }}
-    disabled={loading}>
+    disabled={props.loading}>
         Log in with bank ID (test)
       </Button>
   : null
@@ -159,13 +168,13 @@ const Login = ({login, logout, user, loading, message,
             </p>
             <ButtonToolbar>{buttons}</ButtonToolbar>
 
-            <p style={{minHeight: '1em'}}><label>{displayMessage ? message : ''}</label></p>
+            <p style={{minHeight: '1em'}}><label>{props.displayMessage ? props.message : ''}</label></p>
             {experimentalButtonsToolbar}
             <p style={{marginTop: '5em'}}>
               <small>
                 Read about the login implementation {' '}
                 <a style={{cursor: 'pointer'}}
-                  onClick={() => { navigate('amodahl-no') }}>here
+                  onClick={() => { props.navigate('amodahl-no') }}>here
                 </a>.
                 <br />
                 Note: To change user you may

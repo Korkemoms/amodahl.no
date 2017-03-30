@@ -1,9 +1,9 @@
+// @flow
 import { connect } from 'react-redux'
 import AmodahlNo from '../components/AmodahlNo'
 
 const AmodahlNoContainer = ((Target, namespace) => {
-  const mapDispatchToProps = {
-  }
+  const mapDispatchToProps = {}
 
   const mapStateToProps = (state) => {
     // const localState = namespace ? state[namespace] : state

@@ -1,4 +1,4 @@
-
+// @flow
 import { connect } from 'react-redux'
 import MyNavbar from '../components/MyNavbar'
 

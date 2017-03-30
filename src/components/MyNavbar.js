@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import NavLink from '../containers/NavLink'
 import NavIndexLink from '../containers/NavIndexLink'
@@ -8,10 +9,13 @@ import {
 } from 'react-bootstrap'
 
 /* Purely presentational component */
-const MyNavbar = ({ user, page }) => {
-  const userSpecific = user === null
+const MyNavbar = (props: {
+  user: Object,
+  page: string
+}) => {
+  const userSpecific = props.user === null
   ? <NavLink eventKey={4} to={{ pathname: '/login' }}>Log in</NavLink>
-  : <NavLink eventKey={4} to={{ pathname: '/me' }}>Logged in: {user.name}</NavLink>
+  : <NavLink eventKey={4} to={{ pathname: '/me' }}>Logged in: {props.user.name}</NavLink>
 
   return (
     <Navbar

@@ -1,3 +1,4 @@
+// @flow
 import { connect } from 'react-redux'
 import { myFetch } from '../actions/Login'
 import Chess from '../components/Chess'
@@ -7,9 +8,7 @@ const ChessContainer = ((Target, namespace) => {
   const mapDispatchToProps = (dispatch) => {
     return {
       myFetch: myFetch(dispatch),
-      navigate: (path) => {
-        dispatch(push(path))
-      }
+      navigate: (path) => dispatch(push(path))
     }
   }
 

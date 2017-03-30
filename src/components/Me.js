@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 
 import '../MyContent.scss'
@@ -26,43 +27,49 @@ import {
 } */
 
 /* Purely presentational component */
-const Me = ({ logout, token, user, message, navigate }) => {
-  const logoutButton = token !== null
+const Me = (props: {
+  logout: Function,
+  token: ?string,
+  user: Object,
+  message: string,
+  navigate: Function
+}) => {
+  const logoutButton = props.token !== null
     ? <Button bsStyle='warning' onClick={() => {
-      navigate('/login')
-      logout()
+      props.navigate('/login')
+      props.logout()
     }}>
         Log out
       </Button>
     : ''
 
-  const loginButton = token === null
+  const loginButton = props.token === null
     ? <LinkContainer to={{ pathname: '/login' }} ><Button
       bsStyle='primary'>
         Log in
       </Button></LinkContainer>
     : ''
 
-  const form = token !== null
+  const form = props.token !== null
     ? <form>
       <FormGroup>
         <ControlLabel>Name</ControlLabel>
         <FormControl.Static>
-          {user.name}
+          {props.user.name}
         </FormControl.Static>
       </FormGroup>
 
       <FormGroup>
         <ControlLabel>Email</ControlLabel>
         <FormControl.Static>
-          {user.email}
+          {props.user.email}
         </FormControl.Static>
       </FormGroup>
 
       <FormGroup>
         <ControlLabel>ID</ControlLabel>
         <FormControl.Static>
-          {user.uid}
+          {props.user.uid}
         </FormControl.Static>
       </FormGroup>
 
@@ -81,7 +88,7 @@ const Me = ({ logout, token, user, message, navigate }) => {
             {form}
             {logoutButton}
             {loginButton}
-            <p><label>{message}</label></p>
+            <p><label>{props.message}</label></p>
 
           </Grid>
         </div>

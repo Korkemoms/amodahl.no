@@ -1,25 +1,18 @@
-import { PropTypes } from 'react'
-import Chess from '../components/Chess'
+// @flow
 import { types } from '../constants/ActionTypes'
 
-/** Define initial Redux state and React PropTypes */
-const def = (props = false) => {
-  const f = props ? (_, type) => type : (val, _) => val
-  let r = { // initial Redux state and React PropTypes
-    readMore: f(false, PropTypes.bool),
-    jwToken: f(null, PropTypes.string),
-    myEmail: f(false, PropTypes.string),
-    myName: f(false, PropTypes.string)
-  }
-  if (props) { // add more React PropTypes
-    r = {myFetch: PropTypes.func, ...r}
-  }
-  return r
+class State {
+  jwToken: ?string
+  myEmail: ?string
+  myName: ?string
 }
-const initialState = def()
-Chess.propTypes = def(true)
 
-export default function update (state = initialState, action) {
+const initialState = new State()
+initialState.jwToken = null
+initialState.myEmail = null
+initialState.myName = null
+
+const update = (state: State = initialState, action: Object) => {
   switch (action.type) {
     case types.login.RECEIVE_AMODAHL_TOKEN(): {
       return Object.assign({}, state, {
@@ -37,3 +30,5 @@ export default function update (state = initialState, action) {
       return state
   }
 }
+
+export default  update

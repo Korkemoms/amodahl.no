@@ -1,27 +1,25 @@
-import { PropTypes } from 'react'
-import Login from '../components/Login'
+// @flow
 import { types } from '../constants/ActionTypes'
 
-/** Define initial Redux state and React PropTypes */
-const def = (props = false) => {
-  const f = props ? (_, type) => type : (val, _) => val
-  let r = { // initial Redux state and React PropTypes
-    message: f(null, PropTypes.string),
-    loading: f(null, PropTypes.bool),
-    cancelled: f(null, PropTypes.bool),
-    displayMessage: f(false, PropTypes.bool),
-    user: f(null, PropTypes.object),
-    history: f([], PropTypes.array)
-  }
-  if (props) { // add more React PropTypes
-    r = {...r}
-  }
-  return r
+class State {
+  message: ?string
+  loading: boolean
+  cancelled: boolean
+  displayMessage: boolean
+  user: ?Object
+  history: Array<string>
 }
-const initialState = def()
-Login.propTypes = def(true)
 
-export default function update (state = initialState, action) {
+const initialState = new State()
+initialState.message = null
+initialState.loading = false
+initialState.cancelled = false
+initialState.displayMessage = false
+initialState.user = null
+initialState.history = []
+
+
+export default function update (state: State = initialState, action: Object) {
   switch (action.type) {
     case types.router.LOCATION_CHANGE(): {
       let history = state.history.slice(0, 10)

@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
@@ -14,7 +15,7 @@ import AmodahlNo from './AmodahlNo'
 import MatrixMultiplication from './MatrixMultiplication'
 import LeveringMontering from './LeveringMontering'
 
-// scroll to the anchor
+/** scroll to the anchor */
 function hashLinkScroll (newPage) {
   const { hash } = window.location
   if (hash !== '') {

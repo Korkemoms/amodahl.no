@@ -1,4 +1,4 @@
-
+// @flow
 import DevTools from './DevTools'
 
 import React, { Component } from 'react'

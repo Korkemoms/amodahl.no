@@ -1,3 +1,4 @@
+// @flow
 /**
  * Action types should be fetched using a function call.
  * This causes an error to be thrown if non existing
