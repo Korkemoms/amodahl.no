@@ -1,77 +1,79 @@
 // @flow
 import expect from 'expect'
-
+import configureMockStore from 'redux-mock-store'
+import thunk from 'redux-thunk'
+import nock from 'nock'
 import { types } from '../constants/ActionTypes'
 import * as actions from './Login'
 
-describe('actions', () => {
-  it('should create an action carrying updated login info', () => {
-    let message = (Math.random() + 1).toString(36).substring(16)
-    let displayMessage = Math.random() < 0.5
-    let loading = Math.random() < 0.5
-    let cancelled = Math.random() < 0.5
-    let additionalInfo = {
-      a: (Math.random() + 1).toString(36).substring(16),
-      b: (Math.random() + 1).toString(36).substring(16)
-    }
+const middlewares = [ thunk ]
+const mockStore = configureMockStore(middlewares)
 
-    const expectedAction = {
-      message,
-      displayMessage,
-      loading,
-      additionalInfo,
-      cancelled,
-      type: types.login.UPDATE_LOGIN_INFO()
-    }
-    expect(actions.updateLoginInfo(message, displayMessage, loading, additionalInfo, cancelled))
-    .toEqual(expectedAction)
+// determine where to send requests
+const url = 'https://amodahl.no/api/public'
+
+const makeStore = (middleware) => {
+  const middlewares = [ thunk, middleware ]
+  return configureMockStore(middlewares)
+}
+
+describe('Facebook login actions', () => {
+  afterEach(() => {
+    nock.cleanAll()
   })
 
-  it('should create an action notifying that the user initiated log out', () => {
-    const expectedAction = {
-      type: types.login.USER_LOGGED_OUT()
+  it('fbLogin should result in RECEIVE_FB_TOKEN and ' +
+  'REQUEST_AMODAHL_TOKEN being dispatched', () => {
+    let action1Dispatched = false
+    let action2Dispatched = false
+
+    const store = makeStore(store => next => action => {
+      action1Dispatched = action1Dispatched || (action.type === 'RECEIVE_FB_TOKEN')
+      action2Dispatched = action2Dispatched || (action.type === 'REQUEST_AMODAHL_TOKEN')
+
+      if (!action1Dispatched || !action2Dispatched) {
+        return next(action)
+      }
+    })({})
+
+    const accessToken = Math.random().toString(36).substring(7)
+
+    const params = {
+      type: 'facebook',
+      requestedScopes: 'root',
+      fbResponse: { // mock response
+        authResponse: {
+          accessToken
+        }
+      }
     }
-    expect(actions.userLoggedOut()).toEqual(expectedAction)
+    store.dispatch(actions.login(params))
+
+    expect(action1Dispatched).toEqual(true)
+    expect(action2Dispatched).toEqual(true)
   })
 
-  it('should create an action carrying received token and user details', () => {
-    let name = (Math.random() + 1).toString(36).substring(7)
-    let email = (Math.random() + 1).toString(36).substring(7) + '@' +
-        (Math.random() + 1).toString(36).substring(5) + '.' +
-        (Math.random() + 1).toString(36).substring(3)
-    let user = {
-      name,
-      email
+  it('fbLogin should result in REQUEST_FB_TOKEN_FAILED being dispatched ' +
+  'if no facebook access token is received', () => {
+    let actionDispatched = false
+    const store = makeStore(store => next => action => {
+      actionDispatched = actionDispatched || (action.type === 'REQUEST_FB_TOKEN_FAILED')
+      if (!actionDispatched) {
+        return next(action)
+      }
+    })({})
+
+    const params = {
+      type: 'facebook',
+      requestedScopes: 'root',
+      fbResponse: { // mock response
+        authResponse: {
+          // accessToken
+        }
+      }
     }
+    store.dispatch(actions.login(params))
 
-    let jwToken = (Math.random() + 1).toString(36).substring(16)
-
-    const expectedAction = {
-      type: types.login.RECEIVE_AMODAHL_TOKEN(),
-      user,
-      jwToken
-    }
-    expect(actions.receiveAmodahlToken(jwToken, user)).toEqual(expectedAction)
-  })
-
-  it('should create an action carrying received url, access token and request id', () => {
-    let url = (Math.random() + 1).toString(36).substring(16)
-    let accessToken = (Math.random() + 1).toString(36).substring(16)
-    let requestId = (Math.random() + 1).toString(36).substring(16)
-
-    const expectedAction = {
-      type: types.login.RECEIVE_SIGNERE_URL(),
-      url,
-      accessToken,
-      requestId
-    }
-    expect(actions.receiveSignereUrl(url, accessToken, requestId)).toEqual(expectedAction)
-  })
-
-  it('should create an action notifying that a request for an amodahl token has failed', () => {
-    const expectedAction = {
-      type: types.login.REQUEST_AMODAHL_TOKEN_FAILED()
-    }
-    expect(actions.requestAmodahlTokenFailed()).toEqual(expectedAction)
+    expect(actionDispatched).toEqual(true)
   })
 })

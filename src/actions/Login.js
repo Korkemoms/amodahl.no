@@ -1,12 +1,11 @@
 // @flow
-import { types } from '../constants/ActionTypes'
 import fetch from 'isomorphic-fetch'
 import { push } from 'react-router-redux'
 import type { Action, LoginParams } from './Types'
 
 // determine where to send requests
-const url = () => {
-  const www = window.location.href.indexOf('www.') !== -1 ? 'www.' : ''
+const url = (): string => {
+  const www = (typeof(window) !== 'undefined' ? window.location.href.indexOf('www.') : -1) !== -1 ? 'www.' : ''
   return process.env.NODE_ENV === 'production'
     ? `https://${www}amodahl.no/api/public`
     : `http://${www}local.amodahl.no:3000`
@@ -14,6 +13,8 @@ const url = () => {
 
 const googleClientId = '778219340101-tf221dbeeho9frka8js86iv460hfuse0' +
                         '.apps.googleusercontent.com'
+
+const fbAppId = '772463112910269'
 
 // The scopes to request for the token
 const scopes = [
@@ -29,6 +30,10 @@ const scopes = [
   'update.list'
 ]
 
+export const requestAmodahlToken = (): Action => ({
+  type: 'REQUEST_AMODAHL_TOKEN'
+})
+
 export const receiveAmodahlToken = (
   jwToken: string,
   user: Object): Action => ({
@@ -37,6 +42,21 @@ export const receiveAmodahlToken = (
     user: user
   })
 
+export const requestAmodahlTokenFailed = (): Action => ({
+  type: 'REQUEST_AMODAHL_TOKEN_FAILED'
+})
+
+export const requestFbToken = (): Action => ({
+  type: 'REQUEST_FB_TOKEN'
+})
+
+export const receiveFbToken = (): Action => ({
+  type: 'RECEIVE_FB_TOKEN'
+})
+
+export const requestFbTokenFailed = (): Action => ({
+  type: 'REQUEST_FB_TOKEN_FAILED'
+})
 
 export const receiveSignereUrl = (
   url: string,
@@ -48,20 +68,16 @@ export const receiveSignereUrl = (
     requestId: requestId
   })
 
-export const requestAmodahlTokenFailed = (): Action => ({
-  type: 'REQUEST_AMODAHL_TOKEN_FAILED'
-})
-
 export const userLoggedOut = (): Action => ({
   type: 'USER_LOGGED_OUT'
 })
 
 export const updateLoginInfo = (
-  message: ?string,
-  displayMessage: ?boolean,
-  loading: ?boolean,
-  additionalInfo: ?Object,
-  cancelled: ?boolean): Action => ({
+  message?: string,
+  displayMessage?: boolean,
+  loading?: boolean,
+  additionalInfo?: Object,
+  cancelled?: boolean): Action => ({
     type: 'UPDATE_LOGIN_INFO',
     message: message,
     displayMessage: displayMessage,
@@ -74,7 +90,7 @@ export const updateLoginInfo = (
  * Clear local storage and dispatch an action to tell
  * other components that user has logged out.
  */
-export const logout = () => (dispatch:Function) => {
+export const logout = () => (dispatch: Function) => {
   dispatch(userLoggedOut())
   localStorage.clear()
 
@@ -92,8 +108,6 @@ export const logout = () => (dispatch:Function) => {
   // TODO log out with google sdk?
 }
 
-
-
 /**
  * Ask the API for a token using a facebook or google token, or a
  * signere request id.
@@ -104,9 +118,11 @@ export const logout = () => (dispatch:Function) => {
  *
  * @return the API's response containing a JSON web token for amodahl.no-api
  */
-export const fetchJwToken = (params: LoginParams) =>
-           (dispatch: Function, getState: Function) => {
+export const fetchAmodahlToken = (params: LoginParams) =>
+(dispatch: Function, getState: Function) => {
+  dispatch(requestAmodahlToken())
   dispatch(updateLoginInfo('Logging in to amodahl.no...', true, true, params, false))
+
   let state = getState()
 
   params.requestedScopes = JSON.stringify(scopes)
@@ -174,32 +190,107 @@ export const fetchJwToken = (params: LoginParams) =>
 }
 
 export const offlineLogin = () =>
-  (dispatch: Function, getState: Function) => {
-
-  let params = {
-    // $FlowFixMe
-    type: localStorage.loginType
-  }
-
+(dispatch: Function, getState: Function) => {
   // try offline login
   dispatch(updateLoginInfo('Looking for user info in local storage...',
-    false, false, params, false))
-  if (localStorage.loginType && localStorage.loginType === params.type) {
+    false, false, localStorage, false))
+  if (localStorage.loginType) {
     let user
     try {
+      // $FlowFixMe
       user = JSON.parse(localStorage.user)
+      // $FlowFixMe
       dispatch(receiveAmodahlToken(localStorage.jwToken, user))
       dispatch(updateLoginInfo('You logged in as ' + user.name,
         true, false, user, false))
-
     } catch (e) {
       dispatch(updateLoginInfo('Invalid login info found in local storage, clearing',
         false, false, localStorage, false))
       localStorage.clear()
     }
   } else {
-    dispatch(updateLoginInfo(`No ${params.type} login info found in local storage`,
+    // $FlowFixMe
+    dispatch(updateLoginInfo(`No login info found in local storage for
+      type ${localStorage.loginType}`,
       false, false, localStorage, false))
+  }
+}
+
+/**
+ * Log in to amodahl.no-api using facebook authentication.
+ * @param {LoginParams} params Login parameters
+ */
+export const fbLogin = (_params: LoginParams) =>
+(dispatch: Function, getState: Function) => {
+  const params = _params
+  let state = getState()
+
+  if (params.type !== 'facebook') {
+    throw new Error('Invalid params.type: ' + JSON.stringify(params))
+  }
+
+  dispatch(requestFbToken())
+  dispatch(updateLoginInfo('Logging in with Facebook...',
+  true, true, params, false))
+
+  // run after init facebook and login facebook
+  const amodahlLogin = (params) => {
+    const fbResponse = params.fbResponse
+    // ensure facebook login was successful
+    if (!fbResponse || !fbResponse.authResponse || !fbResponse.authResponse.accessToken) {
+      dispatch(requestFbTokenFailed())
+      dispatch(updateLoginInfo('Failed to log in to facebook: ' +
+        JSON.stringify(params.fbResponse), true, false, fbResponse, false))
+      return
+    }
+
+    dispatch(receiveFbToken())
+    dispatch(updateLoginInfo('Received token from Facebook',
+      true, true, fbResponse.authResponse, false))
+
+    params.fbAccessToken = fbResponse.authResponse.accessToken
+    if (!state.cancelled) {
+      // fetch token from amodahl.no using facebook token
+      dispatch(fetchAmodahlToken(params))
+    }
+  }
+
+  // run after init facebook
+  const fbLogin = () => {
+    if (params.fbResponse) {
+      amodahlLogin(params)
+    } else {
+      window.FB.login(fbResponse => {
+        params.fbResponse = fbResponse
+        amodahlLogin(params)
+      }, {scope: 'public_profile, email'})
+    }
+  }
+
+  if (typeof (document) === 'undefined' || document.getElementById('facebook-jssdk')) {
+    fbLogin()
+  } else {
+    // init facebook sdk first
+    window.fbAsyncInit = function () {
+      window.FB.init({
+        appId: fbAppId,
+        xfbml: true,
+        version: 'v2.8'
+      })
+      window.FB.AppEvents.logPageView()
+
+      fbLogin()
+    };
+
+    (function (d, s, id) {
+      let js
+      let fjs = d.getElementsByTagName(s)[0]
+      if (d.getElementById(id)) { return }
+      js = d.createElement(s); js.id = id
+      js.src = '//connect.facebook.net/en_US/sdk.js'
+      // $FlowFixMe
+      fjs.parentNode.insertBefore(js, fjs)
+    }(document, 'script', 'facebook-jssdk'))
   }
 }
 
@@ -214,16 +305,17 @@ export const offlineLogin = () =>
  * @param {LoginParams} params Login parameters
  */
 export const login = (_params: LoginParams) =>
-  (dispatch: Function, getState: Function) => {
+(dispatch: Function, getState: Function) => {
   const params = _params
-
   let state = getState()
 
+  if (params.type === 'facebook') {
+    dispatch(fbLogin(params))
+  }
+
   if (params.type === 'signere' && params.signereRequestId) {
-    dispatch(fetchJwToken(params))
+    dispatch(fetchAmodahlToken(params))
   } else if (params.type === 'signere') {
-
-
     dispatch(updateLoginInfo('Requesting url from Signere.no',
       true, true, params, false))
 
@@ -290,7 +382,7 @@ export const login = (_params: LoginParams) =>
                                       true, true, authResponse, false))
 
                 params.googleIdToken = authResponse.id_token
-                dispatch(fetchJwToken(params))
+                dispatch(fetchAmodahlToken(params))
               }
             }, errorCallback) // asdf
           }, errorCallback) //
@@ -311,62 +403,10 @@ export const login = (_params: LoginParams) =>
     }
   }
 
-  if (params.type === 'facebook') {
-    dispatch(updateLoginInfo('Logging in with Facebook...',
-      true, true, params, false))
 
-    // to be called after init facebook sdk
-    const fbLogin = () => {
-      window.FB.login(fbResponse => {
-        if (!fbResponse.authResponse) { // ensure facebook login was successful
-          dispatch(updateLoginInfo('Failed to log in to facebook: ' +
-            JSON.stringify(fbResponse), true, false, fbResponse, false))
-          return
-        }
-
-        let fbAccessToken = fbResponse.authResponse.accessToken
-
-        if (!state.cancelled) {
-          dispatch(updateLoginInfo('Received token from Facebook',
-            true, true, fbResponse.authResponse, false))
-          // fetch token from amodahl.no using facebook token
-
-
-            params.fbAccessToken = fbAccessToken
-
-          dispatch(fetchJwToken(params))
-        }
-      }, {scope: 'public_profile,email'})
-    }
-
-    if (document.getElementById('facebook-jssdk')) {
-      fbLogin()
-    } else { // init facebook sdk first
-      window.fbAsyncInit = function () {
-        window.FB.init({
-          appId: '772463112910269',
-          xfbml: true,
-          version: 'v2.8'
-        })
-        window.FB.AppEvents.logPageView()
-
-        fbLogin()
-      };
-
-      (function (d, s, id) {
-        let js
-        let fjs = d.getElementsByTagName(s)[0]
-        if (d.getElementById(id)) { return }
-        js = d.createElement(s); js.id = id
-        js.src = '//connect.facebook.net/en_US/sdk.js'
-        // $FlowFixMe
-        fjs.parentNode.insertBefore(js, fjs)
-      }(document, 'script', 'facebook-jssdk'))
-    }
-  }
 
   if (params.type === 'test') {
-    dispatch(fetchJwToken(params))
+    dispatch(fetchAmodahlToken(params))
   }
 }
 
