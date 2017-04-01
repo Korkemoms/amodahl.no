@@ -216,10 +216,10 @@ export const fetchAmodahlToken = createAction('FETCH_AMODAHL_TOKEN', async (para
       if (!result || !result.token || !result.user) {
         error(result)
       }
-      return {
+      resolve({
         token: result.token,
         user: result.user
-      }
+      })
     })
     .catch(e => {
       error(e)
