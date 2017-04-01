@@ -3,8 +3,6 @@ import { connect } from 'react-redux'
 import { login, logout } from '../actions/Login'
 import Login from '../components/Login'
 import { push } from 'react-router-redux'
-import type { Action, LoginParams } from '../actions/Types'
-import type { State } from '../reducers/Login'
 
 const LoginContainer = ((Target, namespace) => {
   const mapDispatchToProps = { login, logout, push }
