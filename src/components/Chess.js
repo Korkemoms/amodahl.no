@@ -19,7 +19,7 @@ const Chess = (props: {
   toggleReadMore: ?boolean,
   myFetch: Function,
   user: ?Object,
-  jwToken: ?string,
+  token: ?string,
   push: Function
 }) =>
   <DocumentTitle title='Chess game'>
@@ -31,7 +31,7 @@ const Chess = (props: {
         <ChessGame
           playerUid={props.user ? props.user.uid : null}
           playerName={props.user ? props.user.name : null}
-          myFetch={props.jwToken !== null ? props.myFetch(props.jwToken) : null}
+          myFetch={props.token !== null ? props.myFetch(props.token) : null}
           navigate={props.push}
           />
 
