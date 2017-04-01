@@ -2,6 +2,7 @@
 import 'isomorphic-fetch'
 import { push } from 'react-router-redux'
 import type { Action, LoginParams } from './Types'
+import { ActionTypes } from './Types'
 import { createAction } from 'redux-actions'
 
 // determine where to send requests
@@ -26,6 +27,7 @@ const scopes = [
 ]
 
 /**
+ * Normal action
  * Action notifying about login status.
  */
 export const updateLoginInfo = (
@@ -33,7 +35,7 @@ export const updateLoginInfo = (
   displayMessage?: boolean,
   loading?: boolean,
   additionalInfo?: Object,
-  cancelled?: boolean): Promise<Action> => Promise.resolve({
+  cancelled?: boolean): Action => ({
     type: 'UPDATE_LOGIN_INFO',
     payload: {
       message: message,
@@ -45,10 +47,11 @@ export const updateLoginInfo = (
   })
 
 /**
+ * Promise action
  * Instead of loading google sdk every time someone uses the app
  * it is loaded on demand with this method.
  */
-export const initGoogleSdk = createAction('INIT_GOOGLE_SDK', async () => {
+export const initGoogleSdk = createAction(ActionTypes.INIT_GOOGLE_SDK, async () => {
   let response = await new Promise((resolve, reject) => {
     if (typeof (window) === 'undefined') {
       reject(new Error(
@@ -77,10 +80,11 @@ export const initGoogleSdk = createAction('INIT_GOOGLE_SDK', async () => {
 })
 
 /**
+ * Promise action
  * Instead of loading facebook sdk every time someone uses the app
  * it is loaded on demand with this method.
  */
-export const initFbSdk = createAction('INIT_FB_SDK', async () => {
+export const initFbSdk = createAction(ActionTypes.INIT_FB_SDK, async () => {
   let response = await new Promise((resolve, reject) => {
     if (typeof (document) === 'undefined') {
       reject(new Error(
@@ -114,11 +118,12 @@ export const initFbSdk = createAction('INIT_FB_SDK', async () => {
 })
 
 /**
+ * Thunk action
  * Clear local storage and dispatch an action notifying
  * that the user logged out.
  */
 export const logout = () => (dispatch: Function) => {
-  dispatch({type: 'USER_LOGGED_OUT'})
+  dispatch({ type: ActionTypes.USER_LOGGED_OUT })
   localStorage.clear()
 
   // log out of facebook
@@ -136,6 +141,7 @@ export const logout = () => (dispatch: Function) => {
 }
 
 /**
+ * Thunk action
  * Load the user info and token stored in the browser.
  */
 export const offlineLogin = () =>
@@ -149,7 +155,7 @@ export const offlineLogin = () =>
       // $FlowFixMe
       user = JSON.parse(localStorage.user)
 
-      dispatch({ type: 'FETCH_AMODAHL_TOKEN', payload: {
+      dispatch({ type: ActionTypes.FETCH_AMODAHL_TOKEN, payload: {
         // $FlowFixMe
         token: localStorage.token, user: user
       }})
@@ -169,9 +175,10 @@ export const offlineLogin = () =>
 }
 
 /**
+ * Promise action
  * Save user info and token in the browser.
  */
-export const saveUserInfo = createAction('STORE_LOGIN_PARAMETERS',
+export const saveUserInfo = createAction(ActionTypes.SAVE_USER_INFO,
 async (type, token, user) => {
   let response = await new Promise((resolve, reject) => {
     // store user info in browser (for next time app is started)
@@ -184,13 +191,14 @@ async (type, token, user) => {
 })
 
 /**
+ * Promise action
  * Request an amodahl token using a facebook or google token, a
  * signere request id or test user info.
  *
  * @param {LoginParams} params Login parameters
  * @return a promise of a response containing token and userinfo for amodahl.no
  */
-export const fetchAmodahlToken = createAction('FETCH_AMODAHL_TOKEN', async (params) => {
+export const fetchAmodahlToken = createAction(ActionTypes.FETCH_AMODAHL_TOKEN, async (params) => {
   let response = await new Promise((resolve, reject) => {
     const error = e => reject(new Error(
       'Did not receive amodahl token: ' + JSON.stringify(e)))
@@ -229,12 +237,13 @@ export const fetchAmodahlToken = createAction('FETCH_AMODAHL_TOKEN', async (para
 })
 
 /**
+ * Promise action
  * Request a google token from google sdk.
  *
  * @param {LoginParams} params Login parameters
  * @return promise of a google token
  */
-export const fetchGoogleToken = createAction('FETCH_GOOGLE_TOKEN', async () => {
+export const fetchGoogleToken = createAction(ActionTypes.FETCH_GOOGLE_TOKEN, async () => {
   let response = await new Promise((resolve, reject) => {
     const error = e => reject(new Error(
       'Did not receive google token: ' + JSON.stringify(e)))
@@ -261,12 +270,13 @@ export const fetchGoogleToken = createAction('FETCH_GOOGLE_TOKEN', async () => {
 })
 
 /**
+ * Promise action
  * Request a google token from facebook sdk.
  *
  * @param {LoginParams} params Login parameters
  * @return promise of a facebook token
  */
-export const fetchFbToken = createAction('FETCH_FB_TOKEN', async () => {
+export const fetchFbToken = createAction(ActionTypes.FETCH_FB_TOKEN, async () => {
   let response = await new Promise((resolve, reject) => {
     const error = e => reject(new Error(
       'Did not receive facebook token: ' + JSON.stringify(e)))
@@ -290,12 +300,13 @@ export const fetchFbToken = createAction('FETCH_FB_TOKEN', async () => {
 })
 
 /**
+ * Promise action
  * Request a signere url from amodahl-api
  *
  * @param {LoginParams} params Login parameters
  * @return a promise of a signere url
  */
-export const fetchSignereUrl = createAction('FETCH_SIGNERE_URL', async () => {
+export const fetchSignereUrl = createAction(ActionTypes.FETCH_SIGNERE_URL, async () => {
   let response = await new Promise((resolve, reject) => {
     const error = e => reject(new Error(
       'Did not receive signere url: ' + JSON.stringify(e)))
@@ -328,6 +339,7 @@ export const fetchSignereUrl = createAction('FETCH_SIGNERE_URL', async () => {
 })
 
 /**
+ * Thunk action
  * Log in to amodahl.no.
  * This means authenticating with (google/facebook/signere)
  * and then requesting an amodahl-api token using the obtained
