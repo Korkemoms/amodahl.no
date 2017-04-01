@@ -1,5 +1,6 @@
 // @flow
-import { types } from '../constants/ActionTypes'
+import type { Action } from '../actions/Types'
+import { ActionTypes } from '../actions/Types'
 
 type State = {
   user: ?Object,
@@ -11,21 +12,20 @@ const initialState = {
   page: null
 }
 
-const update = (state: State = initialState, action: Object) => {
+const update = (state: State = initialState, action: Action) => {
   switch (action.type) {
-    case types.login.RECEIVE_AMODAHL_TOKEN():
+    case ActionTypes.FETCH_AMODAHL_TOKEN:
       return Object.assign({}, state, {
-        user: action.user
+        user: action.error ? null : action.payload.user
       })
-    case types.login.USER_LOGGED_OUT():
+    case ActionTypes.USER_LOGGED_OUT:
       return Object.assign({}, state, {
         user: null
       })
-    case '@@router/LOCATION_CHANGE': {
-        return Object.assign({}, state, {
-          page: action.payload.pathname
-        })
-      }
+    case '@@router/LOCATION_CHANGE':
+      return Object.assign({}, state, {
+        page: action.payload.pathname
+      })
     default:
       return state
   }

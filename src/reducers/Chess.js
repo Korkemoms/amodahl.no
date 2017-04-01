@@ -1,29 +1,30 @@
 // @flow
-import { types } from '../constants/ActionTypes'
+import type { Action } from '../actions/Types'
+import { ActionTypes } from '../actions/Types'
 
 type State = {
-  jwToken: ?string,
+  token: ?string,
   myEmail: ?string,
   myName: ?string
 }
 
 const initialState = {
-  jwToken: null,
+  token: null,
   myEmail: null,
   myName: null
 }
 
-const update = (state: State = initialState, action: Object) => {
+const update = (state: State = initialState, action: Action) => {
   switch (action.type) {
-    case types.login.RECEIVE_AMODAHL_TOKEN(): {
+    case ActionTypes.FETCH_AMODAHL_TOKEN: {
       return Object.assign({}, state, {
-        jwToken: action.jwToken,
-        user: action.user
+        token: action.error ? null : action.payload.token,
+        user: action.error ? null : action.payload.user
       })
     }
-    case types.login.USER_LOGGED_OUT():
+    case ActionTypes.USER_LOGGED_OUT:
       return Object.assign({}, state, {
-        jwToken: null,
+        token: null,
         myEmail: null,
         myName: null
       })
@@ -32,4 +33,4 @@ const update = (state: State = initialState, action: Object) => {
   }
 }
 
-export default  update
+export default update

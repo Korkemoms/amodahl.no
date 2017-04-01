@@ -1,5 +1,6 @@
 // @flow
-import { types } from '../constants/ActionTypes'
+import type { Action } from '../actions/Types'
+import { ActionTypes } from '../actions/Types'
 
 type State = {
   token: ?string,
@@ -13,21 +14,15 @@ const initialState = {
   message: null
 }
 
- const update = (state: State = initialState, action: Object) => {
+const update = (state: State = initialState, action: Action) => {
   switch (action.type) {
-    case types.login.RECEIVE_AMODAHL_TOKEN():
+    case ActionTypes.FETCH_AMODAHL_TOKEN:
       return Object.assign({}, state, {
-        token: action.token,
-        user: action.user,
+        token: action.error ? null : action.payload.token,
+        user: action.error ? null : action.payload.user,
         message: null
       })
-    case types.login.REQUEST_AMODAHL_TOKEN_FAILED():
-      return Object.assign({}, state, {
-        token: null,
-        user: null,
-        message: null
-      })
-    case types.login.USER_LOGGED_OUT():
+    case ActionTypes.USER_LOGGED_OUT:
       return Object.assign({}, state, {
         token: null,
         user: null,

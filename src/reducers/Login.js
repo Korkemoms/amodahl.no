@@ -1,5 +1,6 @@
 // @flow
-import { types } from '../constants/ActionTypes'
+import type { Action } from '../actions/Types'
+import { ActionTypes } from '../actions/Types'
 
 export type State = {
   message: ?string,
@@ -19,7 +20,7 @@ const initialState = {
   history: []
 }
 
-export default function update (state: State = initialState, action: Object) {
+export default function update (state: State = initialState, action: Action) {
   switch (action.type) {
     case '@@router/LOCATION_CHANGE': {
       let history = state.history.slice(0, 10)
@@ -41,18 +42,20 @@ export default function update (state: State = initialState, action: Object) {
         ...additional
       })
     }
-    case types.login.UPDATE_LOGIN_INFO():
+    case ActionTypes.UPDATE_LOGIN_INFO:
       return Object.assign({}, state, {
-        message: action.message,
-        displayMessage: action.displayMessage,
-        loading: action.loading,
-        cancelled: action.cancelled
+        message: action.payload.message,
+        displayMessage: action.payload.displayMessage,
+        loading: action.payload.loading,
+        cancelled: action.payload.cancelled
       })
-    case types.login.RECEIVE_AMODAHL_TOKEN():
+    case ActionTypes.FETCH_AMODAHL_TOKEN: {
       return Object.assign({}, state, {
-        user: action.user
+        user: action.error ? null : action.payload.user
       })
-    case types.login.USER_LOGGED_OUT():
+    }
+
+    case ActionTypes.USER_LOGGED_OUT:
       return Object.assign({}, state, {
         user: null,
         message: 'You logged out.',
