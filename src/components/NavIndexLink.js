@@ -5,14 +5,12 @@ import { NavItem } from 'react-bootstrap'
 import {IndexLinkContainer} from 'react-router-bootstrap'
 
 /* Purely presentational component */
-const NavIndexLink = (props: {
-  children: Array<mixed>,
-  to: string
-}) => {
+const NavIndexLink = (props: Object) => {
+  const {children, to}: {children: Array<mixed>, to: string} = props
   return (
-    <IndexLinkContainer to={props.to}>
+    <IndexLinkContainer to={to}>
       <NavItem role='navigation'>
-        {props.children}
+        {children}
       </NavItem>
     </IndexLinkContainer>
   )

@@ -5,14 +5,12 @@ import { NavItem } from 'react-bootstrap'
 import {LinkContainer} from 'react-router-bootstrap'
 
 /* Purely presentational component */
-const NavLink = (props: {
-  children: Array<mixed>,
-  to: string
- }) => {
+const NavLink = (props: Object) => {
+  const {children, to}: {children: Array<mixed>, to: string} = props
   return (
-    <LinkContainer to={props.to}>
+    <LinkContainer to={to}>
       <NavItem role='navigation'>
-        {props.children}
+        {children}
       </NavItem>
     </LinkContainer>
   )

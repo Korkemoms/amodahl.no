@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
-import NavLink from '../containers/NavLink'
-import NavIndexLink from '../containers/NavIndexLink'
+import NavLink from '../components/NavLink'
+import NavIndexLink from '../components/NavIndexLink'
 import {
   Nav,
   Navbar,
