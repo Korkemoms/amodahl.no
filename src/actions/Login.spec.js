@@ -2,78 +2,73 @@
 import expect from 'expect'
 import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
-import nock from 'nock'
-import { types } from '../constants/ActionTypes'
+import promiseMiddleware from 'redux-promise'
 import * as actions from './Login'
+import fetchMock from 'fetch-mock'
 
-const middlewares = [ thunk ]
+const middlewares = [ promiseMiddleware, thunk ]
 const mockStore = configureMockStore(middlewares)
 
-// determine where to send requests
-const url = 'https://amodahl.no/api/public'
+describe('Signere login actions', () => {
+  it('fetchSignereUrl resolves with correct url', async () => {
+    const store = mockStore({})
 
-const makeStore = (middleware) => {
-  const middlewares = [ thunk, middleware ]
-  return configureMockStore(middlewares)
-}
+    const url = Math.random().toString(36).substring(7)
+    const expectedActions = [{
+      type: 'FETCH_SIGNERE_URL',
+      payload: url
+    }]
 
-describe('Facebook login actions', () => {
-  afterEach(() => {
-    nock.cleanAll()
+    fetchMock.postOnce('*', {Url: url})
+
+    await store.dispatch(actions.fetchSignereUrl())
+    .then((action) => {
+      expect(store.getActions()).toEqual(expectedActions)
+    })
+    .catch(e => {
+      fail(e)
+    })
   })
 
-  it('fbLogin should result in RECEIVE_FB_TOKEN and ' +
-  'REQUEST_AMODAHL_TOKEN being dispatched', () => {
-    let action1Dispatched = false
-    let action2Dispatched = false
+  it('fetchSignereUrl resolves with error=true if bad response', async () => {
+    let store = mockStore({})
+    fetchMock.postOnce('*', {foo: 'bar'})
+    await store.dispatch(actions.fetchSignereUrl())
+    .then((action) => {
+      expect(action.error).toEqual(true)
+    })
+    .catch(e => {
+      fail(e)
+    })
 
-    const store = makeStore(store => next => action => {
-      action1Dispatched = action1Dispatched || (action.type === 'RECEIVE_FB_TOKEN')
-      action2Dispatched = action2Dispatched || (action.type === 'REQUEST_AMODAHL_TOKEN')
+    store = mockStore({})
+    fetchMock.postOnce('*', 'asdf')
+    await store.dispatch(actions.fetchSignereUrl())
+    .then((action) => {
+      expect(action.error).toEqual(true)
+    })
+    .catch(e => {
+      fail(e)
+    })
 
-      if (!action1Dispatched || !action2Dispatched) {
-        return next(action)
-      }
-    })({})
+    store = mockStore({})
+    fetchMock.postOnce('*', ['token'])
+    await store.dispatch(actions.fetchSignereUrl())
+    .then((action) => {
+      expect(action.error).toEqual(true)
+    })
+    .catch(e => {
+      fail(e)
+    })
 
-    const accessToken = Math.random().toString(36).substring(7)
-
-    const params = {
-      type: 'facebook',
-      requestedScopes: 'root',
-      fbResponse: { // mock response
-        authResponse: {
-          accessToken
-        }
-      }
-    }
-    store.dispatch(actions.login(params))
-
-    expect(action1Dispatched).toEqual(true)
-    expect(action2Dispatched).toEqual(true)
-  })
-
-  it('fbLogin should result in REQUEST_FB_TOKEN_FAILED being dispatched ' +
-  'if no facebook access token is received', () => {
-    let actionDispatched = false
-    const store = makeStore(store => next => action => {
-      actionDispatched = actionDispatched || (action.type === 'REQUEST_FB_TOKEN_FAILED')
-      if (!actionDispatched) {
-        return next(action)
-      }
-    })({})
-
-    const params = {
-      type: 'facebook',
-      requestedScopes: 'root',
-      fbResponse: { // mock response
-        authResponse: {
-          // accessToken
-        }
-      }
-    }
-    store.dispatch(actions.login(params))
-
-    expect(actionDispatched).toEqual(true)
+    store = mockStore({})
+    fetchMock.postOnce('*', {body: {Url: '123'}, status: 400})
+    await store.dispatch(actions.fetchSignereUrl())
+    .then((action) => {
+      expect(action.error).toEqual(true)
+    })
+    .catch(e => {
+      fail(e)
+    })
   })
 })
