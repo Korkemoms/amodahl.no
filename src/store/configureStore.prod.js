@@ -9,7 +9,9 @@ import thunkMiddleware from 'redux-thunk'
 // useful in production (atleast in this stage of development)
 import createLogger from 'redux-logger'
 
-const myMiddleware = store => next => action => {
+import promiseMiddleware from 'redux-promise'
+
+const scrollMiddleware = store => next => action => {
   if (action.type === '@@router/LOCATION_CHANGE') {
     // scroll up when vising new page
     window.scrollTo(0, 0)
@@ -18,9 +20,10 @@ const myMiddleware = store => next => action => {
 }
 
 const middleware = applyMiddleware(
+  promiseMiddleware,
   thunkMiddleware, // allows dispatching of functions
   routerMiddleware(browserHistory), // keeps url in sync with app
-  myMiddleware, // scroll up when vising new page
+  scrollMiddleware, // scroll up when vising new page
   createLogger() // useful logging
 )
 
