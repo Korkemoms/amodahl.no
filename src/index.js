@@ -11,6 +11,7 @@ import configureStore from './store/configureStore'
 
 // $FlowFixMe
 const store = configureStore()
+window.store = store // make available to native app
 store.dispatch(offlineLogin()) // attempt to log in using local storage
 
 render(
